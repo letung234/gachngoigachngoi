@@ -1,0 +1,143 @@
+import { useState, useContext } from 'react'
+import { Outlet, Link, useLocation, Navigate } from 'react-router-dom'
+import path from 'src/constants/path'
+import { AppContext } from 'src/contexts/app.context'
+import usePermission from 'src/hooks/usePermission'
+import { Permission } from 'src/constants/permission'
+
+interface NavItem {
+  name: string
+  path: string
+  icon: string
+  permission: Permission
+}
+
+const navItems: NavItem[] = [
+  { name: 'Dashboard', path: path.adminDashboard, icon: '📊', permission: Permission.DASHBOARD_VIEW },
+  { name: 'Sản phẩm', path: path.adminProducts, icon: '📦', permission: Permission.PRODUCT_READ },
+  { name: 'Đơn hàng', path: path.adminOrders, icon: '🛒', permission: Permission.PURCHASE_READ },
+  { name: 'Khách hàng', path: path.adminCustomers, icon: '👥', permission: Permission.USER_READ },
+  { name: 'Phân tích', path: path.adminAnalytics, icon: '📈', permission: Permission.STATS_VIEW },
+  { name: 'Cài đặt', path: path.adminSettings, icon: '⚙️', permission: Permission.CONFIG_READ }
+]
+
+export default function AdminLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+  const { isAuthenticated, profile } = useContext(AppContext)
+  const { isAdmin, can, userRoles } = usePermission()
+
+  // Redirect if not authenticated or not admin
+  if (!isAuthenticated) {
+    return <Navigate to={path.login} replace />
+  }
+
+  if (!isAdmin) {
+    return <Navigate to={path.home} replace />
+  }
+
+  const isActive = (itemPath: string) => location.pathname === itemPath
+
+  // Filter nav items based on permissions
+  const visibleNavItems = navItems.filter((item) => can(item.permission))
+
+  // Get display role
+  const displayRole = userRoles[0] || 'User'
+
+  return (
+    <div className='flex min-h-screen bg-cement-light'>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className='fixed inset-0 z-20 bg-black/50 md:hidden' onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed left-0 top-0 z-30 h-screen w-64 transform overflow-y-auto bg-earth transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        {/* Logo */}
+        <div className='flex items-center justify-between border-b border-earth-light p-4'>
+          <Link to={path.home} className='flex items-center gap-2 font-serif text-xl font-bold text-cream'>
+            🏠 Shoppe
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className='rounded-md p-1 text-cream hover:bg-earth-light md:hidden'
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Admin Label */}
+        <div className='border-b border-earth-light px-4 py-3'>
+          <p className='text-xs font-semibold uppercase text-cream-light'>Admin Panel</p>
+          <p className='mt-1 text-xs text-gold'>{displayRole}</p>
+        </div>
+
+        {/* Navigation */}
+        <nav className='space-y-1 p-4'>
+          {visibleNavItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+                isActive(item.path) ? 'bg-brick font-semibold text-cream' : 'text-cream-light hover:bg-earth-light'
+              }`}
+            >
+              <span className='text-lg'>{item.icon}</span>
+              <span>{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* Back to site */}
+        <div className='absolute bottom-0 left-0 right-0 border-t border-earth-light p-4'>
+          <Link
+            to={path.home}
+            className='flex items-center gap-2 rounded-lg px-4 py-2 text-cream-light transition-colors hover:bg-earth-light'
+          >
+            ← Về trang chủ
+          </Link>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main className='flex flex-1 flex-col'>
+        {/* Header */}
+        <header className='sticky top-0 z-10 border-b border-cement-dark bg-white px-4 py-4 md:px-6'>
+          <div className='flex items-center justify-between'>
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className='rounded-lg bg-cream-light p-2 text-earth transition-colors hover:bg-cream md:hidden'
+            >
+              ☰
+            </button>
+            <div className='flex items-center gap-4'>
+              <div className='flex items-center gap-2'>
+                {profile?.avatar ? (
+                  <img src={profile.avatar} alt='Avatar' className='h-8 w-8 rounded-full object-cover' />
+                ) : (
+                  <div className='h-8 w-8 rounded-full bg-brick text-center text-sm font-bold leading-8 text-white'>
+                    {profile?.name?.charAt(0) || profile?.email?.charAt(0) || 'A'}
+                  </div>
+                )}
+                <div className='hidden sm:block'>
+                  <p className='text-sm font-medium text-earth'>{profile?.name || profile?.email}</p>
+                  <p className='text-xs text-cement-dark'>{displayRole}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <div className='flex-1 overflow-auto p-4 md:p-6'>
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  )
+}
