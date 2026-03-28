@@ -1,14 +1,14 @@
-import { ButtonHTMLAttributes } from 'react'
+import { memo, ButtonHTMLAttributes } from 'react'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
 }
 
-export default function Button(props: ButtonProps) {
+function ButtonInner(props: ButtonProps) {
   const { className, isLoading, disabled, children, ...rest } = props
   const newClassName = disabled ? className + ' cursor-not-allowed' : className
   return (
-    <button className={newClassName} disabled={disabled} {...rest}>
+    <button className={newClassName} disabled={disabled || isLoading} {...rest}>
       {isLoading && (
         <svg
           aria-hidden='true'
@@ -31,3 +31,5 @@ export default function Button(props: ButtonProps) {
     </button>
   )
 }
+
+export default memo(ButtonInner)

@@ -64,82 +64,62 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
   }
 
   return (
-    <div className='py-4'>
-      <Link
-        to={path.home}
-        className={classNames('flex items-center font-bold', {
-          'text-orange': !category
-        })}
-      >
-        <svg viewBox='0 0 12 10' className='mr-3 h-4 w-3 fill-current'>
-          <g fillRule='evenodd' stroke='none' strokeWidth={1}>
-            <g transform='translate(-373 -208)'>
-              <g transform='translate(155 191)'>
-                <g transform='translate(218 17)'>
-                  <path d='m0 2h2v-2h-2zm4 0h7.1519633v-2h-7.1519633z' />
-                  <path d='m0 6h2v-2h-2zm4 0h7.1519633v-2h-7.1519633z' />
-                  <path d='m0 10h2v-2h-2zm4 0h7.1519633v-2h-7.1519633z' />
-                </g>
-              </g>
-            </g>
-          </g>
-        </svg>
-        {t('aside filter.all categories')}
-      </Link>
-      <div className='my-4 h-[1px] bg-gray-300' />
-      <ul>
-        {categories.map((categoryItem) => {
-          const isActive = category === categoryItem._id
-          return (
-            <li className='py-2 pl-2' key={categoryItem._id}>
-              <Link
-                to={{
-                  pathname: path.home,
-                  search: createSearchParams({
-                    ...queryConfig,
-                    category: categoryItem._id
-                  }).toString()
-                }}
-                className={classNames('relative px-2', {
-                  'font-semibold text-orange': isActive
-                })}
-              >
-                {isActive && (
-                  <svg viewBox='0 0 4 7' className='absolute left-[-10px] top-1 h-2 w-2 fill-orange'>
-                    <polygon points='4 3.5 0 0 0 7' />
-                  </svg>
-                )}
-                {categoryItem.name}
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
-      <Link to={path.home} className='mt-4 flex items-center font-bold uppercase'>
-        <svg
-          enableBackground='new 0 0 15 15'
-          viewBox='0 0 15 15'
-          x={0}
-          y={0}
-          className='mr-3 h-4 w-3 fill-current stroke-current'
+    <div className='py-6 px-4 md:px-0'>
+      {/* Categories Section */}
+      <div className='rounded-lg bg-white p-4 shadow-sm border border-gray-100 mb-4'>
+        <h3 className='font-bold text-gray-900 flex items-center gap-2 mb-4'>
+          <svg viewBox='0 0 20 20' className='h-5 w-5 fill-brick'>
+            <path fillRule='evenodd' d='M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z' clipRule='evenodd' />
+          </svg>
+          Danh mục
+        </h3>
+        <Link
+          to={path.home}
+          className={classNames('block px-3 py-2 rounded-lg transition-all text-sm font-medium', {
+            'bg-brick text-white': !category,
+            'text-gray-700 hover:bg-gray-50': category
+          })}
         >
-          <g>
-            <polyline
-              fill='none'
-              points='5.5 13.2 5.5 5.8 1.5 1.2 13.5 1.2 9.5 5.8 9.5 10.2'
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeMiterlimit={10}
-            />
-          </g>
-        </svg>
-        {t('aside filter.filter search')}
-      </Link>
-      <div className='my-4 h-[1px] bg-gray-300' />
-      <div className='my-5'>
-        <div>Khoảng giá</div>
-        <form className='mt-2' onSubmit={onSubmit}>
-          <div className='flex items-start'>
+          Tất cả sản phẩm
+        </Link>
+        <ul className='mt-2 space-y-1'>
+          {categories.map((categoryItem) => {
+            const isActive = category === categoryItem._id
+            return (
+              <li key={categoryItem._id}>
+                <Link
+                  to={{
+                    pathname: path.home,
+                    search: createSearchParams({
+                      ...queryConfig,
+                      category: categoryItem._id
+                    }).toString()
+                  }}
+                  className={classNames('block px-3 py-2 rounded-lg transition-all text-sm font-medium', {
+                    'bg-brick text-white': isActive,
+                    'text-gray-700 hover:bg-gray-50': !isActive
+                  })}
+                >
+                  {categoryItem.name}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
+      {/* Price Filter Section */}
+      <div className='rounded-lg bg-white p-4 shadow-sm border border-gray-100 mb-4'>
+        <h3 className='font-bold text-gray-900 flex items-center gap-2 mb-4'>
+          <svg viewBox='0 0 20 20' className='h-5 w-5 fill-brick'>
+            <path d='M8.16 5.314a.5.5 0 10-.32.94l12 4.053a.5.5 0 10.32-.94l-12-4.053zM8.16 10.314a.5.5 0 10-.32.94l12 4.053a.5.5 0 10.32-.94l-12-4.053zM8.16 15.314a.5.5 0 10-.32.94l12 4.053a.5.5 0 10.32-.94l-12-4.053z' />
+            <circle cx='3' cy='5.5' r='2.5' />
+            <circle cx='3' cy='10.5' r='2.5' />
+            <circle cx='3' cy='15.5' r='2.5' />
+          </svg>
+          Khoảng giá
+        </h3>
+        <form className='space-y-3' onSubmit={onSubmit}>
+          <div className='flex items-start gap-2'>
             <Controller
               control={control}
               name='price_min'
@@ -148,8 +128,8 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                   <InputNumber
                     type='text'
                     className='grow'
-                    placeholder='₫ TỪ'
-                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                    placeholder='Từ'
+                    classNameInput='p-2 w-full text-sm outline-none border border-gray-300 rounded-lg focus:border-brick focus:ring-2 focus:ring-brick/10'
                     classNameError='hidden'
                     {...field}
                     onChange={(event) => {
@@ -160,20 +140,7 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                 )
               }}
             />
-            {/* <InputV2
-              control={control}
-              name='price_min'
-              type='number'
-              className='grow'
-              placeholder='₫ TỪ'
-              classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-              classNameError='hidden'
-              onChange={() => {
-                trigger('price_max')
-              }}
-            /> */}
-
-            <div className='mx-2 mt-2 shrink-0'>-</div>
+            <span className='mt-2 text-gray-400'>—</span>
             <Controller
               control={control}
               name='price_max'
@@ -182,8 +149,8 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
                   <InputNumber
                     type='text'
                     className='grow'
-                    placeholder='₫ ĐẾN'
-                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                    placeholder='Đến'
+                    classNameInput='p-2 w-full text-sm outline-none border border-gray-300 rounded-lg focus:border-brick focus:ring-2 focus:ring-brick/10'
                     classNameError='hidden'
                     {...field}
                     onChange={(event) => {
@@ -195,20 +162,34 @@ export default function AsideFilter({ queryConfig, categories }: Props) {
               }}
             />
           </div>
-          <div className='mt-1 min-h-[1.25rem] text-center text-sm text-red-600'>{errors.price_min?.message}</div>
-          <Button className='flex w-full items-center justify-center bg-orange p-2 text-sm uppercase text-white hover:bg-orange/80'>
+          {errors.price_min?.message && (
+            <div className='text-xs text-red-600 font-medium'>{errors.price_min.message}</div>
+          )}
+          <Button className='w-full bg-brick text-white hover:bg-brick-dark text-sm font-semibold py-2 rounded-lg transition-colors'>
             Áp dụng
           </Button>
         </form>
       </div>
-      <div className='my-4 h-[1px] bg-gray-300' />
-      <div className='text-sm'>Đánh giá</div>
-      <RatingStars queryConfig={queryConfig} />
-      <div className='my-4 h-[1px] bg-gray-300' />
+
+      {/* Rating Filter Section */}
+      <div className='rounded-lg bg-white p-4 shadow-sm border border-gray-100 mb-4'>
+        <h3 className='font-bold text-gray-900 flex items-center gap-2 mb-4'>
+          <svg viewBox='0 0 20 20' className='h-5 w-5 fill-brick'>
+            <path d='M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z' />
+          </svg>
+          Đánh giá
+        </h3>
+        <RatingStars queryConfig={queryConfig} />
+      </div>
+
+      {/* Clear All Button */}
       <Button
         onClick={handleRemoveAll}
-        className='flex w-full items-center justify-center bg-orange p-2 text-sm uppercase text-white hover:bg-orange/80'
+        className='w-full bg-gray-200 text-gray-700 hover:bg-gray-300 text-sm font-semibold py-2 rounded-lg transition-colors flex items-center justify-center gap-2'
       >
+        <svg viewBox='0 0 20 20' className='h-4 w-4 fill-current'>
+          <path fillRule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clipRule='evenodd' />
+        </svg>
         Xóa tất cả
       </Button>
     </div>

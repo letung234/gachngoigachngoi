@@ -32,7 +32,9 @@ export default function Header() {
   return (
     <header
       className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-cream-light/95 py-3 shadow-lg backdrop-blur-sm' : 'bg-transparent py-5'
+        isScrolled 
+          ? 'bg-white/98 py-3 shadow-lg backdrop-blur-sm border-b border-gray-100' 
+          : 'bg-transparent py-5'
       }`}
     >
       <div className='container'>
@@ -81,17 +83,17 @@ export default function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative py-2 text-sm font-medium transition-colors ${
+                className={`relative py-2 px-1 text-sm font-medium transition-all duration-200 ${
                   isScrolled
-                    ? 'text-earth hover:text-brick'
+                    ? 'text-gray-700 hover:text-brick'
                     : 'text-cream-light/90 hover:text-cream-light'
-                } ${location.pathname === link.path ? (isScrolled ? 'text-brick' : 'text-cream-light') : ''}`}
+                } ${location.pathname === link.path ? (isScrolled ? 'text-brick font-semibold' : 'text-cream-light font-semibold') : ''}`}
               >
                 {link.name}
                 {location.pathname === link.path && (
                   <motion.div
                     layoutId='activeNav'
-                    className={`absolute -bottom-1 left-0 right-0 h-0.5 ${isScrolled ? 'bg-brick' : 'bg-gold'}`}
+                    className={`absolute -bottom-1 left-1 right-1 h-1 rounded-full ${isScrolled ? 'bg-brick' : 'bg-gold'}`}
                   />
                 )}
               </Link>
@@ -102,10 +104,10 @@ export default function Header() {
           <div className='flex items-center gap-4'>
             <Link
               to='/admin/dashboard'
-              className={`hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm ${
+              className={`hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm border ${
                 isScrolled
-                  ? 'bg-earth text-cream-light hover:bg-earth-dark'
-                  : 'bg-earth/70 text-cream-light hover:bg-earth'
+                  ? 'bg-earth text-white border-earth hover:bg-earth-dark hover:border-earth-dark'
+                  : 'bg-earth/80 text-white border-earth/80 hover:bg-earth'
               }`}
               title='Admin Panel'
             >
