@@ -21,7 +21,13 @@ export enum Permission {
   CATEGORY_UPDATE = 'category.update',
   CATEGORY_DELETE = 'category.delete',
 
-  // User permissions
+  // Posts/Blog permissions
+  POST_READ = 'post.read',
+  POST_CREATE = 'post.create',
+  POST_UPDATE = 'post.update',
+  POST_DELETE = 'post.delete',
+
+  // User/Admin permissions
   USER_READ = 'user.read',
   USER_CREATE = 'user.create',
   USER_UPDATE = 'user.update',
@@ -29,17 +35,14 @@ export enum Permission {
   USER_MANAGE_ROLES = 'user.manage_roles',
 
   // Purchase/Order permissions
-  PURCHASE_READ = 'purchase.read',
-  PURCHASE_UPDATE = 'purchase.update',
-  PURCHASE_DELETE = 'purchase.delete',
+  ORDER_READ = 'order.read',
+  ORDER_CREATE = 'order.create',
+  ORDER_UPDATE = 'order.update',
+  ORDER_DELETE = 'order.delete',
 
   // Stats/Dashboard permissions
   DASHBOARD_VIEW = 'dashboard.view',
   STATS_VIEW = 'stats.view',
-
-  // Contact permissions
-  CONTACT_READ = 'contact.read',
-  CONTACT_UPDATE = 'contact.update',
 
   // Config permissions
   CONFIG_READ = 'config.read',
@@ -51,6 +54,7 @@ export const rolePermissions: Record<Role, Permission[]> = {
   [Role.SUPER_ADMIN]: Object.values(Permission), // All permissions
 
   [Role.ADMIN]: [
+    // Product & Category management
     Permission.PRODUCT_READ,
     Permission.PRODUCT_CREATE,
     Permission.PRODUCT_UPDATE,
@@ -59,28 +63,38 @@ export const rolePermissions: Record<Role, Permission[]> = {
     Permission.CATEGORY_CREATE,
     Permission.CATEGORY_UPDATE,
     Permission.CATEGORY_DELETE,
+    // Order management
+    Permission.ORDER_READ,
+    Permission.ORDER_CREATE,
+    Permission.ORDER_UPDATE,
+    Permission.ORDER_DELETE,
+    // User management (read only)
     Permission.USER_READ,
-    Permission.PURCHASE_READ,
-    Permission.PURCHASE_UPDATE,
+    // Dashboard & Stats
     Permission.DASHBOARD_VIEW,
     Permission.STATS_VIEW,
-    Permission.CONTACT_READ,
-    Permission.CONTACT_UPDATE,
+    // Config
     Permission.CONFIG_READ,
     Permission.CONFIG_UPDATE
   ],
 
   [Role.EDITOR]: [
-    Permission.PRODUCT_READ,
-    Permission.PRODUCT_CREATE,
-    Permission.PRODUCT_UPDATE,
+    // Post/Blog management
+    Permission.POST_READ,
+    Permission.POST_CREATE,
+    Permission.POST_UPDATE,
+    Permission.POST_DELETE,
+    // Category read only
     Permission.CATEGORY_READ,
+    // Dashboard view only
     Permission.DASHBOARD_VIEW
   ],
 
   [Role.VIEWER]: [
+    // Read-only access
     Permission.PRODUCT_READ,
     Permission.CATEGORY_READ,
+    Permission.POST_READ,
     Permission.DASHBOARD_VIEW,
     Permission.STATS_VIEW
   ],
@@ -126,39 +140,45 @@ export const isAdminRole = (userRoles: string[]): boolean => {
  */
 export const adminMenuItems = [
   {
-    path: '/admin',
+    path: '/admin/dashboard',
     label: 'Dashboard',
-    icon: 'dashboard',
+    icon: '📊',
     permission: Permission.DASHBOARD_VIEW
   },
   {
     path: '/admin/products',
     label: 'Sản phẩm',
-    icon: 'products',
+    icon: '📦',
     permission: Permission.PRODUCT_READ
+  },
+  {
+    path: '/admin/categories',
+    label: 'Danh mục',
+    icon: '🏷️',
+    permission: Permission.CATEGORY_READ
   },
   {
     path: '/admin/orders',
     label: 'Đơn hàng',
-    icon: 'orders',
-    permission: Permission.PURCHASE_READ
+    icon: '📋',
+    permission: Permission.ORDER_READ
   },
   {
-    path: '/admin/customers',
-    label: 'Khách hàng',
-    icon: 'customers',
+    path: '/admin/users',
+    label: 'Người dùng',
+    icon: '👥',
     permission: Permission.USER_READ
+  },
+  {
+    path: '/admin/posts',
+    label: 'Bài viết',
+    icon: '📝',
+    permission: Permission.POST_READ
   },
   {
     path: '/admin/analytics',
     label: 'Phân tích',
-    icon: 'analytics',
+    icon: '📈',
     permission: Permission.STATS_VIEW
-  },
-  {
-    path: '/admin/settings',
-    label: 'Cài đặt',
-    icon: 'settings',
-    permission: Permission.CONFIG_READ
   }
 ]

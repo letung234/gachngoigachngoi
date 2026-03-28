@@ -5,79 +5,59 @@ import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 import { getAvatarUrl } from 'src/utils/utils'
 
+const navItems = [
+  { to: path.profile, icon: '👤', label: 'Tài khoản của tôi' },
+  { to: path.changePassword, icon: '🔑', label: 'Đổi mật khẩu' },
+  { to: path.historyPurchase, icon: '📦', label: 'Đơn mua của tôi' }
+]
+
 export default function UserSideNav() {
   const { profile } = useContext(AppContext)
 
   return (
-    <div>
-      <div className='flex items-center border-b border-b-gray-200 py-4'>
-        <Link to={path.profile} className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'>
-          <img src={getAvatarUrl(profile?.avatar)} alt='' className='h-full w-full object-cover' />
-        </Link>
-        <div className='flex-grow pl-4'>
-          <div className='mb-1 truncate font-semibold text-gray-600'>{profile?.email}</div>
-          <Link to={path.profile} className='flex items-center capitalize text-gray-500'>
-            <svg
-              width={12}
-              height={12}
-              viewBox='0 0 12 12'
-              xmlns='http://www.w3.org/2000/svg'
-              style={{ marginRight: 4 }}
-            >
-              <path
-                d='M8.54 0L6.987 1.56l3.46 3.48L12 3.48M0 8.52l.073 3.428L3.46 12l6.21-6.18-3.46-3.48'
-                fill='#9B9B9B'
-                fillRule='evenodd'
-              />
-            </svg>
-            Sửa hồ sơ
-          </Link>
-        </div>
-      </div>
-      <div className='mt-7'>
-        <NavLink
+    <nav className='rounded-lg bg-white p-6 shadow-sm'>
+      {/* Profile Card */}
+      <div className='mb-8'>
+        <Link
           to={path.profile}
-          className={({ isActive }) =>
-            classNames('flex items-center capitalize transition-colors', {
-              'text-orange': isActive,
-              'text-gray-600': !isActive
-            })
-          }
+          className='group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-gray-50'
         >
-          <div className='mr-3 h-[22px] w-[22px]'>
-            <img src='https://cf.shopee.vn/file/ba61750a46794d8847c3f463c5e71cc4' alt='' className='h-full w-full' />
+          <div className='h-16 w-16 flex-shrink-0 overflow-hidden rounded-full border-2 border-gray-200 group-hover:border-brick transition-colors'>
+            <img src={getAvatarUrl(profile?.avatar)} alt={profile?.name || 'User'} className='h-full w-full object-cover' />
           </div>
-          Tài khoản của tôi
-        </NavLink>
-        <NavLink
-          to={path.changePassword}
-          className={({ isActive }) =>
-            classNames('mt-4 flex items-center capitalize transition-colors', {
-              'text-orange': isActive,
-              'text-gray-600': !isActive
-            })
-          }
-        >
-          <div className='mr-3 h-[22px] w-[22px]'>
-            <img src='https://cf.shopee.vn/file/ba61750a46794d8847c3f463c5e71cc4' alt='' className='h-full w-full' />
+          <div className='flex-1 min-w-0'>
+            <p className='text-sm font-semibold text-earth truncate'>{profile?.name || profile?.email}</p>
+            <p className='text-xs text-gray-500 truncate'>{profile?.email}</p>
+            <div className='mt-2 flex items-center gap-1 text-xs text-brick font-medium group-hover:translate-x-0.5 transition-transform'>
+              <span>Sửa hồ sơ</span>
+              <svg width='12' height='12' viewBox='0 0 12 12' fill='currentColor'>
+                <path d='M8.54 0L6.987 1.56l3.46 3.48L12 3.48M0 8.52l.073 3.428L3.46 12l6.21-6.18-3.46-3.48' fillRule='evenodd' />
+              </svg>
+            </div>
           </div>
-          Đổi mật khẩu
-        </NavLink>
-        <NavLink
-          to={path.historyPurchase}
-          className={({ isActive }) =>
-            classNames('mt-4 flex items-center capitalize transition-colors', {
-              'text-orange': isActive,
-              'text-gray-600': !isActive
-            })
-          }
-        >
-          <div className='mr-3 h-[22px] w-[22px]'>
-            <img src='https://cf.shopee.vn/file/f0049e9df4e536bc3e7f140d071e9078' alt='' className='h-full w-full' />
-          </div>
-          Đơn mua
-        </NavLink>
+        </Link>
       </div>
-    </div>
+
+      {/* Navigation Menu */}
+      <div className='space-y-1 border-t border-gray-200 pt-6'>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            className={({ isActive }) =>
+              classNames(
+                'flex items-center gap-3 rounded-lg px-4 py-3 font-medium transition-all duration-200',
+                isActive
+                  ? 'bg-brick text-white shadow-sm'
+                  : 'text-earth hover:bg-gray-50'
+              )
+            }
+          >
+            <span className='text-lg'>{item.icon}</span>
+            <span className='text-sm'>{item.label}</span>
+          </NavLink>
+        ))}
+      </div>
+    </nav>
   )
 }

@@ -15,10 +15,11 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: 'Dashboard', path: path.adminDashboard, icon: '📊', permission: Permission.DASHBOARD_VIEW },
   { name: 'Sản phẩm', path: path.adminProducts, icon: '📦', permission: Permission.PRODUCT_READ },
-  { name: 'Đơn hàng', path: path.adminOrders, icon: '🛒', permission: Permission.PURCHASE_READ },
-  { name: 'Khách hàng', path: path.adminCustomers, icon: '👥', permission: Permission.USER_READ },
-  { name: 'Phân tích', path: path.adminAnalytics, icon: '📈', permission: Permission.STATS_VIEW },
-  { name: 'Cài đặt', path: path.adminSettings, icon: '⚙️', permission: Permission.CONFIG_READ }
+  { name: 'Danh mục', path: path.adminCategories, icon: '🏷️', permission: Permission.CATEGORY_READ },
+  { name: 'Đơn hàng', path: path.adminOrders, icon: '📋', permission: Permission.ORDER_READ },
+  { name: 'Người dùng', path: path.adminUsers, icon: '👥', permission: Permission.USER_READ },
+  { name: 'Bài viết', path: path.adminPosts, icon: '📝', permission: Permission.POST_READ },
+  { name: 'Phân tích', path: path.adminAnalytics, icon: '📈', permission: Permission.STATS_VIEW }
 ]
 
 export default function AdminLayout() {
@@ -105,28 +106,41 @@ export default function AdminLayout() {
       </aside>
 
       {/* Main content */}
-      <main className='flex flex-1 flex-col'>
+      <main className='flex flex-1 flex-col bg-gray-50'>
         {/* Header */}
-        <header className='sticky top-0 z-10 border-b border-cement-dark bg-white px-4 py-4 md:px-6'>
-          <div className='flex items-center justify-between'>
+        <header className='sticky top-0 z-10 border-b border-gray-200 bg-white shadow-sm'>
+          <div className='flex items-center justify-between px-4 py-4 md:px-6'>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
-              className='rounded-lg bg-cream-light p-2 text-earth transition-colors hover:bg-cream md:hidden'
+              className='rounded-lg bg-gray-100 p-2 text-earth transition-all hover:bg-gray-200 md:hidden'
+              aria-label='Toggle sidebar'
             >
-              ☰
+              <svg className='h-5 w-5' fill='currentColor' viewBox='0 0 20 20'>
+                <path fillRule='evenodd' d='M3 5a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V5zm0 8a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z' clipRule='evenodd' />
+              </svg>
             </button>
-            <div className='flex items-center gap-4'>
-              <div className='flex items-center gap-2'>
+            
+            <div className='flex items-center gap-6 md:gap-8'>
+              {/* Quick stats */}
+              <div className='hidden lg:flex items-center gap-6'>
+                <div className='text-right'>
+                  <p className='text-xs text-gray-600'>Hoạt động hôm nay</p>
+                  <p className='text-sm font-semibold text-earth'>12 đơn hàng</p>
+                </div>
+              </div>
+
+              {/* User profile */}
+              <div className='flex items-center gap-3'>
                 {profile?.avatar ? (
-                  <img src={profile.avatar} alt='Avatar' className='h-8 w-8 rounded-full object-cover' />
+                  <img src={profile.avatar} alt='Avatar' className='h-10 w-10 rounded-full object-cover border-2 border-gray-200' />
                 ) : (
-                  <div className='h-8 w-8 rounded-full bg-brick text-center text-sm font-bold leading-8 text-white'>
+                  <div className='h-10 w-10 rounded-full bg-brick text-center text-sm font-bold leading-10 text-white flex items-center justify-center'>
                     {profile?.name?.charAt(0) || profile?.email?.charAt(0) || 'A'}
                   </div>
                 )}
                 <div className='hidden sm:block'>
-                  <p className='text-sm font-medium text-earth'>{profile?.name || profile?.email}</p>
-                  <p className='text-xs text-cement-dark'>{displayRole}</p>
+                  <p className='text-sm font-semibold text-earth'>{profile?.name || profile?.email}</p>
+                  <p className='text-xs text-gray-500'>{displayRole}</p>
                 </div>
               </div>
             </div>
@@ -134,8 +148,10 @@ export default function AdminLayout() {
         </header>
 
         {/* Page content */}
-        <div className='flex-1 overflow-auto p-4 md:p-6'>
-          <Outlet />
+        <div className='flex-1 overflow-auto'>
+          <div className='p-4 md:p-6'>
+            <Outlet />
+          </div>
         </div>
       </main>
     </div>

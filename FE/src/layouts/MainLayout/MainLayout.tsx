@@ -7,15 +7,18 @@ interface Props {
   children?: React.ReactNode
 }
 
+const Footer_ = memo(Footer)
+const Header_ = memo(Header)
+
 function MainLayoutInner({ children }: Props) {
   return (
     <div className='min-h-screen bg-cream-light'>
-      <Header />
-      <main>
+      <Header_ />
+      <main className='flex flex-col min-h-[calc(100vh-64px)]'>
         {children}
         <Outlet />
       </main>
-      <Footer />
+      <Footer_ />
     </div>
   )
 }

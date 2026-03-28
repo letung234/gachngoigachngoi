@@ -20,19 +20,19 @@ export default function Footer() {
   return (
     <footer className='bg-earth-dark text-cream-light'>
       {/* Main Footer */}
-      <div className='container py-16'>
-        <div className='grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4'>
+      <div className='container py-12 md:py-16'>
+        <div className='grid grid-cols-1 gap-8 sm:gap-10 md:gap-12 md:grid-cols-2 lg:grid-cols-4'>
           {/* Brand Column */}
-          <div className='lg:col-span-1'>
-            <Link to='/' className='mb-6 flex items-center gap-3'>
-              <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-brick'>
+          <div className='sm:col-span-1 md:col-span-2 lg:col-span-1'>
+            <Link to='/' className='mb-6 inline-flex items-center gap-3'>
+              <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-brick flex-shrink-0'>
                 <svg viewBox='0 0 40 40' className='h-8 w-8 fill-cream-light'>
                   <path d='M20 4L4 12v16l16 8 16-8V12L20 4zm0 4l12 6v12l-12 6-12-6V14l12-6z' />
                   <rect x='14' y='16' width='12' height='8' rx='1' />
                 </svg>
               </div>
               <div>
-                <h2 className='font-serif text-xl font-bold'>Gạch Ngói Việt</h2>
+                <h2 className='font-serif text-lg md:text-xl font-bold'>Gạch Ngói Việt</h2>
                 <p className='text-xs text-cream-light/70'>Tinh hoa làng nghề</p>
               </div>
             </Link>
@@ -41,7 +41,7 @@ export default function Footer() {
               Sản phẩm thủ công, bền vững theo thời gian.
             </p>
             {/* Social Links */}
-            <div className='flex gap-4'>
+            <div className='flex gap-3'>
               <a
                 href='#'
                 className='flex h-10 w-10 items-center justify-center rounded-lg bg-cream-light/10 transition-colors hover:bg-brick'
@@ -73,9 +73,9 @@ export default function Footer() {
           </div>
 
           {/* Products Column */}
-          <div>
-            <h3 className='mb-6 font-serif text-lg font-semibold text-gold'>Sản phẩm</h3>
-            <ul className='space-y-3'>
+          <div className='sm:col-span-1 md:col-span-1'>
+            <h3 className='mb-4 font-serif text-base md:text-lg font-semibold text-gold'>Sản phẩm</h3>
+            <ul className='space-y-2'>
               {footerLinks.products.map((link) => (
                 <li key={link.path}>
                   <Link
@@ -90,9 +90,9 @@ export default function Footer() {
           </div>
 
           {/* Company Column */}
-          <div>
-            <h3 className='mb-6 font-serif text-lg font-semibold text-gold'>Công ty</h3>
-            <ul className='space-y-3'>
+          <div className='sm:col-span-1 md:col-span-1'>
+            <h3 className='mb-4 font-serif text-base md:text-lg font-semibold text-gold'>Công ty</h3>
+            <ul className='space-y-2'>
               {footerLinks.company.map((link) => (
                 <li key={link.path}>
                   <Link
@@ -107,9 +107,9 @@ export default function Footer() {
           </div>
 
           {/* Contact Column */}
-          <div>
-            <h3 className='mb-6 font-serif text-lg font-semibold text-gold'>Liên hệ</h3>
-            <ul className='space-y-4'>
+          <div className='sm:col-span-1 md:col-span-2 lg:col-span-1'>
+            <h3 className='mb-4 font-serif text-base md:text-lg font-semibold text-gold'>Liên hệ</h3>
+            <ul className='space-y-3'>
               <li className='flex items-start gap-3'>
                 <svg className='mt-1 h-5 w-5 flex-shrink-0 text-brick' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z' />
@@ -142,11 +142,11 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className='border-t border-cream-light/10'>
-        <div className='container flex flex-col items-center justify-between gap-4 py-6 text-center sm:flex-row sm:text-left'>
-          <p className='text-sm text-cream-light/60'>
+        <div className='container flex flex-col items-center justify-between gap-3 py-4 md:py-6 text-center sm:flex-row sm:text-left'>
+          <p className='text-xs md:text-sm text-cream-light/60'>
             &copy; {new Date().getFullYear()} Gạch Ngói Việt. Tất cả quyền được bảo lưu.
           </p>
-          <p className='text-sm text-cream-light/60'>
+          <p className='text-xs md:text-sm text-cream-light/60'>
             Giữ gìn và phát huy giá trị truyền thống Việt Nam
           </p>
         </div>

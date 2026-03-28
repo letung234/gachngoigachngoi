@@ -18,10 +18,14 @@ const path = {
   admin: '/admin',
   adminDashboard: '/admin/dashboard',
   adminProducts: '/admin/products',
+  adminCategories: '/admin/categories',
   adminOrders: '/admin/orders',
-  adminCustomers: '/admin/customers',
+  adminUsers: '/admin/users',
+  adminPosts: '/admin/posts',
   adminAnalytics: '/admin/analytics',
-  adminSettings: '/admin/settings'
+  // Error pages
+  unauthorized: '/403',
+  notFound: '/404'
 } as const
 
 export default path

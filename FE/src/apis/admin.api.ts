@@ -1,6 +1,9 @@
 import { Product, ProductList, ProductListConfig } from 'src/types/product.type'
 import { Purchase } from 'src/types/purchase.type'
-import { User } from 'src/types/user.type'
+import { User, UserList, UserListConfig } from 'src/types/user.type'
+import { Category } from 'src/types/category.type'
+import { Post, PostList, PostListConfig } from 'src/types/post.type'
+import { Order, OrderList, OrderListConfig } from 'src/types/order.type'
 import { SiteConfig } from 'src/types/config.type'
 import { SuccessResponse } from 'src/types/utils.type'
 import http from 'src/utils/http'
@@ -177,16 +180,93 @@ const adminApi = {
     })
   },
 
-  // ========== USER/CUSTOMER APIs ==========
-  getUsers() {
-    return http.get<SuccessResponse<User[]>>(`${ADMIN_URL}/users`)
+  // ========== CATEGORY APIs ==========
+  getCategories() {
+    return http.get<SuccessResponse<Category[]>>(`${ADMIN_URL}/categories`)
+  },
+
+  getCategory(id: string) {
+    return http.get<SuccessResponse<Category>>(`${ADMIN_URL}/categories/${id}`)
+  },
+
+  addCategory(body: Omit<Category, '_id' | 'createdAt' | 'updatedAt'>) {
+    return http.post<SuccessResponse<Category>>(`${ADMIN_URL}/categories`, body)
+  },
+
+  updateCategory(id: string, body: Partial<Category>) {
+    return http.put<SuccessResponse<Category>>(`${ADMIN_URL}/categories/${id}`, body)
+  },
+
+  deleteCategory(id: string) {
+    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/categories/${id}`)
+  },
+
+  // ========== POST/BLOG APIs ==========
+  getPosts(params?: PostListConfig) {
+    return http.get<SuccessResponse<PostList>>(`${ADMIN_URL}/posts`, {
+      params
+    })
+  },
+
+  getPost(id: string) {
+    return http.get<SuccessResponse<Post>>(`${ADMIN_URL}/posts/${id}`)
+  },
+
+  addPost(body: Omit<Post, '_id' | 'slug' | 'createdAt' | 'updatedAt'>) {
+    return http.post<SuccessResponse<Post>>(`${ADMIN_URL}/posts`, body)
+  },
+
+  updatePost(id: string, body: Partial<Post>) {
+    return http.put<SuccessResponse<Post>>(`${ADMIN_URL}/posts/${id}`, body)
+  },
+
+  deletePost(id: string) {
+    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/posts/${id}`)
+  },
+
+  uploadPostThumbnail(body: FormData) {
+    return http.post<SuccessResponse<string>>(`${ADMIN_URL}/posts/upload-thumbnail`, body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  },
+
+  // ========== ORDER APIs ==========
+  getOrders(params?: OrderListConfig) {
+    return http.get<SuccessResponse<OrderList>>(`${ADMIN_URL}/orders`, {
+      params
+    })
+  },
+
+  getOrder(id: string) {
+    return http.get<SuccessResponse<Order>>(`${ADMIN_URL}/orders/${id}`)
+  },
+
+  createOrder(body: Omit<Order, '_id' | 'createdAt' | 'updatedAt'>) {
+    return http.post<SuccessResponse<Order>>(`${ADMIN_URL}/orders`, body)
+  },
+
+  updateOrder(id: string, body: Partial<Order>) {
+    return http.put<SuccessResponse<Order>>(`${ADMIN_URL}/orders/${id}`, body)
+  },
+
+  deleteOrder(id: string) {
+    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/orders/${id}`)
+  },
+
+  // ========== USER/ADMIN MANAGEMENT APIs ==========
+  getUsers(params?: UserListConfig) {
+    return http.get<SuccessResponse<UserList>>(`${ADMIN_URL}/users`, {
+      params
+    })
   },
 
   getUser(id: string) {
     return http.get<SuccessResponse<User>>(`${ADMIN_URL}/users/${id}`)
   },
 
-  addUser(body: { email: string; password: string; name?: string; roles?: string[] }) {
+  createUser(body: { email: string; password: string; name?: string; roles?: string[] }) {
     return http.post<SuccessResponse<User>>(`${ADMIN_URL}/users`, body)
   },
 
@@ -195,7 +275,15 @@ const adminApi = {
   },
 
   deleteUser(id: string) {
-    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/users/delete/${id}`)
+    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/users/${id}`)
+  },
+
+  updateUserRole(id: string, roles: string[]) {
+    return http.put<SuccessResponse<User>>(`${ADMIN_URL}/users/${id}/roles`, { roles })
+  },
+
+  toggleUserStatus(id: string, status: 'active' | 'disabled') {
+    return http.put<SuccessResponse<User>>(`${ADMIN_URL}/users/${id}/status`, { status })
   },
 
   // ========== CONFIG APIs ==========
