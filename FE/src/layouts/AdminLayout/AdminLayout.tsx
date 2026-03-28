@@ -15,10 +15,11 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: 'Dashboard', path: path.adminDashboard, icon: '📊', permission: Permission.DASHBOARD_VIEW },
   { name: 'Sản phẩm', path: path.adminProducts, icon: '📦', permission: Permission.PRODUCT_READ },
-  { name: 'Đơn hàng', path: path.adminOrders, icon: '🛒', permission: Permission.PURCHASE_READ },
-  { name: 'Khách hàng', path: path.adminCustomers, icon: '👥', permission: Permission.USER_READ },
-  { name: 'Phân tích', path: path.adminAnalytics, icon: '📈', permission: Permission.STATS_VIEW },
-  { name: 'Cài đặt', path: path.adminSettings, icon: '⚙️', permission: Permission.CONFIG_READ }
+  { name: 'Danh mục', path: path.adminCategories, icon: '🏷️', permission: Permission.CATEGORY_READ },
+  { name: 'Đơn hàng', path: path.adminOrders, icon: '📋', permission: Permission.ORDER_READ },
+  { name: 'Người dùng', path: path.adminUsers, icon: '👥', permission: Permission.USER_READ },
+  { name: 'Bài viết', path: path.adminPosts, icon: '📝', permission: Permission.POST_READ },
+  { name: 'Phân tích', path: path.adminAnalytics, icon: '📈', permission: Permission.STATS_VIEW }
 ]
 
 export default function AdminLayout() {
