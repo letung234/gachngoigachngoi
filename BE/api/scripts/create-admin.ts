@@ -1,28 +1,39 @@
 import { connectMongoDB } from '../database/database'
 import { UserModel } from '../database/models/user.model'
-import { ROLE } from '../constants/role.enum'
 require('dotenv').config()
 
-async function createAdmin() {
-  await connectMongoDB()
+async function createAdminUser() {
+  try {
+    await connectMongoDB()
 
-  const adminEmail = 'admin@demo.com'
+    console.log('🔍 Checking for existing admin user...')
+    const existingAdmin = await UserModel.findOne({ roles: 'Admin' })
 
-  // Update user to Super Admin
-  const result = await UserModel.findOneAndUpdate(
-    { email: adminEmail },
-    { roles: [ROLE.SUPER_ADMIN] },
-    { new: true }
-  ).select({ password: 0, __v: 0 }).lean()
+    if (existingAdmin) {
+      console.log('✅ Admin user already exists:', (existingAdmin as any).email)
+      process.exit(0)
+    }
 
-  if (result) {
-    console.log('✅ User updated to Super Admin:')
-    console.log(result)
-  } else {
-    console.log('❌ User not found')
+    console.log('📝 Creating admin user...')
+    const adminUser = await UserModel.create({
+      email: 'admin@gachngoiviet.com',
+      password: 'admin123',
+      name: 'Admin',
+      roles: 'Admin',
+      verify: 1
+    })
+
+    console.log('✅ Admin user created successfully!')
+    console.log('\nAdmin credentials:')
+    console.log('  Email: admin@gachngoiviet.com')
+    console.log('  Password: admin123')
+    console.log('\n⚠️  Please change the password after first login!')
+
+    process.exit(0)
+  } catch (err) {
+    console.error('❌ Failed to create admin:', err)
+    process.exit(1)
   }
-
-  process.exit(0)
 }
 
-createAdmin().catch(console.error)
+createAdminUser()

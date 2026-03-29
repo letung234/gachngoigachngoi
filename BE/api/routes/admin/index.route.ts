@@ -2,9 +2,10 @@ import adminUserRouter from "./admin-user.route"
 import adminAuthRouter from "./admin-auth.route"
 import adminCategoryRouter from "./admin-category.route"
 import adminProductRouter from "./admin-product.route"
-import adminPurchaseRouter from "./admin-purchase.route"
 import adminStatsRouter from "./admin-stats.route"
 import adminConfigRouter from "./admin-config.route"
+import adminOrderRouter from "./admin-order.route"
+import adminPostRouter from "./admin-post.route"
 
 const adminRoutes = {
   prefix: "/admin/",
@@ -22,8 +23,12 @@ const adminRoutes = {
       route: adminCategoryRouter
     },
     {
-      path: "purchases",
-      route: adminPurchaseRouter
+      path: "orders",
+      route: adminOrderRouter
+    },
+    {
+      path: "posts",
+      route: adminPostRouter
     },
     {
       path: "stats",

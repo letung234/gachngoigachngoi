@@ -299,7 +299,7 @@ export default function Cart() {
                 <Button
                   className='mt-5 flex h-10 w-52 items-center justify-center bg-red-500 text-sm uppercase text-white hover:bg-red-600 sm:ml-4 sm:mt-0'
                   onClick={handleBuyPurchases}
-                  disabled={buyProductsMutation.isLoading}
+                  disabled={buyProductsMutation.isPending}
                 >
                   Mua hàng
                 </Button>

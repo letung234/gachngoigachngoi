@@ -153,6 +153,7 @@ const getProducts = async (req: Request, res: Response) => {
         page,
         limit,
         page_size,
+        total: totalProducts,
       },
     },
   }

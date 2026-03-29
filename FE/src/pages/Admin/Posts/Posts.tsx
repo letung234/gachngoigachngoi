@@ -1,27 +1,19 @@
 import { useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { Link } from 'react-router-dom'
 import adminApi from 'src/apis/admin.api'
 import { Post, PostStatus } from 'src/types/post.type'
-import { Category } from 'src/types/category.type'
 import usePermission from 'src/hooks/usePermission'
 import { Permission } from 'src/constants/permission'
-import Button from 'src/components/Button'
+import { AdminPagination } from 'src/components/Pagination'
+import { toast } from 'react-toastify'
+import path from 'src/constants/path'
 
 export default function Posts() {
   const [page, setPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<PostStatus | 'all'>('all')
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
-
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    thumbnail: '',
-    category: '',
-    status: 'draft' as PostStatus
-  })
 
   const { can } = usePermission()
   const canCreate = can(Permission.POST_CREATE)
@@ -29,7 +21,7 @@ export default function Posts() {
   const canDelete = can(Permission.POST_DELETE)
 
   // Fetch posts
-  const { data: postsData, isLoading, refetch } = useQuery({
+  const { data: postsData, isPending, error, refetch } = useQuery({
     queryKey: ['admin-posts', page, searchTerm, filterStatus],
     queryFn: () =>
       adminApi.getPosts({
@@ -40,40 +32,10 @@ export default function Posts() {
       })
   })
 
-  // Fetch categories
-  const { data: categoriesData } = useQuery({
-    queryKey: ['admin-categories'],
-    queryFn: () => adminApi.getCategories()
-  })
-
-  // Create post mutation
-  const createPostMutation = useMutation({
-    mutationFn: (data: any) => adminApi.addPost(data),
-    onSuccess: () => {
-      refetch()
-      setIsModalOpen(false)
-      resetForm()
-      alert('Tạo bài viết thành công')
-    },
-    onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi tạo bài viết')
-    }
-  })
-
-  // Update post mutation
-  const updatePostMutation = useMutation({
-    mutationFn: (data: any) => adminApi.updatePost(selectedPost!._id, data),
-    onSuccess: () => {
-      refetch()
-      setIsModalOpen(false)
-      setSelectedPost(null)
-      resetForm()
-      alert('Cập nhật bài viết thành công')
-    },
-    onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi cập nhật bài viết')
-    }
-  })
+  // Show error toasts if queries fail
+  if (error) {
+    toast.error('Lỗi tải dữ liệu bài viết')
+  }
 
   // Delete post mutation
   const deletePostMutation = useMutation({
@@ -81,30 +43,12 @@ export default function Posts() {
     onSuccess: () => {
       refetch()
       setShowDeleteConfirm(null)
-      alert('Xóa bài viết thành công')
+      toast.success('Xóa bài viết thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi xóa bài viết')
+      toast.error(error.response?.data?.message || 'Lỗi xóa bài viết')
     }
   })
-
-  const handleAddPost = () => {
-    setSelectedPost(null)
-    resetForm()
-    setIsModalOpen(true)
-  }
-
-  const handleEditPost = (post: Post) => {
-    setSelectedPost(post)
-    setFormData({
-      title: post.title,
-      content: post.content,
-      thumbnail: post.thumbnail || '',
-      category: post.category._id,
-      status: post.status
-    })
-    setIsModalOpen(true)
-  }
 
   const handleDeletePost = (id: string) => {
     if (showDeleteConfirm === id) {
@@ -114,39 +58,8 @@ export default function Posts() {
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      content: '',
-      thumbnail: '',
-      category: '',
-      status: 'draft'
-    })
-  }
-
-  const handleSubmit = () => {
-    if (!formData.title || !formData.content || !formData.category) {
-      alert('Vui lòng điền đầy đủ thông tin')
-      return
-    }
-
-    const postData = {
-      title: formData.title,
-      content: formData.content,
-      thumbnail: formData.thumbnail,
-      category: formData.category,
-      status: formData.status
-    }
-
-    if (selectedPost) {
-      updatePostMutation.mutate(postData)
-    } else {
-      createPostMutation.mutate(postData)
-    }
-  }
-
-  const posts = postsData?.data.posts || []
-  const categories = categoriesData?.data || []
+  const posts = postsData?.data.data?.posts || []
+  const pagination = postsData?.data.data?.pagination
 
   const statusColors: Record<PostStatus, string> = {
     draft: 'bg-gray-50 text-gray-700 border-gray-200',
@@ -166,18 +79,20 @@ export default function Posts() {
       <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
         <div>
           <h1 className='text-4xl font-bold text-earth'>Quản lý bài viết</h1>
-          <p className='mt-2 text-gray-600'>Tổng cộng {posts.length} bài viết</p>
+          <p className='mt-2 text-gray-600'>
+            Tổng cộng <span className='font-bold text-brick'>{pagination?.total || posts.length}</span> bài viết
+          </p>
         </div>
         {canCreate && (
-          <button
-            onClick={handleAddPost}
-            className='rounded-lg bg-brick px-6 py-3 font-semibold text-white transition-all hover:bg-brick-dark hover:shadow-lg active:scale-95 flex items-center gap-2'
+          <Link
+            to={path.adminPostNew}
+            className='rounded-lg bg-brick px-6 py-3 font-semibold text-white transition-all hover:bg-brick-dark hover:shadow-lg active:scale-95 flex items-center gap-2 justify-center'
           >
             <svg className='h-5 w-5' fill='currentColor' viewBox='0 0 20 20'>
               <path fillRule='evenodd' d='M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z' clipRule='evenodd' />
             </svg>
             Viết bài mới
-          </button>
+          </Link>
         )}
       </div>
 
@@ -219,7 +134,7 @@ export default function Posts() {
       {/* Table */}
       <div className='overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100'>
         <div className='overflow-x-auto'>
-          {isLoading ? (
+          {isPending ? (
             <div className='flex items-center justify-center py-16'>
               <div className='text-center'>
                 <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick mb-4'></div>
@@ -263,7 +178,7 @@ export default function Posts() {
                           <div className='flex-1'>
                             <p className='font-semibold text-gray-900'>{post.title}</p>
                             <p className='text-xs text-gray-500 mt-1 line-clamp-2'>
-                              {post.content.substring(0, 100)}...
+                              {post.content.replace(/<[^>]*>/g, '').substring(0, 100)}...
                             </p>
                           </div>
                         </div>
@@ -282,17 +197,18 @@ export default function Posts() {
                       <td className='px-6 py-5 text-center'>
                         <div className='flex items-center justify-center gap-2'>
                           {canUpdate && (
-                            <button
-                              onClick={() => handleEditPost(post)}
+                            <Link
+                              to={path.adminPostEdit.replace(':id', post._id)}
                               className='rounded-lg bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors'
                             >
                               ✏️ Sửa
-                            </button>
+                            </Link>
                           )}
                           {canDelete && (
                             <button
                               onClick={() => handleDeletePost(post._id)}
                               className='rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 border border-red-200 hover:bg-red-100 transition-colors'
+                              disabled={deletePostMutation.isPending}
                             >
                               {showDeleteConfirm === post._id ? '✓ Xác nhận' : '🗑️ Xóa'}
                             </button>
@@ -317,114 +233,13 @@ export default function Posts() {
         </div>
       </div>
 
-      {/* Modal */}
-      {isModalOpen && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto'>
-          <div className='bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-8 space-y-6 my-8'>
-            <div>
-              <h2 className='text-2xl font-bold text-earth'>
-                {selectedPost ? 'Chỉnh sửa bài viết' : 'Viết bài mới'}
-              </h2>
-            </div>
-
-            <div className='space-y-6'>
-              {/* Title */}
-              <div>
-                <label className='block text-sm font-semibold text-earth mb-2'>Tiêu đề *</label>
-                <input
-                  type='text'
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className='w-full rounded-lg border border-gray-300 px-4 py-2 text-sm'
-                  placeholder='Nhập tiêu đề bài viết'
-                />
-              </div>
-
-              {/* Category */}
-              <div>
-                <label className='block text-sm font-semibold text-earth mb-2'>Danh mục *</label>
-                <select
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className='w-full rounded-lg border border-gray-300 px-4 py-2 text-sm'
-                >
-                  <option value=''>Chọn danh mục</option>
-                  {categories.map((cat) => (
-                    <option key={cat._id} value={cat._id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Thumbnail */}
-              <div>
-                <label className='block text-sm font-semibold text-earth mb-2'>Ảnh đại diện</label>
-                <input
-                  type='url'
-                  value={formData.thumbnail}
-                  onChange={(e) => setFormData({ ...formData, thumbnail: e.target.value })}
-                  className='w-full rounded-lg border border-gray-300 px-4 py-2 text-sm'
-                  placeholder='URL ảnh'
-                />
-                {formData.thumbnail && (
-                  <img
-                    src={formData.thumbnail}
-                    alt='Thumbnail'
-                    className='mt-3 h-32 w-full rounded-lg object-cover'
-                  />
-                )}
-              </div>
-
-              {/* Content */}
-              <div>
-                <label className='block text-sm font-semibold text-earth mb-2'>Nội dung *</label>
-                <textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className='w-full rounded-lg border border-gray-300 px-4 py-2 text-sm font-mono'
-                  placeholder='Viết nội dung bài viết...'
-                  rows={8}
-                />
-              </div>
-
-              {/* Status */}
-              <div>
-                <label className='block text-sm font-semibold text-earth mb-2'>Trạng thái</label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as PostStatus })}
-                  className='w-full rounded-lg border border-gray-300 px-4 py-2 text-sm'
-                >
-                  <option value='draft'>Nháp</option>
-                  <option value='published'>Xuất bản</option>
-                  <option value='archived'>Lưu trữ</option>
-                </select>
-              </div>
-            </div>
-
-            <div className='flex gap-3'>
-              <button
-                onClick={() => {
-                  setIsModalOpen(false)
-                  setSelectedPost(null)
-                  resetForm()
-                }}
-                className='flex-1 rounded-lg border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50'
-              >
-                Hủy
-              </button>
-              <Button
-                onClick={handleSubmit}
-                className='flex-1 bg-brick text-white hover:bg-brick-dark rounded-lg font-semibold py-2 transition-colors'
-                isLoading={createPostMutation.isPending || updatePostMutation.isPending}
-                disabled={createPostMutation.isPending || updatePostMutation.isPending}
-              >
-                {selectedPost ? 'Cập nhật' : 'Xuất bản'}
-              </Button>
-            </div>
-          </div>
-        </div>
+      {/* Pagination */}
+      {pagination && pagination.total !== undefined && (
+        <AdminPagination
+          pagination={pagination}
+          onPageChange={setPage}
+          showInfo={true}
+        />
       )}
     </div>
   )

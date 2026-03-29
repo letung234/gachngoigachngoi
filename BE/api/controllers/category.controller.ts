@@ -19,14 +19,67 @@ const addCategory = async (req: Request, res: Response) => {
 }
 
 const getCategories = async (req: Request, res: Response) => {
-  const { exclude } = req.query
-  let condition = exclude ? { _id: { $ne: exclude } } : {}
-  const categories = await CategoryModel.find(condition)
-    .select({ __v: 0 })
-    .lean()
+  let {
+    page = 1,
+    limit = 10,
+    exclude,
+    sort_by = 'createdAt',
+    order = 'desc',
+    search,
+  } = req.query as {
+    [key: string]: string | number
+  }
+
+  page = Number(page)
+  limit = Number(limit)
+
+  // Build search conditions
+  let condition: any = {}
+  if (exclude) {
+    condition._id = { $ne: exclude }
+  }
+  if (search) {
+    condition.name = {
+      $regex: search,
+      $options: 'i',
+    }
+  }
+
+  // Validate sort_by and order
+  const validSortFields = ['createdAt', 'name', 'order']
+  const validOrders = ['asc', 'desc']
+
+  if (!validSortFields.includes(sort_by as string)) {
+    sort_by = 'createdAt'
+  }
+  if (!validOrders.includes(order as string)) {
+    order = 'desc'
+  }
+
+  // Execute parallel queries for data and count
+  let [categories, totalCategories]: [categories: any, totalCategories: any] =
+    await Promise.all([
+      CategoryModel.find(condition)
+        .sort({ [sort_by]: order === 'desc' ? -1 : 1 })
+        .skip(page * limit - limit)
+        .limit(limit)
+        .select({ __v: 0 })
+        .lean(),
+      CategoryModel.find(condition).countDocuments().lean(),
+    ])
+
+  const page_size = Math.ceil(totalCategories / limit) || 1
   const response = {
     message: 'Lấy categories thành công',
-    data: categories,
+    data: {
+      categories,
+      pagination: {
+        page,
+        limit,
+        page_size,
+        total: totalCategories,
+      },
+    },
   }
   return responseSuccess(res, response)
 }

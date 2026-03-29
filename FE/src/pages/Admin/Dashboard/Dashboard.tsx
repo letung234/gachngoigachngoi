@@ -2,42 +2,106 @@ import { useQuery } from '@tanstack/react-query'
 import StatCard from '../components/StatCard'
 import ChartCard from '../components/ChartCard'
 import adminApi from 'src/apis/admin.api'
-import { purchasesStatus } from 'src/constants/purchase'
+import { ORDER_STATUS } from 'src/constants/order'
 
-const statusMap: Record<number, { label: string; color: string }> = {
-  [-1]: { label: 'Đã hủy', color: 'bg-red-100 text-red-800' },
-  [purchasesStatus.waitForConfirmation]: { label: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-800' },
-  [purchasesStatus.waitForGetting]: { label: 'Đang xử lý', color: 'bg-blue-100 text-blue-800' },
-  [purchasesStatus.inProgress]: { label: 'Đang giao', color: 'bg-blue-100 text-blue-800' },
-  [purchasesStatus.delivered]: { label: 'Đã giao', color: 'bg-green-100 text-green-800' },
-  [purchasesStatus.cancelled]: { label: 'Đã hủy', color: 'bg-gray-100 text-gray-800' }
+const statusMap: Record<string, { label: string; color: string }> = {
+  [ORDER_STATUS.PENDING]: { label: 'Chờ xử lý', color: 'bg-yellow-100 text-yellow-800' },
+  [ORDER_STATUS.CONFIRMED]: { label: 'Đã xác nhận', color: 'bg-blue-100 text-blue-800' },
+  [ORDER_STATUS.PROCESSING]: { label: 'Đang xử lý', color: 'bg-blue-100 text-blue-800' },
+  [ORDER_STATUS.COMPLETED]: { label: 'Hoàn thành', color: 'bg-green-100 text-green-800' },
+  [ORDER_STATUS.CANCELLED]: { label: 'Đã hủy', color: 'bg-red-100 text-red-800' }
 }
 
 export default function AdminDashboard() {
   // Fetch overview stats
-  const { data: overviewData } = useQuery({
+  const {
+    data: overviewData,
+    isLoading: isOverviewLoading,
+    isError: isOverviewError,
+    error: overviewError
+  } = useQuery({
     queryKey: ['admin-overview'],
-    queryFn: () => adminApi.getOverviewStats()
+    queryFn: () => adminApi.getOverviewStats(),
+    retry: 2
   })
 
   // Fetch revenue stats
-  const { data: revenueData } = useQuery({
+  const {
+    data: revenueData,
+    isLoading: isRevenueLoading,
+    isError: isRevenueError
+  } = useQuery({
     queryKey: ['admin-revenue'],
-    queryFn: () => adminApi.getRevenueStats()
+    queryFn: () => adminApi.getRevenueStats(),
+    retry: 2
   })
 
   // Fetch latest orders
-  const { data: latestOrdersData } = useQuery({
+  const {
+    data: latestOrdersData,
+    isLoading: isOrdersLoading,
+    isError: isOrdersError
+  } = useQuery({
     queryKey: ['admin-latest-orders'],
-    queryFn: () => adminApi.getLatestOrders(5)
+    queryFn: () => adminApi.getLatestOrders(5),
+    retry: 2
+  })
+
+  // Fetch category stats
+  const {
+    data: categoryStatsData,
+    isLoading: isCategoryLoading,
+    isError: isCategoryError
+  } = useQuery({
+    queryKey: ['admin-category-stats'],
+    queryFn: () => adminApi.getCategoryStats(),
+    retry: 2
   })
 
   const overview = overviewData?.data.data
-  const revenueStats = revenueData?.data.data.monthly || []
+  const revenueStats = revenueData?.data.data?.monthly || []
   const latestOrders = latestOrdersData?.data.data || []
+  const categoryStats = categoryStatsData?.data.data || []
 
   // Calculate max revenue for chart scaling
   const maxRevenue = Math.max(...revenueStats.map((item) => item.revenue), 1)
+
+  // Global loading state
+  const isLoading = isOverviewLoading || isRevenueLoading || isOrdersLoading || isCategoryLoading
+
+  // Show loading spinner for initial load
+  if (isLoading && !overviewData && !revenueData && !latestOrdersData && !categoryStatsData) {
+    return (
+      <div className='flex min-h-[50vh] items-center justify-center'>
+        <div className='text-center'>
+          <div className='inline-block animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-brick-dark mb-4'></div>
+          <h2 className='text-xl font-semibold text-gray-700'>Đang tải dashboard...</h2>
+          <p className='text-gray-500 mt-2'>Vui lòng đợi trong giây lát</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error if critical data fails
+  if (isOverviewError) {
+    return (
+      <div className='flex min-h-[50vh] items-center justify-center'>
+        <div className='text-center bg-red-50 rounded-xl p-8 max-w-md'>
+          <div className='text-red-500 text-4xl mb-4'>⚠️</div>
+          <h2 className='text-xl font-semibold text-red-700 mb-2'>Không thể tải dữ liệu dashboard</h2>
+          <p className='text-red-600 mb-4'>
+            {overviewError?.message || 'Đã xảy ra lỗi khi tải thông tin tổng quan. Vui lòng thử lại sau.'}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors'
+          >
+            Tải lại trang
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className='space-y-8'>
@@ -112,27 +176,37 @@ export default function AdminDashboard() {
 
         <ChartCard title='Danh mục sản phẩm' description='Phân bố bán hàng theo danh mục'>
           <div className='flex h-72 flex-col items-center justify-center gap-8'>
-            <div className='w-full space-y-6'>
-              {[
-                { label: 'Gạch ốp tường', value: 45, color: 'from-brick to-brick/70' },
-                { label: 'Gạch lát sàn', value: 30, color: 'from-gold to-gold/70' },
-                { label: 'Gạch trang trí', value: 15, color: 'from-purple-600 to-purple-600/70' },
-                { label: 'Khác', value: 10, color: 'from-gray-400 to-gray-400/70' }
-              ].map((item, i) => (
-                <div key={i} className='group'>
-                  <div className='mb-2 flex justify-between items-center'>
-                    <span className='text-sm font-medium text-earth'>{item.label}</span>
-                    <span className='text-sm font-bold text-brick group-hover:text-brick-dark transition-colors'>{item.value}%</span>
+            {isCategoryLoading ? (
+              <div className='flex items-center justify-center'>
+                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick'></div>
+                <span className='ml-2 text-sm text-gray-500'>Đang tải thống kê...</span>
+              </div>
+            ) : categoryStats.length > 0 ? (
+              <div className='w-full space-y-6'>
+                {categoryStats.map((item, i) => (
+                  <div key={i} className='group'>
+                    <div className='mb-2 flex justify-between items-center'>
+                      <span className='text-sm font-medium text-earth'>{item.label}</span>
+                      <div className='flex items-center gap-2'>
+                        <span className='text-sm font-bold text-brick group-hover:text-brick-dark transition-colors'>{item.value}%</span>
+                        <span className='text-xs text-gray-500'>({item.revenue.toLocaleString()}₫)</span>
+                      </div>
+                    </div>
+                    <div className='h-3 w-full overflow-hidden rounded-full bg-gray-200 shadow-sm'>
+                      <div
+                        className={`h-full bg-gradient-to-r ${item.color} transition-all duration-500 hover:shadow-md`}
+                        style={{ width: `${item.value}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className='h-3 w-full overflow-hidden rounded-full bg-gray-200 shadow-sm'>
-                    <div 
-                      className={`h-full bg-gradient-to-r ${item.color} transition-all duration-500 hover:shadow-md`}
-                      style={{ width: `${item.value}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className='text-center text-gray-500'>
+                <span className='text-2xl'>📊</span>
+                <p className='mt-2 text-sm'>Chưa có dữ liệu thống kê</p>
+              </div>
+            )}
           </div>
         </ChartCard>
       </div>
@@ -163,7 +237,7 @@ export default function AdminDashboard() {
             <tbody className='divide-y divide-gray-200'>
               {latestOrders.length > 0 ? (
                 latestOrders.map((order, index) => {
-                  const status = statusMap[order.status] || statusMap[1]
+                  const status = statusMap[order.status] || statusMap[ORDER_STATUS.PENDING]
                   return (
                     <tr key={order._id} className='hover:bg-gray-50 transition-colors duration-200'>
                       <td className='px-6 py-5 font-semibold text-brick'>

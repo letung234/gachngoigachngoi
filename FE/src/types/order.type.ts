@@ -32,6 +32,7 @@ export interface OrderList {
     page: number
     limit: number
     page_size: number
+    total?: number
   }
 }
 

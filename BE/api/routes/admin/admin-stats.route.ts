@@ -54,4 +54,12 @@ adminStatsRouter.get(
   wrapAsync(statsController.getLatestOrders)
 )
 
+// Get category statistics
+adminStatsRouter.get(
+  '/category-stats',
+  authMiddleware.verifyAccessToken,
+  requirePermission(Permission.STATS_VIEW),
+  wrapAsync(statsController.getCategoryStats)
+)
+
 export default adminStatsRouter

@@ -149,10 +149,10 @@ export default function Register() {
           <div className='pt-2'>
             <Button
               className='w-full flex items-center justify-center bg-brick hover:bg-brick-dark px-4 py-3 text-base font-semibold text-white rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95'
-              isLoading={registerAccountMutation.isLoading}
-              disabled={registerAccountMutation.isLoading}
+              isLoading={registerAccountMutation.isPending}
+              disabled={registerAccountMutation.isPending}
             >
-              {registerAccountMutation.isLoading ? 'Đang đăng ký...' : 'Đăng ký'}
+              {registerAccountMutation.isPending ? 'Đang đăng ký...' : 'Đăng ký'}
             </Button>
           </div>
 

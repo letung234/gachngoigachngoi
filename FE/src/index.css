@@ -35,6 +35,27 @@ body {
   background: #8A2D21;
 }
 
+/* Admin Layout Fixes */
+.admin-layout {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.admin-header {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.admin-content {
+  height: calc(100vh - 73px); /* Adjust based on header height */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 /* Animations */
 @keyframes fadeInUp {
   from {
@@ -106,4 +127,47 @@ body {
 
 .ql-editor {
   min-height: 300px !important;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Button hover effects */
+.btn-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Card hover effects */
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }

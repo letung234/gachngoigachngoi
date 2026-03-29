@@ -11,6 +11,7 @@ const UserSchema = new Schema(
     phone: { type: String, maxlength: 20 },
     roles: { type: [String], required: true, default: [ROLE.USER] },
     avatar: { type: String, maxlength: 1000 },
+    status: { type: String, enum: ['active', 'disabled'], default: 'active' },
   },
   {
     timestamps: true,

@@ -12,6 +12,8 @@ const Home = lazy(() => import('./pages/Home'))
 const Products = lazy(() => import('./pages/Products'))
 const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Projects = lazy(() => import('./pages/Projects'))
+const Blog = lazy(() => import('./pages/Blog'))
+const BlogDetail = lazy(() => import('./pages/BlogDetail'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Login = lazy(() => import('./pages/Login'))
@@ -29,6 +31,11 @@ const AdminOrders = lazy(() => import('./pages/Admin/Orders'))
 const AdminCustomers = lazy(() => import('./pages/Admin/Customers'))
 const AdminAnalytics = lazy(() => import('./pages/Admin/Analytics'))
 const AdminSettings = lazy(() => import('./pages/Admin/Settings'))
+const AdminCategories = lazy(() => import('./pages/Admin/Categories'))
+const AdminUsers = lazy(() => import('./pages/Admin/Users'))
+const AdminPosts = lazy(() => import('./pages/Admin/Posts'))
+const AdminPostForm = lazy(() => import('./pages/Admin/PostForm'))
+const AdminOrderForm = lazy(() => import('./pages/Admin/OrderForm'))
 const AdminLayout = lazy(() => import('./layouts/AdminLayout'))
 
 // Loading component
@@ -106,6 +113,30 @@ export default function useRouteElements() {
           element: (
             <Suspense fallback={<PageLoader />}>
               <About />
+            </Suspense>
+          )
+        },
+        {
+          path: path.blog,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Blog />
+            </Suspense>
+          )
+        },
+        {
+          path: path.blogPost,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <BlogDetail />
+            </Suspense>
+          )
+        },
+        {
+          path: path.projectDetail,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <BlogDetail />
             </Suspense>
           )
         },
@@ -243,10 +274,66 @@ export default function useRouteElements() {
           )
         },
         {
+          path: path.adminOrderNew,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminOrderForm />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminOrderEdit,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminOrderForm />
+            </Suspense>
+          )
+        },
+        {
           path: path.adminCustomers,
           element: (
             <Suspense fallback={<PageLoader />}>
               <AdminCustomers />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminCategories,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminCategories />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminUsers,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminUsers />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminPosts,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminPosts />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminPostNew,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminPostForm />
+            </Suspense>
+          )
+        },
+        {
+          path: path.adminPostEdit,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <AdminPostForm />
             </Suspense>
           )
         },

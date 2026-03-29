@@ -12,7 +12,7 @@ adminUserRouter.get(
   '',
   authMiddleware.verifyAccessToken,
   requirePermission(Permission.USER_READ),
-  userController.getUsers
+  wrapAsync(userController.getUsers)
 )
 adminUserRouter.post(
   '',
@@ -50,4 +50,25 @@ adminUserRouter.delete(
   helpersMiddleware.idValidator,
   wrapAsync(userController.deleteUser)
 )
+
+// PUT /admin/users/:user_id/roles - Update user roles
+adminUserRouter.put(
+  '/:user_id/roles',
+  authMiddleware.verifyAccessToken,
+  requirePermission(Permission.USER_UPDATE),
+  helpersMiddleware.idRule('user_id'),
+  helpersMiddleware.idValidator,
+  wrapAsync(userController.updateUserRole)
+)
+
+// PUT /admin/users/:user_id/status - Toggle user status
+adminUserRouter.put(
+  '/:user_id/status',
+  authMiddleware.verifyAccessToken,
+  requirePermission(Permission.USER_UPDATE),
+  helpersMiddleware.idRule('user_id'),
+  helpersMiddleware.idValidator,
+  wrapAsync(userController.toggleUserStatus)
+)
+
 export default adminUserRouter

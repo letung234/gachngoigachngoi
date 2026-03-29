@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import adminApi from 'src/apis/admin.api'
 import { User } from 'src/types/user.type'
 import usePermission from 'src/hooks/usePermission'
 import { Permission } from 'src/constants/permission'
 import Button from 'src/components/Button'
+import { AdminPagination } from 'src/components/Pagination'
+import { toast } from 'react-toastify'
+import { AppContext } from 'src/contexts/app.context'
 
 export default function Users() {
   const [page, setPage] = useState(1)
@@ -20,20 +23,31 @@ export default function Users() {
   })
 
   const { can } = usePermission()
+  const { profile } = useContext(AppContext)
   const canCreate = can(Permission.USER_CREATE)
   const canUpdate = can(Permission.USER_UPDATE)
   const canDelete = can(Permission.USER_DELETE)
 
+  const limit = 10
+
   // Fetch users
-  const { data: usersData, isLoading, refetch } = useQuery({
+  const { data: usersData, isPending, error, refetch } = useQuery({
     queryKey: ['admin-users', page, searchTerm],
     queryFn: () =>
       adminApi.getUsers({
         page,
-        limit: 10,
+        limit,
         search: searchTerm || undefined
       })
   })
+
+  // Show error toast if query fails
+  if (error) {
+    toast.error('Lỗi tải dữ liệu người dùng')
+  }
+
+  const users = usersData?.data.data?.users || []
+  const pagination = usersData?.data.data?.pagination
 
   // Create user mutation
   const createUserMutation = useMutation({
@@ -42,10 +56,10 @@ export default function Users() {
       refetch()
       setIsModalOpen(false)
       resetForm()
-      alert('Tạo người dùng thành công')
+      toast.success('Tạo người dùng thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi tạo người dùng')
+      toast.error(error.response?.data?.message || 'Lỗi tạo người dùng')
     }
   })
 
@@ -57,10 +71,10 @@ export default function Users() {
       setIsModalOpen(false)
       setSelectedUser(null)
       resetForm()
-      alert('Cập nhật người dùng thành công')
+      toast.success('Cập nhật người dùng thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi cập nhật người dùng')
+      toast.error(error.response?.data?.message || 'Lỗi cập nhật người dùng')
     }
   })
 
@@ -70,10 +84,10 @@ export default function Users() {
     onSuccess: () => {
       refetch()
       setShowDeleteConfirm(null)
-      alert('Xóa người dùng thành công')
+      toast.success('Xóa người dùng thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi xóa người dùng')
+      toast.error(error.response?.data?.message || 'Lỗi xóa người dùng')
     }
   })
 
@@ -83,10 +97,10 @@ export default function Users() {
       adminApi.updateUserRole(id, roles),
     onSuccess: () => {
       refetch()
-      alert('Cập nhật quyền thành công')
+      toast.success('Cập nhật quyền thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi cập nhật quyền')
+      toast.error(error.response?.data?.message || 'Lỗi cập nhật quyền')
     }
   })
 
@@ -96,10 +110,10 @@ export default function Users() {
       adminApi.toggleUserStatus(id, status),
     onSuccess: () => {
       refetch()
-      alert('Cập nhật trạng thái thành công')
+      toast.success('Cập nhật trạng thái thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi cập nhật trạng thái')
+      toast.error(error.response?.data?.message || 'Lỗi cập nhật trạng thái')
     }
   })
 
@@ -139,7 +153,7 @@ export default function Users() {
 
   const handleSubmit = () => {
     if (!formData.email || !formData.name) {
-      alert('Vui lòng điền đầy đủ thông tin')
+      toast.error('Vui lòng điền đầy đủ thông tin')
       return
     }
 
@@ -151,14 +165,12 @@ export default function Users() {
       })
     } else {
       if (!formData.password || formData.password.length < 6) {
-        alert('Mật khẩu phải tối thiểu 6 ký tự')
+        toast.error('Mật khẩu phải tối thiểu 6 ký tự')
         return
       }
       createUserMutation.mutate(formData)
     }
   }
-
-  const users = usersData?.data.users || []
 
   return (
     <div className='space-y-8'>
@@ -166,7 +178,9 @@ export default function Users() {
       <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
         <div>
           <h1 className='text-4xl font-bold text-earth'>Quản lý người dùng</h1>
-          <p className='mt-2 text-gray-600'>Tổng cộng {users.length} người dùng</p>
+          <p className='mt-2 text-gray-600'>
+            Tổng cộng <span className='font-bold text-brick'>{pagination?.total || users.length}</span> người dùng
+          </p>
         </div>
         {canCreate && (
           <button
@@ -201,7 +215,7 @@ export default function Users() {
       {/* Table */}
       <div className='overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100'>
         <div className='overflow-x-auto'>
-          {isLoading ? (
+          {isPending ? (
             <div className='flex items-center justify-center py-16'>
               <div className='text-center'>
                 <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick mb-4'></div>
@@ -239,13 +253,19 @@ export default function Users() {
                       </td>
                       <td className='px-6 py-5'>
                         <button
-                          onClick={() =>
+                          onClick={() => {
+                            if (user._id === profile?._id && user.status === 'active') {
+                              toast.error('Bạn không thể khóa tài khoản của chính mình')
+                              return
+                            }
                             toggleStatusMutation.mutate({
                               id: user._id,
                               status: user.status === 'active' ? 'disabled' : 'active'
                             })
-                          }
-                          className={`inline-flex rounded-full px-4 py-2 text-xs font-bold border transition-colors ${
+                          }}
+                          disabled={toggleStatusMutation.isPending || (user._id === profile?._id && user.status === 'active')}
+                          title={user._id === profile?._id && user.status === 'active' ? 'Không thể khóa chính mình' : ''}
+                          className={`inline-flex rounded-full px-4 py-2 text-xs font-bold border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                             user.status === 'active'
                               ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100'
                               : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
@@ -267,7 +287,8 @@ export default function Users() {
                           {canDelete && (
                             <button
                               onClick={() => handleDeleteUser(user._id)}
-                              className='rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 border border-red-200 hover:bg-red-100 transition-colors'
+                              className='rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 border border-red-200 hover:bg-red-100 transition-colors disabled:opacity-50'
+                              disabled={deleteUserMutation.isPending}
                             >
                               {showDeleteConfirm === user._id ? '✓ Xác nhận' : '🗑️ Xóa'}
                             </button>
@@ -291,6 +312,15 @@ export default function Users() {
           )}
         </div>
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.total !== undefined && (
+        <AdminPagination
+          pagination={pagination}
+          onPageChange={setPage}
+          showInfo={true}
+        />
+      )}
 
       {/* Modal */}
       {isModalOpen && (

@@ -93,7 +93,7 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
     queryFn: () => categoryApi.getCategories()
   })
 
-  const categories = categoriesData?.data.data || []
+  const categories = categoriesData?.data.data.categories || []
 
   // Set form data when editing
   useEffect(() => {
@@ -138,6 +138,23 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
     setAdditionalImageFiles([])
     setActiveTab('basic')
   }, [product, isOpen])
+
+  // Cleanup object URLs to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (mainImagePreview && mainImagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(mainImagePreview)
+      }
+      additionalImagePreviews.forEach(preview => {
+        if (preview.startsWith('blob:')) {
+          URL.revokeObjectURL(preview)
+        }
+      })
+      if (reviewAvatarPreview && reviewAvatarPreview.startsWith('blob:')) {
+        URL.revokeObjectURL(reviewAvatarPreview)
+      }
+    }
+  }, [])
 
   // Upload image mutation
   const uploadImageMutation = useMutation({
@@ -255,9 +272,45 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
     }))
   }
 
-  // Handle submit
+  // Handle submit with improved validation
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Form validation
+    if (!formData.name || formData.name.trim().length < 2) {
+      toast.error('Tên sản phẩm phải có ít nhất 2 ký tự')
+      return
+    }
+
+    if (!formData.category) {
+      toast.error('Vui lòng chọn danh mục')
+      return
+    }
+
+    if (formData.price < 0) {
+      toast.error('Giá sản phẩm không được âm')
+      return
+    }
+
+    if (formData.price_before_discount < 0) {
+      toast.error('Giá trước giảm không được âm')
+      return
+    }
+
+    if (formData.price_before_discount > 0 && formData.price > formData.price_before_discount) {
+      toast.error('Giá bán không được lớn hơn giá trước giảm')
+      return
+    }
+
+    if (formData.quantity < 0) {
+      toast.error('Số lượng không được âm')
+      return
+    }
+
+    if (!formData.image && !mainImageFile) {
+      toast.error('Vui lòng chọn ảnh chính cho sản phẩm')
+      return
+    }
 
     try {
       setUploading(true)
@@ -278,11 +331,13 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
 
       setUploading(false)
 
-      // Save product
+      // Save product with sanitized data
       await saveProductMutation.mutateAsync({
         id: product?._id,
         body: {
           ...formData,
+          name: formData.name.trim(),
+          description: formData.description.trim(),
           image: imageUrl,
           images: allImages
         }
@@ -663,16 +718,16 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
               type='button'
               onClick={onClose}
               className='rounded-lg bg-cement-light px-6 py-2 font-medium text-earth transition-colors hover:bg-cement'
-              disabled={uploading || saveProductMutation.isLoading}
+              disabled={uploading || saveProductMutation.isPending}
             >
               Hủy
             </button>
             <button
               type='submit'
               className='rounded-lg bg-brick px-6 py-2 font-medium text-white transition-colors hover:bg-brick-dark disabled:opacity-50'
-              disabled={uploading || saveProductMutation.isLoading}
+              disabled={uploading || saveProductMutation.isPending}
             >
-              {uploading ? 'Đang upload...' : saveProductMutation.isLoading ? 'Đang lưu...' : 'Lưu sản phẩm'}
+              {uploading ? 'Đang upload...' : saveProductMutation.isPending ? 'Đang lưu...' : 'Lưu sản phẩm'}
             </button>
           </div>
         </form>

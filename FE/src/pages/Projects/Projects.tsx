@@ -1,71 +1,21 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import blogApi from 'src/apis/blog.api'
+import categoryApi from 'src/apis/category.api'
 
-const projects = [
-  {
-    id: 1,
-    title: 'Nhà cổ Đường Lâm',
-    category: 'Nhà cổ',
-    location: 'Sơn Tây, Hà Nội',
-    year: '2023',
-    description: 'Phục dựng mái ngói cho ngôi nhà cổ 200 năm tuổi tại làng cổ Đường Lâm, sử dụng ngói âm dương truyền thống.',
-    products: ['Ngói âm dương đỏ', 'Gạch xây cổ'],
-    image: '/images/projects/nha-co.jpg'
-  },
-  {
-    id: 2,
-    title: 'Resort An Lâm Retreats',
-    category: 'Resort',
-    location: 'Ninh Bình',
-    year: '2022',
-    description: 'Cung cấp toàn bộ vật liệu mái ngói cho khu nghỉ dưỡng cao cấp, kết hợp kiến trúc hiện đại với vật liệu truyền thống.',
-    products: ['Ngói mũi hài men', 'Gạch lát sân'],
-    image: '/images/projects/resort.jpg'
-  },
-  {
-    id: 3,
-    title: 'Chùa Bái Đính',
-    category: 'Chùa',
-    location: 'Ninh Bình',
-    year: '2021',
-    description: 'Tham gia dự án mở rộng quần thể chùa Bái Đính, cung cấp ngói mũi hài cao cấp cho các công trình phụ.',
-    products: ['Ngói mũi hài cổ', 'Gạch trang trí hoa sen'],
-    image: '/images/projects/chua.jpg'
-  },
-  {
-    id: 4,
-    title: 'Biệt thự Vinhomes Riverside',
-    category: 'Biệt thự',
-    location: 'Long Biên, Hà Nội',
-    year: '2023',
-    description: 'Thiết kế và cung cấp giải pháp mái ngói cho căn biệt thự phong cách Á Đông trong khu đô thị Vinhomes.',
-    products: ['Ngói âm dương nâu', 'Gạch trang trí'],
-    image: '/images/projects/biet-thu.jpg'
-  },
-  {
-    id: 5,
-    title: 'Nhà hàng Quán Ăn Ngon',
-    category: 'Nhà hàng',
-    location: 'Phan Bội Châu, Hà Nội',
-    year: '2022',
-    description: 'Cải tạo và phục dựng không gian nhà hàng với phong cách làng quê Việt Nam, sử dụng gạch ngói truyền thống.',
-    products: ['Ngói âm dương', 'Gạch lát sân vuông'],
-    image: '/images/projects/nha-co.jpg'
-  },
-  {
-    id: 6,
-    title: 'Đền thờ Vua Đinh',
-    category: 'Di tích',
-    location: 'Ninh Bình',
-    year: '2021',
-    description: 'Tham gia dự án trùng tu đền thờ Vua Đinh, cung cấp ngói mũi hài theo đúng mẫu cổ.',
-    products: ['Ngói mũi hài cổ', 'Gạch xây cổ vàng'],
-    image: '/images/projects/chua.jpg'
-  }
-]
+// Helper function to extract plain text from HTML content
+const getExcerpt = (htmlContent: string, maxLength = 200) => {
+  const textContent = htmlContent.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ')
+  return textContent.length > maxLength ? textContent.substring(0, maxLength) + '...' : textContent
+}
 
-const categories = ['Tất cả', 'Nhà cổ', 'Resort', 'Chùa', 'Biệt thự', 'Nhà hàng', 'Di tích']
+// Helper function to format date to year
+const getYear = (dateString: string) => {
+  return new Date(dateString).getFullYear().toString()
+}
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -81,9 +31,54 @@ const staggerContainer = {
 }
 
 export default function Projects() {
+  const [selectedCategory, setSelectedCategory] = useState('Tất cả')
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  // Fetch project posts from API
+  const { data: postsData, isPending, error } = useQuery({
+    queryKey: ['project-posts'],
+    queryFn: () => blogApi.getPosts({
+      limit: 50,
+      sort_by: 'createdAt',
+      order: 'desc'
+    }),
+    staleTime: 5 * 60 * 1000
+  })
+
+  // Fetch categories for filtering
+  const { data: categoriesData } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryApi.getCategories(),
+    staleTime: 10 * 60 * 1000
+  })
+
+  // Transform posts to project format
+  const projects = (postsData?.data.data.posts || []).map((post) => ({
+    id: post._id,
+    title: post.title,
+    category: post.category?.name || 'Dự án',
+    location: 'Việt Nam',
+    year: getYear(post.createdAt),
+    description: getExcerpt(post.content),
+    products: [],
+    image: post.thumbnail || '/images/projects/nha-co.jpg',
+    slug: post.slug
+  }))
+
+  // Get categories from API
+  let categories = ['Tất cả']
+  if (categoriesData?.data.data && Array.isArray(categoriesData.data.data.categories)) {
+    const dynamicCategories = categoriesData.data.data.categories.map((cat: any) => cat.name)
+    categories = ['Tất cả', ...dynamicCategories]
+  }
+
+  // Filter projects by selected category
+  const filteredProjects = selectedCategory === 'Tất cả'
+    ? projects
+    : projects.filter(project => project.category === selectedCategory)
 
   return (
     <>
@@ -122,8 +117,9 @@ export default function Projects() {
               {categories.map((cat) => (
                 <button
                   key={cat}
+                  onClick={() => setSelectedCategory(cat)}
                   className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${
-                    cat === 'Tất cả' ? 'bg-brick text-cream-light' : 'bg-cream text-earth hover:bg-cream-dark'
+                    cat === selectedCategory ? 'bg-brick text-cream-light' : 'bg-cream text-earth hover:bg-cream-dark'
                   }`}
                 >
                   {cat}
@@ -132,69 +128,106 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Projects */}
-          <motion.div
-            variants={staggerContainer}
-            initial='hidden'
-            animate='visible'
-            className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'
-          >
-            {projects.map((project) => (
-              <motion.article
-                key={project.id}
-                variants={fadeInUp}
-                className='group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover-lift'
-              >
-                {/* Image */}
-                <div className='img-zoom relative aspect-[4/3]'>
-                  <img src={project.image} alt={project.title} className='h-full w-full object-cover' />
-                  <div className='absolute inset-0 bg-gradient-to-t from-earth-dark/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
-                  <span className='absolute left-4 top-4 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-earth-dark'>
-                    {project.category}
-                  </span>
-                </div>
+          {/* Loading State */}
+          {isPending && (
+            <div className='flex items-center justify-center py-16'>
+              <div className='text-center'>
+                <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick mb-4'></div>
+                <div className='text-gray-600 font-medium'>Đang tải dự án...</div>
+              </div>
+            </div>
+          )}
 
-                {/* Content */}
-                <div className='p-6'>
-                  <div className='mb-3 flex items-center gap-4 text-sm text-earth/60'>
-                    <span className='flex items-center gap-1'>
-                      <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
-                        />
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
-                        />
+          {/* Error State */}
+          {error && (
+            <div className='mb-8 flex items-center justify-center py-8'>
+              <div className='text-center'>
+                <span className='text-2xl'>⚠️</span>
+                <div className='text-gray-600 font-medium mt-2'>Không thể tải dữ liệu dự án. Vui lòng thử lại sau.</div>
+              </div>
+            </div>
+          )}
+
+          {/* Projects */}
+          {!isPending && !error && (
+            <>
+              {filteredProjects.length > 0 ? (
+                <motion.div
+                  variants={staggerContainer}
+                  initial='hidden'
+                  animate='visible'
+                  className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'
+                >
+                  {filteredProjects.map((project) => (
+                <motion.article
+                  key={project.id}
+                  variants={fadeInUp}
+                  className='group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover-lift'
+                >
+                  <Link to={`/du-an/${project.slug}`}>
+                    {/* Image */}
+                    <div className='img-zoom relative aspect-[4/3]'>
+                      <img src={project.image} alt={project.title} className='h-full w-full object-cover' />
+                      <div className='absolute inset-0 bg-gradient-to-t from-earth-dark/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
+                      <span className='absolute left-4 top-4 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-earth-dark'>
+                        {project.category}
+                      </span>
+                    </div>
+
+                    {/* Content */}
+                    <div className='p-6'>
+                      <div className='mb-3 flex items-center gap-4 text-sm text-earth/60'>
+                        <span className='flex items-center gap-1'>
+                          <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={2}
+                              d='M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z'
+                            />
+                            <path
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              strokeWidth={2}
+                              d='M15 11a3 3 0 11-6 0 3 3 0 016 0z'
+                            />
                       </svg>
                       {project.location}
                     </span>
                     <span>{project.year}</span>
                   </div>
 
-                  <h3 className='mb-3 font-serif text-xl font-semibold text-earth-dark group-hover:text-brick'>
-                    {project.title}
-                  </h3>
+                      <h3 className='mb-3 font-serif text-xl font-semibold text-earth-dark group-hover:text-brick'>
+                        {project.title}
+                      </h3>
 
-                  <p className='mb-4 text-sm text-earth/70 line-clamp-3'>{project.description}</p>
+                      <p className='mb-4 text-sm text-earth/70 line-clamp-3'>{project.description}</p>
 
-                  {/* Products Used */}
-                  <div className='flex flex-wrap gap-2'>
-                    {project.products.map((product, index) => (
-                      <span key={index} className='rounded-full bg-cream px-3 py-1 text-xs text-earth/80'>
-                        {product}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </motion.div>
+                      {/* Products Used */}
+                      {project.products && project.products.length > 0 && (
+                        <div className='flex flex-wrap gap-2'>
+                          {project.products.map((product, index) => (
+                            <span key={index} className='rounded-full bg-cream px-3 py-1 text-xs text-earth/80'>
+                              {product}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </motion.article>
+              ))}
+            </motion.div>
+          ) : (
+            <div className='flex items-center justify-center py-16'>
+              <div className='text-center'>
+                <span className='text-3xl'>📦</span>
+                <div className='text-gray-600 font-medium mt-2'>Chưa có dự án nào</div>
+              </div>
+            </div>
+          )}
+        </>
+          )}
         </div>
       </section>
 

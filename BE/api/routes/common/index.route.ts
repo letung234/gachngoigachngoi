@@ -3,6 +3,7 @@ import commonAuthRouter from './common-auth.route'
 import commonProductRouter from './common-product.route'
 import commonCategoryRouter from './common-category.route'
 import commonConfigRouter from './common-config.route'
+import commonPostRouter from './common-post.route'
 
 const commonRoutes = {
   prefix: '/',
@@ -22,6 +23,10 @@ const commonRoutes = {
     {
       path: 'categories',
       route: commonCategoryRouter
+    },
+    {
+      path: 'posts',
+      route: commonPostRouter
     },
     {
       path: '',

@@ -54,12 +54,63 @@ const addUser = async (req: Request, res: Response) => {
 }
 
 const getUsers = async (req: Request, res: Response) => {
-  const usersDB = await UserModel.find({})
-    .select({ password: 0, __v: 0 })
-    .lean()
+  const {
+    page = 1,
+    limit = 10,
+    sort_by = 'createdAt',
+    order = 'desc',
+    search,
+    role,
+    status,
+  } = req.query
+
+  const _page = Number(page)
+  const _limit = Number(limit)
+
+  // Build filter condition
+  const condition: any = {}
+
+  // Search by name or email
+  if (search) {
+    condition.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+    ]
+  }
+
+  // Filter by role
+  if (role) {
+    condition.roles = role
+  }
+
+  // Filter by status
+  if (status) {
+    condition.status = status
+  }
+
+  const [users, totalUsers] = await Promise.all([
+    UserModel.find(condition)
+      .select({ password: 0, __v: 0 })
+      .sort({ [sort_by as string]: order === 'desc' ? -1 : 1 })
+      .skip((_page - 1) * _limit)
+      .limit(_limit)
+      .lean(),
+    UserModel.countDocuments(condition),
+  ])
+
+  const page_size = Math.ceil(totalUsers / _limit) || 1
+
   const response = {
     message: 'Lấy người dùng thành công',
-    data: usersDB,
+    data: {
+      users,
+      pagination: {
+        page: _page,
+        limit: _limit,
+        page_size,
+        total: totalUsers,
+      },
+    },
   }
   return responseSuccess(res, response)
 }
@@ -193,6 +244,66 @@ const uploadAvatar = async (req: Request, res: Response) => {
   return responseSuccess(res, response)
 }
 
+const updateUserRole = async (req: Request, res: Response) => {
+  const user_id = req.params.user_id
+  const { roles } = req.body
+
+  if (!roles || !Array.isArray(roles) || roles.length === 0) {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Vui lòng cung cấp quyền hợp lệ')
+  }
+
+  const userDB = await UserModel.findByIdAndUpdate(
+    user_id,
+    { roles },
+    { new: true }
+  )
+    .select({ password: 0, __v: 0 })
+    .lean()
+
+  if (userDB) {
+    const response = {
+      message: 'Cập nhật quyền thành công',
+      data: userDB,
+    }
+    return responseSuccess(res, response)
+  } else {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng')
+  }
+}
+
+const toggleUserStatus = async (req: Request, res: Response) => {
+  const user_id = req.params.user_id
+  const { status } = req.body
+  const currentUserId = (req as any).jwtDecoded?.id
+
+  if (!status || !['active', 'disabled'].includes(status)) {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Trạng thái không hợp lệ')
+  }
+
+  // Prevent user from disabling themselves
+  if (user_id === currentUserId && status === 'disabled') {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Bạn không thể khóa tài khoản của chính mình')
+  }
+
+  const userDB = await UserModel.findByIdAndUpdate(
+    user_id,
+    { status },
+    { new: true }
+  )
+    .select({ password: 0, __v: 0 })
+    .lean()
+
+  if (userDB) {
+    const response = {
+      message: 'Cập nhật trạng thái thành công',
+      data: userDB,
+    }
+    return responseSuccess(res, response)
+  } else {
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Không tìm thấy người dùng')
+  }
+}
+
 const userController = {
   addUser,
   getUsers,
@@ -202,6 +313,8 @@ const userController = {
   deleteUser,
   updateMe,
   uploadAvatar,
+  updateUserRole,
+  toggleUserStatus,
 }
 
 export default userController

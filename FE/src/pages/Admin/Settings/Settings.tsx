@@ -36,7 +36,7 @@ export default function Settings() {
   const canUpdate = can(Permission.CONFIG_UPDATE)
 
   // Fetch config
-  const { data: configData, isLoading } = useQuery({
+  const { data: configData, isLoading: isPending } = useQuery({
     queryKey: ['admin-config'],
     queryFn: () => adminApi.getConfig(),
     staleTime: 5 * 60 * 1000
@@ -143,7 +143,7 @@ export default function Settings() {
     updateMutation.mutate(dataToSave)
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className='flex min-h-[400px] items-center justify-center'>
         <div className='h-12 w-12 animate-spin rounded-full border-4 border-brick border-t-transparent' />
@@ -208,7 +208,7 @@ export default function Settings() {
 
   const renderImageUpload = (label: string, path: string, description = '') => {
     const value = getValue(path)
-    const isUploading = uploadingField === path && uploadMutation.isLoading
+    const isUploading = uploadingField === path && uploadMutation.isPending
 
     return (
       <div>
@@ -430,10 +430,10 @@ export default function Settings() {
         {canUpdate && (
           <button
             onClick={handleSave}
-            disabled={!isDirty || updateMutation.isLoading}
+            disabled={!isDirty || updateMutation.isPending}
             className='rounded-lg bg-brick px-6 py-2 font-medium text-white transition-colors hover:bg-brick/90 disabled:cursor-not-allowed disabled:opacity-50'
           >
-            {updateMutation.isLoading ? 'Đang lưu...' : 'Lưu thay đổi'}
+            {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
           </button>
         )}
       </div>

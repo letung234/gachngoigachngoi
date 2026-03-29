@@ -46,7 +46,7 @@ export default function AdminLayout() {
   const displayRole = userRoles[0] || 'User'
 
   return (
-    <div className='flex min-h-screen bg-cement-light'>
+    <div className='admin-layout flex bg-cement-light'>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div className='fixed inset-0 z-20 bg-black/50 md:hidden' onClick={() => setSidebarOpen(false)} />
@@ -108,7 +108,7 @@ export default function AdminLayout() {
       {/* Main content */}
       <main className='flex flex-1 flex-col bg-gray-50'>
         {/* Header */}
-        <header className='sticky top-0 z-10 border-b border-gray-200 bg-white shadow-sm'>
+        <header className='admin-header border-b border-gray-200 bg-white shadow-sm'>
           <div className='flex items-center justify-between px-4 py-4 md:px-6'>
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -125,7 +125,6 @@ export default function AdminLayout() {
               <div className='hidden lg:flex items-center gap-6'>
                 <div className='text-right'>
                   <p className='text-xs text-gray-600'>Hoạt động hôm nay</p>
-                  <p className='text-sm font-semibold text-earth'>12 đơn hàng</p>
                 </div>
               </div>
 
@@ -148,7 +147,7 @@ export default function AdminLayout() {
         </header>
 
         {/* Page content */}
-        <div className='flex-1 overflow-auto'>
+        <div className='admin-content bg-gray-50'>
           <div className='p-4 md:p-6'>
             <Outlet />
           </div>

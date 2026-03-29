@@ -48,7 +48,7 @@ export default function ProductDetail() {
   }
 
   // Fetch product detail
-  const { data: productData, isLoading } = useQuery({
+  const { data: productData, isLoading: isPending } = useQuery({
     queryKey: ['product', id],
     queryFn: () => productApi.getProductDetail(id as string),
     enabled: !!id,
@@ -77,7 +77,7 @@ export default function ProductDetail() {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price)
   }
 
-  if (isLoading) {
+  if (isPending) {
     return (
       <div className='flex min-h-screen items-center justify-center bg-cream-light'>
         <div className='text-center'>

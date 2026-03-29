@@ -121,10 +121,10 @@ export default function Login() {
             <Button
               type='submit'
               className='w-full flex items-center justify-center bg-brick hover:bg-brick-dark px-4 py-3 text-base font-semibold text-white rounded-lg transition-all duration-200 hover:shadow-lg active:scale-95'
-              isLoading={loginMutation.isLoading}
-              disabled={loginMutation.isLoading}
+              isLoading={loginMutation.isPending}
+              disabled={loginMutation.isPending}
             >
-              {loginMutation.isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+              {loginMutation.isPending ? 'Đang đăng nhập...' : 'Đăng nhập'}
             </Button>
           </div>
 

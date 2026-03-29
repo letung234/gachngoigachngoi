@@ -39,8 +39,10 @@ export default function Products() {
     staleTime: 5 * 60 * 1000
   })
 
+  const categories: Category[] = categoriesData?.data.data.categories || []
+
   // Fetch products
-  const { data: productsData, isLoading } = useQuery({
+  const { data: productsData, isLoading: isPending } = useQuery({
     queryKey: ['products', activeCategory],
     queryFn: () => {
       const params: Record<string, string | number> = { limit: 50 }
@@ -53,14 +55,14 @@ export default function Products() {
       }
       return productApi.getProducts(params as any)
     },
+    enabled: !!categoriesData, // Only fetch products after categories are loaded
     staleTime: 5 * 60 * 1000
   })
 
-  const categories: Category[] = categoriesData?.data.data || []
   const products: Product[] = productsData?.data.data.products || []
 
   // Add "Tất cả" option at the beginning
-  const allCategories = [{ _id: 'all', name: 'Tất cả', slug: '' }, ...categories]
+  const allCategories = [{ _id: 'all', name: 'Tất cả', slug: 'all' }, ...categories]
 
   useEffect(() => {
     setActiveCategory(category || 'all')
@@ -131,14 +133,14 @@ export default function Products() {
           </div>
 
           {/* Loading State */}
-          {isLoading && (
+          {isPending && (
             <div className='flex items-center justify-center py-20'>
               <div className='h-12 w-12 animate-spin rounded-full border-4 border-brick border-t-transparent' />
             </div>
           )}
 
           {/* Products Grid */}
-          {!isLoading && (
+          {!isPending && (
             <motion.div
               variants={staggerContainer}
               initial='hidden'
@@ -206,7 +208,7 @@ export default function Products() {
           )}
 
           {/* Empty state */}
-          {!isLoading && products.length === 0 && (
+          {!isPending && products.length === 0 && (
             <div className='py-20 text-center'>
               <p className='text-lg text-earth/60'>Không có sản phẩm nào trong danh mục này.</p>
             </div>

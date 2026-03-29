@@ -1,54 +1,60 @@
 import { Request, Response } from 'express'
 import { ProductModel } from '../database/models/product.model'
 import { UserModel } from '../database/models/user.model'
-import { PurchaseModel } from '../database/models/purchase.model'
-import { STATUS_PURCHASE } from '../constants/purchase'
+import { OrderModel, ORDER_STATUS } from '../database/models/order.model'
 import { responseSuccess } from '../utils/response'
 import { handleImageProduct } from './product.controller'
 import { cloneDeep } from 'lodash'
 
 // Dashboard Overview Stats
 export const getOverviewStats = async (req: Request, res: Response) => {
-  const [totalProducts, totalUsers, purchases] = await Promise.all([
+  const [totalProducts, totalUsers, orders] = await Promise.all([
     ProductModel.countDocuments(),
     UserModel.countDocuments(),
-    PurchaseModel.find({
-      status: { $ne: STATUS_PURCHASE.IN_CART },
-    }).lean(),
+    OrderModel.find().lean(),
   ])
 
-  const totalOrders = purchases.length
-  const totalRevenue = purchases.reduce((sum, purchase: any) => {
-    return sum + purchase.price * purchase.buy_count
+  const totalOrders = orders.length
+  const totalRevenue = orders.reduce((sum, order: any) => {
+    return sum + order.total
   }, 0)
 
-  // Count orders by status
-  const ordersByStatus = {
-    wait_for_confirmation: purchases.filter(
-      (p: any) => p.status === STATUS_PURCHASE.WAIT_FOR_CONFIRMATION
-    ).length,
-    wait_for_getting: purchases.filter(
-      (p: any) => p.status === STATUS_PURCHASE.WAIT_FOR_GETTING
-    ).length,
-    in_progress: purchases.filter(
-      (p: any) => p.status === STATUS_PURCHASE.IN_PROGRESS
-    ).length,
-    delivered: purchases.filter(
-      (p: any) => p.status === STATUS_PURCHASE.DELIVERED
-    ).length,
-    cancelled: purchases.filter(
-      (p: any) => p.status === STATUS_PURCHASE.CANCELLED
-    ).length,
-  }
+  // Get today's orders
+  const todayStart = new Date()
+  todayStart.setHours(0, 0, 0, 0)
+  const todayOrders = orders.filter((o: any) =>
+    new Date(o.createdAt) >= todayStart
+  ).length
 
+  // Get new customers (users created in last 30 days)
+  const thirtyDaysAgo = new Date()
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+  const newCustomers = await UserModel.countDocuments({
+    createdAt: { $gte: thirtyDaysAgo }
+  })
+
+  // Calculate conversion rate (completed orders / total orders)
+  const completedOrders = orders.filter(
+    (o: any) => o.status === ORDER_STATUS.COMPLETED
+  ).length
+  const conversionRate = totalOrders > 0 ? (completedOrders / totalOrders) * 100 : 0
+
+  // Calculate changes (mock for now - would need historical data)
   const response = {
     message: 'Lấy thống kê tổng quan thành công',
     data: {
+      totalRevenue,
+      todayOrders,
+      newCustomers,
+      conversionRate: Math.round(conversionRate * 100) / 100,
+      revenueChange: '+12.5%', // Would calculate from previous period
+      ordersChange: todayOrders > 0 ? `+${todayOrders}` : '0',
+      customersChange: newCustomers > 0 ? `+${newCustomers}` : '0',
+      conversionChange: '+2.3%', // Would calculate from previous period
+      // Additional useful data
       totalProducts,
       totalUsers,
       totalOrders,
-      totalRevenue,
-      ordersByStatus,
     },
   }
   return responseSuccess(res, response)
@@ -58,12 +64,12 @@ export const getOverviewStats = async (req: Request, res: Response) => {
 export const getRevenueStats = async (req: Request, res: Response) => {
   const { period = 'month' } = req.query
 
-  // Get purchases from last 12 months
+  // Get orders from last 12 months
   const twelveMonthsAgo = new Date()
   twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
 
-  const purchases: any = await PurchaseModel.find({
-    status: STATUS_PURCHASE.DELIVERED,
+  const orders: any = await OrderModel.find({
+    status: ORDER_STATUS.COMPLETED,
     createdAt: { $gte: twelveMonthsAgo },
   }).lean()
 
@@ -81,18 +87,20 @@ export const getRevenueStats = async (req: Request, res: Response) => {
     }
   }
 
-  purchases.forEach((purchase: any) => {
-    const date = new Date(purchase.createdAt)
+  orders.forEach((order: any) => {
+    const date = new Date(order.createdAt)
     const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
     if (revenueByMonth[monthKey]) {
-      revenueByMonth[monthKey].revenue += purchase.price * purchase.buy_count
+      revenueByMonth[monthKey].revenue += order.total
       revenueByMonth[monthKey].orders += 1
     }
   })
 
   const response = {
     message: 'Lấy thống kê doanh thu thành công',
-    data: Object.values(revenueByMonth),
+    data: {
+      monthly: Object.values(revenueByMonth),
+    },
   }
   return responseSuccess(res, response)
 }
@@ -102,44 +110,35 @@ export const getTopProducts = async (req: Request, res: Response) => {
   const { limit = 10 } = req.query
   const _limit = Number(limit)
 
-  // Get all delivered purchases
-  const purchases: any = await PurchaseModel.find({
-    status: STATUS_PURCHASE.DELIVERED,
-  })
-    .populate({
-      path: 'product',
-      populate: {
-        path: 'category',
-      },
-    })
-    .lean()
+  // Get all completed orders
+  const orders: any = await OrderModel.find({
+    status: ORDER_STATUS.COMPLETED,
+  }).lean()
 
   // Group by product and calculate total sold and revenue
   const productStats: any = {}
 
-  purchases.forEach((purchase: any) => {
-    if (purchase.product && purchase.product._id) {
-      const productId = purchase.product._id.toString()
+  orders.forEach((order: any) => {
+    order.items.forEach((item: any) => {
+      const productId = item.productId.toString()
       if (!productStats[productId]) {
         productStats[productId] = {
-          product: purchase.product,
+          productId,
+          productName: item.productName,
+          image: item.image,
           totalSold: 0,
           totalRevenue: 0,
         }
       }
-      productStats[productId].totalSold += purchase.buy_count
-      productStats[productId].totalRevenue += purchase.price * purchase.buy_count
-    }
+      productStats[productId].totalSold += item.quantity
+      productStats[productId].totalRevenue += item.totalPrice
+    })
   })
 
   // Convert to array and sort by revenue
   const topProducts = Object.values(productStats)
     .sort((a: any, b: any) => b.totalRevenue - a.totalRevenue)
     .slice(0, _limit)
-    .map((item: any) => ({
-      ...item,
-      product: handleImageProduct(cloneDeep(item.product)),
-    }))
 
   const response = {
     message: 'Lấy danh sách sản phẩm bán chạy thành công',
@@ -153,16 +152,7 @@ export const getLatestOrders = async (req: Request, res: Response) => {
   const { limit = 5 } = req.query
   const _limit = Number(limit)
 
-  const orders = await PurchaseModel.find({
-    status: { $ne: STATUS_PURCHASE.IN_CART },
-  })
-    .populate('user', 'email name')
-    .populate({
-      path: 'product',
-      populate: {
-        path: 'category',
-      },
-    })
+  const orders = await OrderModel.find({})
     .sort({ createdAt: -1 })
     .limit(_limit)
     .lean()
@@ -170,11 +160,110 @@ export const getLatestOrders = async (req: Request, res: Response) => {
   const response = {
     message: 'Lấy danh sách đơn hàng mới nhất thành công',
     data: orders.map((order: any) => ({
-      ...order,
-      product: handleImageProduct(cloneDeep(order.product)),
+      _id: order._id,
+      customer: order.customerName || order.customerEmail || 'Khách hàng',
+      amount: order.total,
+      status: order.status,
+      createdAt: order.createdAt,
     })),
   }
   return responseSuccess(res, response)
+}
+
+// Category sales distribution
+export const getCategoryStats = async (req: Request, res: Response) => {
+  // Get all completed orders to calculate real stats
+  const orders: any = await OrderModel.find({
+    status: ORDER_STATUS.COMPLETED,
+  }).lean()
+
+  // Get products to map productId to category
+  const allProducts = await ProductModel.find({})
+    .populate('category')
+    .lean()
+
+  const productCategoryMap = new Map()
+  allProducts.forEach((product: any) => {
+    if (product.category) {
+      productCategoryMap.set(product._id.toString(), {
+        categoryId: product.category._id.toString(),
+        categoryName: product.category.name,
+      })
+    }
+  })
+
+  // Group by category and calculate total sales
+  const categoryStats: any = {}
+  let totalRevenue = 0
+
+  orders.forEach((order: any) => {
+    order.items.forEach((item: any) => {
+      const productCategory = productCategoryMap.get(item.productId.toString())
+      if (productCategory) {
+        const categoryId = productCategory.categoryId
+        const categoryName = productCategory.categoryName
+        const revenue = item.totalPrice
+
+        totalRevenue += revenue
+
+        if (!categoryStats[categoryId]) {
+          categoryStats[categoryId] = {
+            categoryId,
+            categoryName,
+            totalRevenue: 0,
+            totalSold: 0
+          }
+        }
+
+        categoryStats[categoryId].totalRevenue += revenue
+        categoryStats[categoryId].totalSold += item.quantity
+      }
+    })
+  })
+
+  // Convert to array and calculate percentages
+  const categoryArray = Object.values(categoryStats).map((cat: any) => ({
+    label: cat.categoryName,
+    value: totalRevenue > 0 ? Math.round((cat.totalRevenue / totalRevenue) * 100) : 0,
+    revenue: cat.totalRevenue,
+    sold: cat.totalSold,
+    // Assign colors based on category (you can customize this)
+    color: getCategoryColor(cat.categoryName)
+  }))
+
+  // Sort by revenue and take top categories
+  const topCategories = categoryArray
+    .sort((a: any, b: any) => b.revenue - a.revenue)
+    .slice(0, 4) // Top 4 categories
+
+  const response = {
+    message: 'Lấy thống kê danh mục thành công',
+    data: topCategories,
+  }
+  return responseSuccess(res, response)
+}
+
+// Helper function to assign colors to categories
+const getCategoryColor = (categoryName: string): string => {
+  const colorMap: any = {
+    'gạch ốp tường': 'from-brick to-brick/70',
+    'gạch lát sàn': 'from-gold to-gold/70',
+    'gạch trang trí': 'from-purple-600 to-purple-600/70',
+    'gạch mosaic': 'from-blue-600 to-blue-600/70',
+    'gạch ceramic': 'from-green-600 to-green-600/70'
+  }
+
+  // Convert to lowercase for matching
+  const lowerName = categoryName.toLowerCase()
+
+  // Find matching color or return default
+  for (const key in colorMap) {
+    if (lowerName.includes(key) || key.includes(lowerName)) {
+      return colorMap[key]
+    }
+  }
+
+  return 'from-gray-400 to-gray-400/70' // Default color
 }
 
 const statsController = {
@@ -182,6 +271,7 @@ const statsController = {
   getRevenueStats,
   getTopProducts,
   getLatestOrders,
+  getCategoryStats,
 }
 
 export default statsController

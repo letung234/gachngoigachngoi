@@ -27,6 +27,7 @@ export interface PostList {
     page: number
     limit: number
     page_size: number
+    total?: number
   }
 }
 

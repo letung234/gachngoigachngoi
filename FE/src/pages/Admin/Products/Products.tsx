@@ -6,11 +6,17 @@ import ProductModal from '../components/ProductModal'
 import { Product } from 'src/types/product.type'
 import usePermission from 'src/hooks/usePermission'
 import { Permission } from 'src/constants/permission'
+import { AdminPagination } from 'src/components/Pagination'
 
 export default function AdminProducts() {
   const queryClient = useQueryClient()
   const { can } = usePermission()
   const [searchTerm, setSearchTerm] = useState('')
+  const [filterCategory, setFilterCategory] = useState('')
+  const [priceMin, setPriceMin] = useState('')
+  const [priceMax, setPriceMax] = useState('')
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [order, setOrder] = useState('desc')
   const [page, setPage] = useState(1)
   const limit = 20
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,15 +27,35 @@ export default function AdminProducts() {
   const canUpdate = can(Permission.PRODUCT_UPDATE)
   const canDelete = can(Permission.PRODUCT_DELETE)
 
-  // Fetch products
-  const { data: productsData, isLoading } = useQuery({
-    queryKey: ['admin-products', page],
+  // Fetch categories for filter
+  const { data: categoriesData, error: categoriesError } = useQuery({
+    queryKey: ['admin-categories'],
+    queryFn: () => adminApi.getCategories()
+  })
+
+  // Fetch products with server-side filtering
+  const { data: productsData, isPending, error } = useQuery({
+    queryKey: ['admin-products', page, searchTerm, filterCategory, priceMin, priceMax, sortBy, order],
     queryFn: () =>
       adminApi.getProducts({
         page,
-        limit
+        limit,
+        name: searchTerm || undefined,
+        category: filterCategory || undefined,
+        price_min: priceMin ? Number(priceMin) : undefined,
+        price_max: priceMax ? Number(priceMax) : undefined,
+        sort_by: sortBy,
+        order: order
       })
   })
+
+  // Show error toasts if queries fail
+  if (error) {
+    toast.error('Lỗi tải dữ liệu sản phẩm')
+  }
+  if (categoriesError) {
+    toast.error('Lỗi tải dữ liệu danh mục')
+  }
 
   // Delete product mutation
   const deleteProductMutation = useMutation({
@@ -45,13 +71,17 @@ export default function AdminProducts() {
 
   const products = productsData?.data.data.products || []
   const pagination = productsData?.data.data.pagination
+  const categories = categoriesData?.data.data.categories || []
 
-  const filteredProducts = products.filter((product) => {
-    const matchSearch =
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.name.toLowerCase().includes(searchTerm.toLowerCase())
-    return matchSearch
-  })
+  const handleResetFilters = () => {
+    setSearchTerm('')
+    setFilterCategory('')
+    setPriceMin('')
+    setPriceMax('')
+    setSortBy('createdAt')
+    setOrder('desc')
+    setPage(1)
+  }
 
   const handleDeleteProduct = (productId: string, productName: string) => {
     if (window.confirm(`Bạn có chắc muốn xóa sản phẩm "${productName}"?`)) {
@@ -74,54 +104,6 @@ export default function AdminProducts() {
     setSelectedProduct(null)
   }
 
-  // Generate page numbers to display
-  const getPageNumbers = () => {
-    if (!pagination) return []
-    const totalPages = pagination.page_size
-    const pages: (number | string)[] = []
-    const maxButtonsToShow = 5
-
-    if (totalPages <= maxButtonsToShow) {
-      // Show all pages if total is small
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
-    } else {
-      // Always show first page
-      pages.push(1)
-
-      // Calculate range around current page
-      let start = Math.max(2, page - 1)
-      let end = Math.min(totalPages - 1, page + 1)
-
-      if (page <= 3) {
-        end = 4
-      } else if (page >= totalPages - 2) {
-        start = totalPages - 3
-      }
-
-      // Add ellipsis before range if needed
-      if (start > 2) {
-        pages.push('...')
-      }
-
-      // Add page range
-      for (let i = start; i <= end; i++) {
-        pages.push(i)
-      }
-
-      // Add ellipsis after range if needed
-      if (end < totalPages - 1) {
-        pages.push('...')
-      }
-
-      // Always show last page
-      pages.push(totalPages)
-    }
-
-    return pages
-  }
-
   return (
     <div className='space-y-8'>
       {/* Header */}
@@ -130,7 +112,7 @@ export default function AdminProducts() {
           <h1 className='text-4xl font-bold text-earth'>Quản lý sản phẩm</h1>
           <div className='mt-2 flex items-center gap-4'>
             <p className='text-gray-600'>
-              Tổng cộng <span className='font-bold text-brick'>{products.length}</span> sản phẩm
+              Tổng cộng <span className='font-bold text-brick'>{pagination?.total || products.length}</span> sản phẩm
             </p>
           </div>
         </div>
@@ -153,22 +135,111 @@ export default function AdminProducts() {
           <span className='text-lg'>🔍</span>
           <h3 className='font-semibold text-earth'>Bộ lọc</h3>
         </div>
-        <div>
-          <label className='mb-2 block text-sm font-medium text-gray-700'>Tìm kiếm sản phẩm</label>
-          <input
-            type='text'
-            placeholder='Nhập tên sản phẩm hoặc danh mục...'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
-          />
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {/* Search */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Tìm kiếm sản phẩm</label>
+            <input
+              type='text'
+              placeholder='Nhập tên sản phẩm...'
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            />
+          </div>
+
+          {/* Category Filter */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Danh mục</label>
+            <select
+              value={filterCategory}
+              onChange={(e) => {
+                setFilterCategory(e.target.value)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            >
+              <option value=''>Tất cả danh mục</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sort */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Sắp xếp</label>
+            <select
+              value={`${sortBy}-${order}`}
+              onChange={(e) => {
+                const [newSortBy, newOrder] = e.target.value.split('-')
+                setSortBy(newSortBy)
+                setOrder(newOrder)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            >
+              <option value='createdAt-desc'>Mới nhất</option>
+              <option value='createdAt-asc'>Cũ nhất</option>
+              <option value='name-asc'>Tên A-Z</option>
+              <option value='name-desc'>Tên Z-A</option>
+              <option value='price-asc'>Giá thấp đến cao</option>
+              <option value='price-desc'>Giá cao đến thấp</option>
+              <option value='sold-desc'>Bán chạy nhất</option>
+              <option value='view-desc'>Xem nhiều nhất</option>
+            </select>
+          </div>
+
+          {/* Price Range */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Giá từ (₫)</label>
+            <input
+              type='number'
+              placeholder='Giá thấp nhất'
+              value={priceMin}
+              onChange={(e) => {
+                setPriceMin(e.target.value)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            />
+          </div>
+
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Giá đến (₫)</label>
+            <input
+              type='number'
+              placeholder='Giá cao nhất'
+              value={priceMax}
+              onChange={(e) => {
+                setPriceMax(e.target.value)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            />
+          </div>
+
+          {/* Reset Button */}
+          <div className='flex items-end'>
+            <button
+              onClick={handleResetFilters}
+              className='w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            >
+              🗑️ Xóa bộ lọc
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Products Table */}
       <div className='overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100'>
         <div className='overflow-x-auto'>
-          {isLoading ? (
+          {isPending ? (
             <div className='flex items-center justify-center py-16'>
               <div className='text-center'>
                 <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick mb-4'></div>
@@ -194,8 +265,8 @@ export default function AdminProducts() {
                 </tr>
               </thead>
               <tbody className='divide-y divide-gray-200'>
-                {filteredProducts.length > 0 ? (
-                  filteredProducts.map((product) => (
+                {products.length > 0 ? (
+                  products.map((product) => (
                     <tr key={product._id} className='hover:bg-gray-50 transition-colors duration-200 border-b border-gray-100 last:border-b-0'>
                       <td className='px-6 py-5'>
                         <div className='flex items-center gap-4'>
@@ -249,7 +320,7 @@ export default function AdminProducts() {
                             <button
                               onClick={() => handleDeleteProduct(product._id, product.name)}
                               className='rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 border border-red-200 hover:bg-red-100 transition-colors disabled:opacity-50'
-                              disabled={deleteProductMutation.isLoading}
+                              disabled={deleteProductMutation.isPending}
                               title='Xóa'
                             >
                               🗑️ Xóa
@@ -279,46 +350,12 @@ export default function AdminProducts() {
       </div>
 
       {/* Pagination */}
-      {pagination && pagination.page_size > 1 && (
-        <div className='flex items-center justify-center gap-3 mt-8 py-6'>
-          {/* Previous Button */}
-          <button
-            onClick={() => setPage(page - 1)}
-            disabled={page === 1}
-            className='rounded-lg bg-white px-4 py-3 text-sm font-semibold text-earth border border-gray-200 transition-all hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed'
-          >
-            ← Trước
-          </button>
-
-          {/* Page Numbers */}
-          <div className='flex gap-2'>
-            {getPageNumbers().map((pageNum, index) => (
-              <button
-                key={index}
-                onClick={() => typeof pageNum === 'number' && setPage(pageNum)}
-                disabled={pageNum === '...' || pageNum === page}
-                className={`rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
-                  pageNum === page
-                    ? 'bg-brick text-white shadow-md'
-                    : pageNum === '...'
-                      ? 'cursor-default bg-transparent text-gray-400'
-                      : 'bg-white text-earth border border-gray-200 hover:bg-gray-50 hover:border-brick'
-                }`}
-              >
-                {pageNum}
-              </button>
-            ))}
-          </div>
-
-          {/* Next Button */}
-          <button
-            onClick={() => setPage(page + 1)}
-            disabled={page === pagination.page_size}
-            className='rounded-lg bg-white px-4 py-3 text-sm font-semibold text-earth border border-gray-200 transition-all hover:bg-gray-50 hover:border-gray-300 disabled:opacity-50 disabled:cursor-not-allowed'
-          >
-            Sau →
-          </button>
-        </div>
+      {pagination && pagination.total !== undefined && (
+        <AdminPagination
+          pagination={pagination}
+          onPageChange={setPage}
+          showInfo={true}
+        />
       )}
 
       {/* Product Modal */}

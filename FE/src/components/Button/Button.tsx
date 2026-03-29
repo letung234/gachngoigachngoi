@@ -2,32 +2,69 @@ import { memo, ButtonHTMLAttributes } from 'react'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
+  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'ghost' | 'outline'
+  size?: 'sm' | 'md' | 'lg'
+  icon?: React.ReactNode
+  iconPosition?: 'left' | 'right'
 }
 
 function ButtonInner(props: ButtonProps) {
-  const { className, isLoading, disabled, children, ...rest } = props
-  const newClassName = disabled ? className + ' cursor-not-allowed' : className
+  const {
+    className = '',
+    isLoading,
+    disabled,
+    children,
+    variant = 'primary',
+    size = 'md',
+    icon,
+    iconPosition = 'left',
+    ...rest
+  } = props
+
+  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-95'
+
+  const sizeStyles = {
+    sm: 'px-3 py-1.5 text-xs gap-1.5',
+    md: 'px-4 py-2.5 text-sm gap-2',
+    lg: 'px-6 py-3 text-base gap-2.5'
+  }
+
+  const variantStyles = {
+    primary: 'bg-gradient-to-r from-brick to-brick-dark text-white hover:from-brick-dark hover:to-brick focus:ring-brick/30 shadow-md hover:shadow-xl',
+    secondary: 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 focus:ring-gray-300 border border-gray-300 hover:border-gray-400',
+    success: 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700 focus:ring-green-300 shadow-md hover:shadow-xl',
+    warning: 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 focus:ring-amber-300 shadow-md hover:shadow-xl',
+    danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 focus:ring-red-300 shadow-md hover:shadow-xl',
+    ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 focus:ring-gray-200 transition-colors',
+    outline: 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-200 hover:border-gray-400 transition-colors'
+  }
+
+  const finalClassName = `${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`.trim()
+
   return (
-    <button className={newClassName} disabled={disabled || isLoading} {...rest}>
+    <button className={finalClassName} disabled={disabled || isLoading} {...rest}>
       {isLoading && (
-        <svg
-          aria-hidden='true'
-          className='mr-2 h-4 w-4 animate-spin fill-white text-gray-200'
-          viewBox='0 0 100 101'
-          fill='none'
-          xmlns='http://www.w3.org/2000/svg'
-        >
-          <path
-            d='M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z'
-            fill='currentColor'
-          />
-          <path
-            d='M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z'
-            fill='currentFill'
-          />
-        </svg>
+        <div className='animate-spin'>
+          <svg className='h-4 w-4' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
+            <circle
+              className='opacity-25'
+              cx='12'
+              cy='12'
+              r='10'
+              stroke='currentColor'
+              strokeWidth='4'
+            ></circle>
+            <path
+              className='opacity-75'
+              fill='currentColor'
+              d='m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+            ></path>
+          </svg>
+        </div>
       )}
-      <span>{children}</span>
+      {!isLoading && icon && iconPosition === 'left' && icon}
+      <span className='transition-all duration-200'>{children}</span>
+      {!isLoading && icon && iconPosition === 'right' && icon}
     </button>
   )
 }

@@ -50,6 +50,7 @@ export interface ProductList {
     page: number
     limit: number
     page_size: number
+    total?: number
   }
 }
 

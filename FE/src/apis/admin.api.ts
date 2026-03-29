@@ -1,7 +1,7 @@
 import { Product, ProductList, ProductListConfig } from 'src/types/product.type'
 import { Purchase } from 'src/types/purchase.type'
 import { User, UserList, UserListConfig } from 'src/types/user.type'
-import { Category } from 'src/types/category.type'
+import { Category, CategoryList, CategoryListConfig } from 'src/types/category.type'
 import { Post, PostList, PostListConfig } from 'src/types/post.type'
 import { Order, OrderList, OrderListConfig } from 'src/types/order.type'
 import { SiteConfig } from 'src/types/config.type'
@@ -42,6 +42,14 @@ export interface LatestOrder {
   amount: number
   status: number
   createdAt: string
+}
+
+export interface CategoryStat {
+  label: string
+  value: number
+  revenue: number
+  sold: number
+  color: string
 }
 
 // Purchase list params
@@ -114,6 +122,10 @@ const adminApi = {
     })
   },
 
+  getCategoryStats() {
+    return http.get<SuccessResponse<CategoryStat[]>>(`${ADMIN_URL}/stats/category-stats`)
+  },
+
   // ========== PRODUCT APIs ==========
   getProducts(params: ProductListConfig) {
     return http.get<SuccessResponse<ProductList>>(`${ADMIN_URL}/products`, {
@@ -165,7 +177,15 @@ const adminApi = {
 
   // ========== PURCHASE/ORDER APIs ==========
   getPurchases(params: AdminPurchaseParams) {
-    return http.get<SuccessResponse<Purchase[]>>(`${ADMIN_URL}/purchases`, {
+    return http.get<SuccessResponse<{
+      purchases: Purchase[]
+      pagination: {
+        page: number
+        limit: number
+        page_size: number
+        total: number
+      }
+    }>>(`${ADMIN_URL}/purchases`, {
       params
     })
   },
@@ -181,8 +201,8 @@ const adminApi = {
   },
 
   // ========== CATEGORY APIs ==========
-  getCategories() {
-    return http.get<SuccessResponse<Category[]>>(`${ADMIN_URL}/categories`)
+  getCategories(params?: CategoryListConfig) {
+    return http.get<SuccessResponse<CategoryList>>(`${ADMIN_URL}/categories`, { params })
   },
 
   getCategory(id: string) {

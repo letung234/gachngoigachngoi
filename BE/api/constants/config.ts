@@ -13,7 +13,8 @@ export const FOLDER_UPLOAD = 'upload'
 
 export const FOLDERS = {
   PRODUCT: 'product',
-  AVATAR: 'avatar'
+  AVATAR: 'avatar',
+  POST: 'post'
 }
 
 export const ROUTE_IMAGE = 'images'

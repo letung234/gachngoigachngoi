@@ -72,6 +72,14 @@ const loginController = async (req: Request, res: Response) => {
         password: 'Email hoặc password không đúng',
       })
     }
+
+    // Check if user is disabled
+    if (userInDB.status === 'disabled') {
+      throw new ErrorHandler(STATUS.FORBIDDEN, {
+        message: 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.',
+      })
+    }
+
     let payloadJWT: PayloadToken = {
       id: userInDB._id,
       email: userInDB.email,

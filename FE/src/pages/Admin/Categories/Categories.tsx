@@ -5,8 +5,15 @@ import { Category } from 'src/types/category.type'
 import usePermission from 'src/hooks/usePermission'
 import { Permission } from 'src/constants/permission'
 import Button from 'src/components/Button'
+import { toast } from 'react-toastify'
+import { AdminPagination } from 'src/components/Pagination'
 
 export default function Categories() {
+  const [page, setPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [order, setOrder] = useState('desc')
+  const limit = 10
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null)
@@ -22,10 +29,21 @@ export default function Categories() {
   const canDelete = can(Permission.CATEGORY_DELETE)
 
   // Fetch categories
-  const { data: categoriesData, isLoading, refetch } = useQuery({
-    queryKey: ['admin-categories'],
-    queryFn: () => adminApi.getCategories()
+  const { data: categoriesData, isPending, error, refetch } = useQuery({
+    queryKey: ['admin-categories', page, searchTerm, sortBy, order],
+    queryFn: () => adminApi.getCategories({
+      page,
+      limit,
+      search: searchTerm || undefined,
+      sort_by: sortBy,
+      order: order
+    })
   })
+
+  // Show error toast if query fails
+  if (error) {
+    toast.error('Lỗi tải dữ liệu danh mục')
+  }
 
   // Create category mutation
   const createCategoryMutation = useMutation({
@@ -34,10 +52,10 @@ export default function Categories() {
       refetch()
       setIsModalOpen(false)
       resetForm()
-      alert('Tạo danh mục thành công')
+      toast.success('Tạo danh mục thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi tạo danh mục')
+      toast.error(error.response?.data?.message || 'Lỗi tạo danh mục')
     }
   })
 
@@ -49,10 +67,10 @@ export default function Categories() {
       setIsModalOpen(false)
       setSelectedCategory(null)
       resetForm()
-      alert('Cập nhật danh mục thành công')
+      toast.success('Cập nhật danh mục thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi cập nhật danh mục')
+      toast.error(error.response?.data?.message || 'Lỗi cập nhật danh mục')
     }
   })
 
@@ -62,10 +80,10 @@ export default function Categories() {
     onSuccess: () => {
       refetch()
       setShowDeleteConfirm(null)
-      alert('Xóa danh mục thành công')
+      toast.success('Xóa danh mục thành công')
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || 'Lỗi xóa danh mục. Danh mục có thể đang được sử dụng.')
+      toast.error(error.response?.data?.message || 'Lỗi xóa danh mục. Danh mục có thể đang được sử dụng.')
     }
   })
 
@@ -102,38 +120,91 @@ export default function Categories() {
   }
 
   const generateSlug = (text: string) => {
+    // Vietnamese character mappings
+    const vietnameseMap: { [key: string]: string } = {
+      'à': 'a', 'á': 'a', 'ạ': 'a', 'ả': 'a', 'ã': 'a',
+      'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ậ': 'a', 'ẩ': 'a', 'ẫ': 'a',
+      'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ặ': 'a', 'ẳ': 'a', 'ẵ': 'a',
+      'è': 'e', 'é': 'e', 'ẹ': 'e', 'ẻ': 'e', 'ẽ': 'e',
+      'ê': 'e', 'ề': 'e', 'ế': 'e', 'ệ': 'e', 'ể': 'e', 'ễ': 'e',
+      'ì': 'i', 'í': 'i', 'ị': 'i', 'ỉ': 'i', 'ĩ': 'i',
+      'ò': 'o', 'ó': 'o', 'ọ': 'o', 'ỏ': 'o', 'õ': 'o',
+      'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ộ': 'o', 'ổ': 'o', 'ỗ': 'o',
+      'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ợ': 'o', 'ở': 'o', 'ỡ': 'o',
+      'ù': 'u', 'ú': 'u', 'ụ': 'u', 'ủ': 'u', 'ũ': 'u',
+      'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ự': 'u', 'ử': 'u', 'ữ': 'u',
+      'ỳ': 'y', 'ý': 'y', 'ỵ': 'y', 'ỷ': 'y', 'ỹ': 'y',
+      'đ': 'd'
+    }
+
     return text
       .toLowerCase()
       .trim()
+      // Convert Vietnamese characters to ASCII
+      .replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g, 'a')
+      .replace(/[èéẹẻẽêềếệểễ]/g, 'e')
+      .replace(/[ìíịỉĩ]/g, 'i')
+      .replace(/[òóọỏõôồốộổỗơờớợởỡ]/g, 'o')
+      .replace(/[ùúụủũưừứựửữ]/g, 'u')
+      .replace(/[ỳýỵỷỹ]/g, 'y')
+      .replace(/[đ]/g, 'd')
+      // Remove special characters except spaces and hyphens
       .replace(/[^\w\s-]/g, '')
+      // Replace spaces and multiple hyphens with single hyphen
       .replace(/[\s_-]+/g, '-')
+      // Remove leading and trailing hyphens
       .replace(/^-+|-+$/g, '')
   }
 
   const handleSubmit = () => {
-    if (!formData.name) {
-      alert('Vui lòng nhập tên danh mục')
+    // Enhanced form validation
+    if (!formData.name || formData.name.trim().length < 2) {
+      toast.error('Tên danh mục phải có ít nhất 2 ký tự')
       return
     }
 
-    const slug = formData.slug || generateSlug(formData.name)
+    // Check for special characters that might break URLs
+    const invalidChars = /[<>:"/\\|?*]/
+    if (invalidChars.test(formData.name)) {
+      toast.error('Tên danh mục không được chứa ký tự đặc biệt: < > : " / \\ | ? *')
+      return
+    }
+
+    // Validate slug if manually entered
+    if (formData.slug && formData.slug.trim()) {
+      const slugPattern = /^[a-z0-9-]+$/
+      if (!slugPattern.test(formData.slug.trim())) {
+        toast.error('Slug chỉ được chứa chữ thường, số và dấu gạch ngang')
+        return
+      }
+    }
+
+    const slug = formData.slug.trim() || generateSlug(formData.name.trim())
 
     if (selectedCategory) {
       updateCategoryMutation.mutate({
-        name: formData.name,
-        description: formData.description,
+        name: formData.name.trim(),
+        description: formData.description.trim() || undefined,
         slug
       })
     } else {
       createCategoryMutation.mutate({
-        name: formData.name,
-        description: formData.description,
+        name: formData.name.trim(),
+        description: formData.description.trim() || undefined,
         slug
       })
     }
   }
 
-  const categories = categoriesData?.data || []
+  const categories: Category[] = categoriesData?.data.data?.categories || []
+  const pagination = categoriesData?.data.data?.pagination
+
+  const handleResetFilters = () => {
+    setSearchTerm('')
+    setSortBy('createdAt')
+    setOrder('desc')
+    setPage(1)
+  }
 
   return (
     <div className='space-y-8'>
@@ -141,7 +212,9 @@ export default function Categories() {
       <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
         <div>
           <h1 className='text-4xl font-bold text-earth'>Quản lý danh mục</h1>
-          <p className='mt-2 text-gray-600'>Tổng cộng {categories.length} danh mục</p>
+          <p className='mt-2 text-gray-600'>
+            Tổng cộng <span className='font-bold text-brick'>{pagination?.total || categories.length}</span> danh mục
+          </p>
         </div>
         {canCreate && (
           <button
@@ -156,10 +229,64 @@ export default function Categories() {
         )}
       </div>
 
+      {/* Filters */}
+      <div className='rounded-xl bg-white p-6 shadow-sm border border-gray-100'>
+        <div className='flex items-center gap-3 mb-4'>
+          <span className='text-lg'>🔍</span>
+          <h3 className='font-semibold text-earth'>Bộ lọc</h3>
+        </div>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+          {/* Search */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Tìm kiếm danh mục</label>
+            <input
+              type='text'
+              placeholder='Nhập tên danh mục...'
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            />
+          </div>
+
+          {/* Sort */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700'>Sắp xếp</label>
+            <select
+              value={`${sortBy}-${order}`}
+              onChange={(e) => {
+                const [newSortBy, newOrder] = e.target.value.split('-')
+                setSortBy(newSortBy)
+                setOrder(newOrder)
+                setPage(1)
+              }}
+              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm transition-all focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            >
+              <option value='createdAt-desc'>Mới nhất</option>
+              <option value='createdAt-asc'>Cũ nhất</option>
+              <option value='name-asc'>Tên A-Z</option>
+              <option value='name-desc'>Tên Z-A</option>
+            </select>
+          </div>
+
+          {/* Reset Button */}
+          <div className='flex items-end'>
+            <button
+              onClick={handleResetFilters}
+              className='w-full rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 focus:border-brick focus:ring-2 focus:ring-brick/10 focus:outline-none'
+            >
+              🗑️ Xóa bộ lọc
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Table */}
       <div className='overflow-hidden rounded-xl bg-white shadow-sm border border-gray-100'>
         <div className='overflow-x-auto'>
-          {isLoading ? (
+          {isPending ? (
             <div className='flex items-center justify-center py-16'>
               <div className='text-center'>
                 <div className='inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brick mb-4'></div>
@@ -201,6 +328,7 @@ export default function Categories() {
                             <button
                               onClick={() => handleDeleteCategory(category._id)}
                               className='rounded-lg bg-red-50 px-4 py-2 text-xs font-bold text-red-700 border border-red-200 hover:bg-red-100 transition-colors'
+                              disabled={deleteCategoryMutation.isPending}
                             >
                               {showDeleteConfirm === category._id ? '✓ Xác nhận' : '🗑️ Xóa'}
                             </button>
@@ -224,6 +352,15 @@ export default function Categories() {
           )}
         </div>
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.total !== undefined && (
+        <AdminPagination
+          pagination={pagination}
+          onPageChange={setPage}
+          showInfo={true}
+        />
+      )}
 
       {/* Modal */}
       {isModalOpen && (

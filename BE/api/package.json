@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon --files index.ts",
     "build": "tsc --project ./",
-    "prod": "tsc --project ./ && node ./build/index.js production"
+    "prod": "tsc --project ./ && node ./build/index.js production",
+    "seed": "ts-node scripts/seed-data.ts",
+    "seed:posts": "ts-node scripts/seed-posts.ts",
+    "create:admin": "ts-node scripts/create-admin.ts"
   },
   "keywords": [],
   "author": "",

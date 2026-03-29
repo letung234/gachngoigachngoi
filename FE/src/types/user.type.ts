@@ -21,6 +21,7 @@ export interface UserList {
     page: number
     limit: number
     page_size: number
+    total?: number
   }
 }
 
@@ -31,4 +32,5 @@ export interface UserListConfig {
   order?: 'asc' | 'desc'
   role?: Role
   status?: UserStatus
+  search?: string
 }
