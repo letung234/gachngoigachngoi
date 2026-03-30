@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --files index.ts",
+    "start": "nodemon --exec npx ts-node --files index.ts",
     "build": "tsc --project ./",
     "prod": "tsc --project ./ && node ./build/index.js production",
     "seed": "ts-node scripts/seed-data.ts",

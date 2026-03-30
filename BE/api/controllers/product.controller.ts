@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+﻿import { Request, Response } from 'express'
 import { responseSuccess, ErrorHandler } from '../utils/response'
 import { ProductModel } from '../database/models/product.model'
 import { STATUS } from '../constants/status'
@@ -53,6 +53,9 @@ const addProduct = async (req: Request, res: Response) => {
     quantity,
     sold,
     view,
+    featured,
+    specs,
+    reviews,
   } = form
   const product = {
     name,
@@ -66,6 +69,9 @@ const addProduct = async (req: Request, res: Response) => {
     quantity,
     sold,
     view,
+    featured,
+    specs,
+    reviews,
   }
   const productAdd = await new ProductModel(product).save()
   const response = {
@@ -214,6 +220,9 @@ const updateProduct = async (req: Request, res: Response) => {
     quantity,
     sold,
     view,
+    featured,
+    specs,
+    reviews,
   } = form
   const product = omitBy(
     {
@@ -228,9 +237,14 @@ const updateProduct = async (req: Request, res: Response) => {
       quantity,
       sold,
       view,
+      featured,
+      specs,
     },
     (value) => value === undefined || value === ''
   )
+  if (reviews !== undefined) {
+    ;(product as any).reviews = reviews
+  }
   const productDB = await ProductModel.findByIdAndUpdate(
     req.params.product_id,
     product,

@@ -1,9 +1,8 @@
-import path from 'src/constants/path'
+﻿import path from 'src/constants/path'
 import { useContext, lazy, Suspense } from 'react'
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 import { AppContext } from './contexts/app.context'
 import MainLayout from './layouts/MainLayout'
-import RegisterLayout from './layouts/RegisterLayout'
 import CartLayout from './layouts/CartLayout'
 import UserLayout from './pages/User/layouts/UserLayout'
 
@@ -17,7 +16,6 @@ const BlogDetail = lazy(() => import('./pages/BlogDetail'))
 const About = lazy(() => import('./pages/About'))
 const Contact = lazy(() => import('./pages/Contact'))
 const Login = lazy(() => import('./pages/Login'))
-const Register = lazy(() => import('./pages/Register'))
 const Profile = lazy(() => import('./pages/User/pages/Profile'))
 const Cart = lazy(() => import('./pages/Cart'))
 const ChangePassword = lazy(() => import('./pages/User/pages/ChangePassword'))
@@ -44,7 +42,7 @@ function PageLoader() {
     <div className='flex min-h-screen items-center justify-center bg-cream-light'>
       <div className='flex flex-col items-center gap-4'>
         <div className='h-12 w-12 animate-spin rounded-full border-4 border-brick border-t-transparent' />
-        <span className='text-earth/60'>Đang tải...</span>
+        <span className='text-earth/60'>{'Đang tải...'}</span>
       </div>
     </div>
   )
@@ -57,7 +55,7 @@ function ProtectedRoute() {
 
 function RejectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
-  return !isAuthenticated ? <Outlet /> : <Navigate to='/' />
+  return !isAuthenticated ? <Outlet /> : <Navigate to={path.adminDashboard} />
 }
 
 export default function useRouteElements() {
@@ -164,26 +162,12 @@ export default function useRouteElements() {
       element: <RejectedRoute />,
       children: [
         {
-          path: '',
-          element: <RegisterLayout />,
-          children: [
-            {
-              path: path.login,
-              element: (
-                <Suspense fallback={<PageLoader />}>
-                  <Login />
-                </Suspense>
-              )
-            },
-            {
-              path: path.register,
-              element: (
-                <Suspense fallback={<PageLoader />}>
-                  <Register />
-                </Suspense>
-              )
-            }
-          ]
+          path: path.login,
+          element: (
+            <Suspense fallback={<PageLoader />}>
+              <Login />
+            </Suspense>
+          )
         }
       ]
     },

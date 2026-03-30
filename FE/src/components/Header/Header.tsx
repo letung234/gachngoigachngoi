@@ -31,10 +31,8 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/98 py-3 shadow-lg backdrop-blur-sm border-b border-gray-100' 
-          : 'bg-transparent py-5'
+      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 bg-earth-dark shadow-lg ${
+        isScrolled ? 'py-3' : 'py-4'
       }`}
     >
       <div className='container'>
@@ -45,15 +43,11 @@ export default function Header() {
               <img
                 src={config.logo}
                 alt={config.siteName}
-                className={`h-12 w-auto object-contain transition-opacity ${
-                  isScrolled ? 'opacity-100' : 'opacity-90'
-                }`}
+                className='h-12 w-auto object-contain transition-opacity opacity-100'
               />
             ) : (
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-lg transition-colors ${
-                  isScrolled ? 'bg-brick' : 'bg-brick/90'
-                }`}
+                className='flex h-12 w-12 items-center justify-center rounded-lg transition-colors bg-brick'
               >
                 <svg viewBox='0 0 40 40' className='h-8 w-8 fill-cream-light'>
                   <path d='M20 4L4 12v16l16 8 16-8V12L20 4zm0 4l12 6v12l-12 6-12-6V14l12-6z' />
@@ -63,14 +57,12 @@ export default function Header() {
             )}
             <div className='hidden sm:block'>
               <h1
-                className={`font-serif text-xl font-bold transition-colors ${
-                  isScrolled ? 'text-earth-dark' : 'text-cream-light'
-                }`}
+                className='font-serif text-xl font-bold text-cream-light'
               >
                 {config?.siteName || 'Gạch Ngói Thủ công'}
               </h1>
               <p
-                className={`text-xs transition-colors ${isScrolled ? 'text-earth/70' : 'text-cream-light/80'}`}
+                className='text-xs text-cream-light/80'
               >
                 {config?.siteSlogan || 'Tinh hoa làng nghề'}
               </p>
@@ -83,17 +75,13 @@ export default function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative py-2 px-1 text-sm font-medium transition-all duration-200 ${
-                  isScrolled
-                    ? 'text-gray-700 hover:text-brick'
-                    : 'text-cream-light/90 hover:text-cream-light'
-                } ${location.pathname === link.path ? (isScrolled ? 'text-brick font-semibold' : 'text-cream-light font-semibold') : ''}`}
+                className={`relative py-2 px-1 text-sm font-medium transition-all duration-200 text-cream-light/90 hover:text-cream-light ${location.pathname === link.path ? 'text-cream-light font-semibold' : ''}`}
               >
                 {link.name}
                 {location.pathname === link.path && (
                   <motion.div
                     layoutId='activeNav'
-                    className={`absolute -bottom-1 left-1 right-1 h-1 rounded-full ${isScrolled ? 'bg-brick' : 'bg-gold'}`}
+                    className='absolute -bottom-1 left-1 right-1 h-1 rounded-full bg-gold'
                   />
                 )}
               </Link>
@@ -104,32 +92,22 @@ export default function Header() {
           <div className='flex items-center gap-4'>
             <Link
               to='/admin/dashboard'
-              className={`hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm border ${
-                isScrolled
-                  ? 'bg-earth text-white border-earth hover:bg-earth-dark hover:border-earth-dark'
-                  : 'bg-earth/80 text-white border-earth/80 hover:bg-earth'
-              }`}
+              className='hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm border bg-brick text-white border-brick hover:bg-brick-dark hover:border-brick-dark'
               title='Admin Panel'
             >
-              🔐 Admin
+              Admin
             </Link>
             <Link
               to='/lien-he'
-              className={`hidden rounded-lg px-6 py-2.5 text-sm font-semibold transition-all hover:scale-105 sm:block ${
-                isScrolled
-                  ? 'bg-brick text-cream-light hover:bg-brick-dark'
-                  : 'bg-gold text-earth-dark hover:bg-gold-light'
-              }`}
+              className='hidden rounded-lg px-6 py-2.5 text-sm font-semibold transition-all hover:scale-105 sm:block bg-gold text-earth-dark hover:bg-gold-light'
             >
-              Liên hệ tư vấn
+              {'Liên hệ tư vấn'}
             </Link>
 
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors lg:hidden ${
-                isScrolled ? 'bg-brick/10 text-brick' : 'bg-cream-light/20 text-cream-light'
-              }`}
+              className='flex h-10 w-10 items-center justify-center rounded-lg transition-colors lg:hidden bg-cream-light/20 text-cream-light'
               aria-label='Toggle menu'
             >
               <svg
@@ -176,7 +154,7 @@ export default function Header() {
                 to='/lien-he'
                 className='mt-2 rounded-lg bg-gold px-4 py-3 text-center text-sm font-semibold text-earth-dark'
               >
-                Liên hệ tư vấn
+                {'Liên hệ tư vấn'}
               </Link>
             </nav>
           </motion.div>
