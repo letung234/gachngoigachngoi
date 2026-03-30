@@ -336,14 +336,15 @@ export default function ProductModal({ isOpen, onClose, product }: ProductModalP
         id: product?._id,
         body: {
           ...formData,
-          name: formData.name.trim(),
-          description: formData.description.trim(),
+          name: formData.name?.trim() || '',
+          description: formData.description?.trim() || '',
           image: imageUrl,
           images: allImages
         }
       })
-    } catch {
+    } catch (error) {
       setUploading(false)
+      console.error(error)
       toast.error('Có lỗi xảy ra')
     }
   }

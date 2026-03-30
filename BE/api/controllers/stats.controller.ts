@@ -3,14 +3,12 @@ import { ProductModel } from '../database/models/product.model'
 import { UserModel } from '../database/models/user.model'
 import { OrderModel, ORDER_STATUS } from '../database/models/order.model'
 import { responseSuccess } from '../utils/response'
-import { handleImageProduct } from './product.controller'
-import { cloneDeep } from 'lodash'
 
 // Dashboard Overview Stats
 export const getOverviewStats = async (req: Request, res: Response) => {
   const [totalProducts, totalUsers, orders] = await Promise.all([
     ProductModel.countDocuments(),
-    UserModel.countDocuments(),
+    OrderModel.distinct("customerEmail"),
     OrderModel.find().lean(),
   ])
 
@@ -53,7 +51,7 @@ export const getOverviewStats = async (req: Request, res: Response) => {
       conversionChange: '+2.3%', // Would calculate from previous period
       // Additional useful data
       totalProducts,
-      totalUsers,
+      totalUsers: totalUsers.length,
       totalOrders,
     },
   }

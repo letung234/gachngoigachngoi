@@ -7,26 +7,26 @@ async function createAdminUser() {
     await connectMongoDB()
 
     console.log('🔍 Checking for existing admin user...')
-    const existingAdmin = await UserModel.findOne({ roles: 'Admin' })
+    const existingAdmin = await UserModel.findOne({ roles: 'Super Admin' })
 
     if (existingAdmin) {
-      console.log('✅ Admin user already exists:', (existingAdmin as any).email)
+      console.log('✅ Super Admin user already exists:', (existingAdmin as any).email)
       process.exit(0)
     }
 
-    console.log('📝 Creating admin user...')
+    console.log('📝 Creating super admin user...')
     const adminUser = await UserModel.create({
-      email: 'admin@gachngoiviet.com',
-      password: 'admin123',
-      name: 'Admin',
-      roles: 'Admin',
+      email: 'supperadmin@gachngoiviet.com',
+      password: 'supperadmin123',
+      name: 'Supper Admin',
+      roles: ['Super Admin'],
       verify: 1
     })
 
-    console.log('✅ Admin user created successfully!')
-    console.log('\nAdmin credentials:')
-    console.log('  Email: admin@gachngoiviet.com')
-    console.log('  Password: admin123')
+    console.log('✅ Super Admin user created successfully!')
+    console.log('\nSuper Admin credentials:')
+    console.log('  Email: supperadmin@gachngoiviet.com')
+    console.log('  Password: supperadmin123')
     console.log('\n⚠️  Please change the password after first login!')
 
     process.exit(0)
