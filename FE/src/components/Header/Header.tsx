@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useSiteConfig } from 'src/contexts/siteConfig.context'
 
-const navLinks = [
+const DEFAULT_NAV_LINKS = [
   { name: 'Trang chủ', path: '/' },
   { name: 'Sản phẩm', path: '/san-pham' },
   { name: 'Dự án', path: '/du-an' },
   { name: 'Về chúng tôi', path: '/gioi-thieu' },
-  { name: 'Liên hệ', path: '/lien-he' }
+  { name: 'Liên hệ', path: '/lien-he' },
+  { name: 'Hồ sơ năng lực', path: '/ho-so-nang-luc' },
 ]
 
 export default function Header() {
@@ -17,10 +18,25 @@ export default function Header() {
   const location = useLocation()
   const { config } = useSiteConfig()
 
+  const navLinks = useMemo(() => {
+    const headerLinks = config?.header?.navLinks
+
+    if (headerLinks && headerLinks.length > 0) {
+      return headerLinks.filter((link) => link.isEnabled)
+    }
+
+    return DEFAULT_NAV_LINKS
+  }, [config?.header?.navLinks])
+
+  const ctaText = config?.header?.ctaText || 'Liên hệ tư vấn'
+  const ctaLink = config?.header?.ctaLink || '/lien-he'
+  const isShowAdminLink = config?.header?.showAdminLink !== false
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
@@ -43,12 +59,10 @@ export default function Header() {
               <img
                 src={config.logo}
                 alt={config.siteName}
-                className='h-12 w-auto object-contain transition-opacity opacity-100'
+                className='h-12 w-auto object-contain opacity-100'
               />
             ) : (
-              <div
-                className='flex h-12 w-12 items-center justify-center rounded-lg transition-colors bg-brick'
-              >
+              <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-brick'>
                 <svg viewBox='0 0 40 40' className='h-8 w-8 fill-cream-light'>
                   <path d='M20 4L4 12v16l16 8 16-8V12L20 4zm0 4l12 6v12l-12 6-12-6V14l12-6z' />
                   <rect x='14' y='16' width='12' height='8' rx='1' />
@@ -56,14 +70,10 @@ export default function Header() {
               </div>
             )}
             <div className='hidden sm:block'>
-              <h1
-                className='font-serif text-xl font-bold text-cream-light'
-              >
+              <h1 className='font-serif text-xl font-bold text-cream-light'>
                 {config?.siteName || 'Gạch Ngói Thủ công'}
               </h1>
-              <p
-                className='text-xs text-cream-light/80'
-              >
+              <p className='text-xs text-cream-light/80'>
                 {config?.siteSlogan || 'Tinh hoa làng nghề'}
               </p>
             </div>
@@ -75,7 +85,9 @@ export default function Header() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative py-2 px-1 text-sm font-medium transition-all duration-200 text-cream-light/90 hover:text-cream-light ${location.pathname === link.path ? 'text-cream-light font-semibold' : ''}`}
+                className={`relative py-2 px-1 text-sm font-medium transition-all duration-200 text-cream-light/90 hover:text-cream-light ${
+                  location.pathname === link.path ? 'text-cream-light font-semibold' : ''
+                }`}
               >
                 {link.name}
                 {location.pathname === link.path && (
@@ -90,18 +102,20 @@ export default function Header() {
 
           {/* CTA Button & Mobile Menu */}
           <div className='flex items-center gap-4'>
+            {isShowAdminLink && (
+              <Link
+                to='/admin/dashboard'
+                className='hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm border bg-brick text-white border-brick hover:bg-brick-dark hover:border-brick-dark'
+                title='Admin Panel'
+              >
+                Admin
+              </Link>
+            )}
             <Link
-              to='/admin/dashboard'
-              className='hidden rounded-lg px-3 py-2 text-xs font-semibold transition-all md:px-4 md:py-2.5 md:text-sm border bg-brick text-white border-brick hover:bg-brick-dark hover:border-brick-dark'
-              title='Admin Panel'
-            >
-              Admin
-            </Link>
-            <Link
-              to='/lien-he'
+              to={ctaLink}
               className='hidden rounded-lg px-6 py-2.5 text-sm font-semibold transition-all hover:scale-105 sm:block bg-gold text-earth-dark hover:bg-gold-light'
             >
-              {'Liên hệ tư vấn'}
+              {ctaText}
             </Link>
 
             {/* Mobile Menu Button */}
@@ -110,12 +124,7 @@ export default function Header() {
               className='flex h-10 w-10 items-center justify-center rounded-lg transition-colors lg:hidden bg-cream-light/20 text-cream-light'
               aria-label='Toggle menu'
             >
-              <svg
-                className='h-6 w-6'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
+              <svg className='h-6 w-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 {isMobileMenuOpen ? (
                   <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
                 ) : (
@@ -151,10 +160,10 @@ export default function Header() {
                 </Link>
               ))}
               <Link
-                to='/lien-he'
+                to={ctaLink}
                 className='mt-2 rounded-lg bg-gold px-4 py-3 text-center text-sm font-semibold text-earth-dark'
               >
-                {'Liên hệ tư vấn'}
+                {ctaText}
               </Link>
             </nav>
           </motion.div>

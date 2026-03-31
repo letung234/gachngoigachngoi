@@ -6,6 +6,7 @@ import adminStatsRouter from "./admin-stats.route"
 import adminConfigRouter from "./admin-config.route"
 import adminOrderRouter from "./admin-order.route"
 import adminPostRouter from "./admin-post.route"
+import adminContactRouter from "./admin-contact.route"
 
 const adminRoutes = {
   prefix: "/admin/",
@@ -33,6 +34,10 @@ const adminRoutes = {
     {
       path: "stats",
       route: adminStatsRouter
+    },
+    {
+      path: "contacts",
+      route: adminContactRouter
     },
     {
       path: "config",

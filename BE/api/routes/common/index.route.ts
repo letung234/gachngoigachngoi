@@ -4,6 +4,7 @@ import commonProductRouter from './common-product.route'
 import commonCategoryRouter from './common-category.route'
 import commonConfigRouter from './common-config.route'
 import commonPostRouter from './common-post.route'
+import commonContactRouter from './common-contact.route'
 
 const commonRoutes = {
   prefix: '/',
@@ -31,6 +32,10 @@ const commonRoutes = {
     {
       path: '',
       route: commonConfigRouter
+    },
+    {
+      path: '',
+      route: commonContactRouter
     }
   ]
 }

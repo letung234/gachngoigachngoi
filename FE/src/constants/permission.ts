@@ -44,6 +44,11 @@ export enum Permission {
   DASHBOARD_VIEW = 'dashboard.view',
   STATS_VIEW = 'stats.view',
 
+  // Contact permissions
+  CONTACT_READ = 'contact.read',
+  CONTACT_UPDATE = 'contact.update',
+  CONTACT_DELETE = 'contact.delete',
+
   // Config permissions
   CONFIG_READ = 'config.read',
   CONFIG_UPDATE = 'config.update'
@@ -73,6 +78,10 @@ export const rolePermissions: Record<Role, Permission[]> = {
     // Dashboard & Stats
     Permission.DASHBOARD_VIEW,
     Permission.STATS_VIEW,
+    // Contact
+    Permission.CONTACT_READ,
+    Permission.CONTACT_UPDATE,
+    Permission.CONTACT_DELETE,
     // Config
     Permission.CONFIG_READ,
     Permission.CONFIG_UPDATE
@@ -142,43 +151,55 @@ export const adminMenuItems = [
   {
     path: '/admin/dashboard',
     label: 'Dashboard',
-    icon: '📊',
+    icon: '�ｨ滓ｨ雁��',
     permission: Permission.DASHBOARD_VIEW
   },
   {
     path: '/admin/products',
-    label: 'Sản phẩm',
-    icon: '📦',
+    label: 'S髯ゑｽｯ�ｿｽ�ｽｽ�ｽ｣n ph髯ゑｽｯ�ｿｽ�ｽｽ�ｽｩm',
+    icon: '�ｨ滓ｨ｣ﾂ�ｿｽ',
     permission: Permission.PRODUCT_READ
   },
   {
     path: '/admin/categories',
-    label: 'Danh mục',
-    icon: '🏷️',
+    label: 'Danh m騾ｶ�ｽｻ�ｿｽ�ｽｽ�ｽ･c',
+    icon: '�ｨ滓ｨ雁ｷｮ�ｿｽ�ｽｿ�ｽｽ�ｿｽ�ｽｽ�ｽｸ�ｿｽ�ｽｿ�ｽｽ',
     permission: Permission.CATEGORY_READ
   },
   {
     path: '/admin/orders',
-    label: 'Đơn hàng',
-    icon: '📋',
+    label: '�ｿｽ�ｽｾ�ｿｽ髢ｼ�ｿｽ�ｿｽ�ｽｽ�ｽ｡n h�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽng',
+    icon: '�ｨ滓ｨ頑帆',
     permission: Permission.ORDER_READ
   },
   {
     path: '/admin/users',
-    label: 'Người dùng',
-    icon: '👥',
+    label: 'Ng�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｰ騾ｶ�ｽｻ隲｡�ｽｱ d�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｹng',
+    icon: '�ｨ滓ｧｫ謠ｴ',
     permission: Permission.USER_READ
   },
   {
     path: '/admin/posts',
-    label: 'Bài viết',
-    icon: '📝',
+    label: 'B�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽi vi髯ゑｽｯ�ｿｽ�ｽｽ�ｽｿt',
+    icon: '�ｨ滓ｨ抵ｽｵ�ｽｱ',
     permission: Permission.POST_READ
   },
   {
     path: '/admin/analytics',
-    label: 'Phân tích',
-    icon: '📈',
+    label: 'Ph�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽ｢n t�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｭch',
+    icon: '�ｨ滓ｧｫ�ｽｶ�ｿｽ',
     permission: Permission.STATS_VIEW
+  },
+  {
+    path: '/admin/contacts',
+    label: 'Liên hệ',
+    icon: '📩',
+    permission: Permission.CONTACT_READ
+  },
+  {
+    path: '/admin/settings',
+    label: 'C�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽi �ｿｽ�ｽｾ�ｿｽ魄溷ｹ｢�ｽｽ�ｽｺ�ｿｽ�ｽｽ�ｽｷt',
+    icon: '髫ｨ讒ｫ驕懶ｿｽ�ｽｽ�ｽｸ�ｿｽ�ｽｿ�ｽｽ',
+    permission: Permission.CONFIG_READ
   }
 ]

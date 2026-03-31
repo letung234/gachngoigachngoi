@@ -1,4 +1,69 @@
-export interface SiteConfig {
+export type NavLinkConfig = {
+  name: string
+  path: string
+  isEnabled: boolean
+}
+
+export type FooterLinkConfig = {
+  name: string
+  path: string
+}
+
+export type BannerImageConfig = {
+  image: string
+  link: string
+  title: string
+}
+
+export type TeamMemberConfig = {
+  name: string
+  role: string
+  avatar: string
+}
+
+export type TestimonialConfig = {
+  name: string
+  role: string
+  content: string
+  avatar: string
+  rating: number
+}
+
+export type AchievementConfig = {
+  title: string
+  description: string
+  icon: string
+}
+
+export type ClientConfig = {
+  name: string
+  logo: string
+}
+
+export type CertificationConfig = {
+  name: string
+  image: string
+  year: string
+}
+
+export type CompanyStatConfig = {
+  label: string
+  value: string
+  suffix: string
+}
+
+export type CompanyProfileConfig = {
+  companyName: string
+  foundedYear: string
+  description: string
+  coreValues: string[]
+  achievements: AchievementConfig[]
+  clients: ClientConfig[]
+  certifications: CertificationConfig[]
+  stats: CompanyStatConfig[]
+}
+
+export type SiteConfig = {
   _id: string
 
   // Basic Info
@@ -38,12 +103,47 @@ export interface SiteConfig {
     facebookPixelId: string
   }
 
+  // Header Settings
+  header: {
+    navLinks: NavLinkConfig[]
+    ctaText: string
+    ctaLink: string
+    showAdminLink: boolean
+  }
+
   // Footer Settings
   footer: {
     about: string
     copyright: string
     showSocialIcons: boolean
     showNewsletter: boolean
+    brandName: string
+    brandSlogan: string
+    productLinks: FooterLinkConfig[]
+    companyLinks: FooterLinkConfig[]
+  }
+
+  // About Page Settings
+  aboutPage: {
+    title: string
+    subtitle: string
+    content: string
+    missionTitle: string
+    missionContent: string
+    visionTitle: string
+    visionContent: string
+    heroImage: string
+    teamMembers: TeamMemberConfig[]
+  }
+
+  // Notification/Announcement Banner
+  notification: {
+    enabled: boolean
+    message: string
+    type: 'info' | 'warning' | 'success' | 'promotion'
+    link: string
+    linkText: string
+    isDismissible: boolean
   }
 
   // Homepage Settings
@@ -55,11 +155,7 @@ export interface SiteConfig {
     heroButtonLink: string
     featuredCategoryIds: string[]
     showBanner: boolean
-    bannerImages: {
-      image: string
-      link: string
-      title: string
-    }[]
+    bannerImages: BannerImageConfig[]
   }
 
   // Theme Settings
@@ -87,6 +183,12 @@ export interface SiteConfig {
     message: string
     allowedIPs: string[]
   }
+
+  // Testimonials
+  testimonials: TestimonialConfig[]
+
+  // Company Profile
+  companyProfile: CompanyProfileConfig
 
   createdAt: string
   updatedAt: string

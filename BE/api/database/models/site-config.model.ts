@@ -39,12 +39,61 @@ const SiteConfigSchema = new Schema(
       facebookPixelId: { type: String, default: '' }
     },
 
+    // Header Settings
+    header: {
+      navLinks: [{
+        name: { type: String },
+        path: { type: String },
+        isEnabled: { type: Boolean, default: true },
+      }],
+      ctaText: { type: String, default: 'Liên hệ tư vấn' },
+      ctaLink: { type: String, default: '/lien-he' },
+      showAdminLink: { type: Boolean, default: true },
+    },
+
     // Footer Settings
     footer: {
       about: { type: String, default: '' },
-      copyright: { type: String, default: '© 2024 Gạch Ngói Shop. All rights reserved.' },
+      copyright: { type: String, default: '\u00A9 2024 Gạch Ngói Shop. All rights reserved.' },
       showSocialIcons: { type: Boolean, default: true },
-      showNewsletter: { type: Boolean, default: true }
+      showNewsletter: { type: Boolean, default: true },
+      brandName: { type: String, default: 'Gạch Ngói Việt' },
+      brandSlogan: { type: String, default: 'Tinh hoa làng nghề' },
+      productLinks: [{
+        name: { type: String },
+        path: { type: String },
+      }],
+      companyLinks: [{
+        name: { type: String },
+        path: { type: String },
+      }],
+    },
+
+    // About Page Settings
+    aboutPage: {
+      title: { type: String, default: 'Về chúng tôi' },
+      subtitle: { type: String, default: '' },
+      content: { type: String, default: '' },
+      missionTitle: { type: String, default: 'Sứ mệnh' },
+      missionContent: { type: String, default: '' },
+      visionTitle: { type: String, default: 'Tầm nhìn' },
+      visionContent: { type: String, default: '' },
+      heroImage: { type: String, default: '' },
+      teamMembers: [{
+        name: { type: String },
+        role: { type: String },
+        avatar: { type: String },
+      }],
+    },
+
+    // Notification/Announcement Banner
+    notification: {
+      enabled: { type: Boolean, default: false },
+      message: { type: String, default: '' },
+      type: { type: String, enum: ['info', 'warning', 'success', 'promotion'], default: 'info' },
+      link: { type: String, default: '' },
+      linkText: { type: String, default: '' },
+      isDismissible: { type: Boolean, default: true },
     },
 
     // Homepage Settings
@@ -53,14 +102,50 @@ const SiteConfigSchema = new Schema(
       heroSubtitle: { type: String, default: '' },
       heroImage: { type: String, default: '' },
       heroButtonText: { type: String, default: 'Xem sản phẩm' },
-      heroButtonLink: { type: String, default: '/products' },
+      heroButtonLink: { type: String, default: '/san-pham' },
       featuredCategoryIds: [{ type: Schema.Types.ObjectId, ref: 'categories' }],
       showBanner: { type: Boolean, default: true },
       bannerImages: [{
         image: { type: String },
         link: { type: String },
         title: { type: String }
-      }]
+      }],
+    },
+
+    // Testimonials
+    testimonials: [{
+      name: { type: String },
+      role: { type: String },
+      content: { type: String },
+      avatar: { type: String },
+      rating: { type: Number, default: 5 },
+    }],
+
+    // Company Profile
+    companyProfile: {
+      companyName: { type: String, default: '' },
+      foundedYear: { type: String, default: '' },
+      description: { type: String, default: '' },
+      coreValues: [{ type: String }],
+      achievements: [{
+        title: { type: String },
+        description: { type: String },
+        icon: { type: String },
+      }],
+      clients: [{
+        name: { type: String },
+        logo: { type: String },
+      }],
+      certifications: [{
+        name: { type: String },
+        image: { type: String },
+        year: { type: String },
+      }],
+      stats: [{
+        label: { type: String },
+        value: { type: String },
+        suffix: { type: String },
+      }],
     },
 
     // Theme Settings

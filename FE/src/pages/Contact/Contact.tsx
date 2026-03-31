@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import http from 'src/utils/http'
 
 const contactInfo = [
   {
@@ -8,8 +9,8 @@ const contactInfo = [
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M15 11a3 3 0 11-6 0 3 3 0 016 0z' />
       </svg>
     ),
-    title: 'Địa chỉ',
-    content: ['Làng nghề gạch ngói Bát Tràng', 'Gia Lâm, Hà Nội, Việt Nam']
+    title: 'ﾄ雪ｻ蟻 ch盻�',
+    content: ['Lﾃ�ng ngh盻� g蘯｡ch ngﾃｳi Bﾃ｡t Trﾃ�ng', 'Gia Lﾃ｢m, Hﾃ� N盻冓, Vi盻㏄ Nam']
   },
   {
     icon: (
@@ -17,8 +18,8 @@ const contactInfo = [
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' />
       </svg>
     ),
-    title: 'Điện thoại',
-    content: ['Hotline: 1900 xxxx', 'Di động: 0912 345 678']
+    title: 'ﾄ進盻㌻ tho蘯｡i',
+    content: ['Hotline: 1900 xxxx', 'Di ﾄ黛ｻ冢g: 0912 345 678']
   },
   {
     icon: (
@@ -35,27 +36,27 @@ const contactInfo = [
         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' />
       </svg>
     ),
-    title: 'Giờ làm việc',
-    content: ['Thứ 2 - Thứ 7: 8:00 - 17:30', 'Chủ nhật: 8:00 - 12:00']
+    title: 'Gi盻� lﾃ�m vi盻㌘',
+    content: ['Th盻ｩ 2 - Th盻ｩ 7: 8:00 - 17:30', 'Ch盻ｧ nh蘯ｭt: 8:00 - 12:00']
   }
 ]
 
 const faqs = [
   {
-    question: 'Thời gian giao hàng là bao lâu?',
-    answer: 'Thời gian giao hàng phụ thuộc vào số lượng đặt hàng và địa điểm giao. Thông thường từ 7-14 ngày làm việc cho đơn hàng trong nước và 30-45 ngày cho đơn hàng xuất khẩu.'
+    question: 'Th盻拱 gian giao hﾃ�ng lﾃ� bao lﾃ｢u?',
+    answer: 'Th盻拱 gian giao hﾃ�ng ph盻･ thu盻冂 vﾃ�o s盻� lﾆｰ盻｣ng ﾄ黛ｺｷt hﾃ�ng vﾃ� ﾄ黛ｻ蟻 ﾄ訴盻ノ giao. Thﾃｴng thﾆｰ盻拵g t盻ｫ 7-14 ngﾃ�y lﾃ�m vi盻㌘ cho ﾄ柁｡n hﾃ�ng trong nﾆｰ盻嫩 vﾃ� 30-45 ngﾃ�y cho ﾄ柁｡n hﾃ�ng xu蘯･t kh蘯ｩu.'
   },
   {
-    question: 'Có hỗ trợ thi công lắp đặt không?',
-    answer: 'Có, chúng tôi có đội ngũ kỹ thuật viên giàu kinh nghiệm hỗ trợ tư vấn và giám sát thi công. Chi phí thi công sẽ được báo giá riêng tùy theo công trình.'
+    question: 'Cﾃｳ h盻� tr盻｣ thi cﾃｴng l蘯ｯp ﾄ黛ｺｷt khﾃｴng?',
+    answer: 'Cﾃｳ, chﾃｺng tﾃｴi cﾃｳ ﾄ黛ｻ冓 ngﾅｩ k盻ｹ thu蘯ｭt viﾃｪn giﾃ�u kinh nghi盻㍊ h盻� tr盻｣ tﾆｰ v蘯･n vﾃ� giﾃ｡m sﾃ｡t thi cﾃｴng. Chi phﾃｭ thi cﾃｴng s蘯ｽ ﾄ柁ｰ盻｣c bﾃ｡o giﾃ｡ riﾃｪng tﾃｹy theo cﾃｴng trﾃｬnh.'
   },
   {
-    question: 'Chính sách bảo hành như thế nào?',
-    answer: 'Tất cả sản phẩm của chúng tôi được bảo hành 10 năm về chất lượng vật liệu. Riêng dòng sản phẩm cao cấp được bảo hành lên đến 25 năm.'
+    question: 'Chﾃｭnh sﾃ｡ch b蘯｣o hﾃ�nh nhﾆｰ th蘯ｿ nﾃ�o?',
+    answer: 'T蘯･t c蘯｣ s蘯｣n ph蘯ｩm c盻ｧa chﾃｺng tﾃｴi ﾄ柁ｰ盻｣c b蘯｣o hﾃ�nh 10 nﾄノ v盻� ch蘯･t lﾆｰ盻｣ng v蘯ｭt li盻㎡. Riﾃｪng dﾃｲng s蘯｣n ph蘯ｩm cao c蘯･p ﾄ柁ｰ盻｣c b蘯｣o hﾃ�nh lﾃｪn ﾄ黛ｺｿn 25 nﾄノ.'
   },
   {
-    question: 'Có nhận sản xuất theo mẫu riêng không?',
-    answer: 'Có, chúng tôi nhận sản xuất theo yêu cầu với số lượng tối thiểu 500m² cho ngói và 200m² cho gạch. Vui lòng liên hệ để được tư vấn chi tiết.'
+    question: 'Cﾃｳ nh蘯ｭn s蘯｣n xu蘯･t theo m蘯ｫu riﾃｪng khﾃｴng?',
+    answer: 'Cﾃｳ, chﾃｺng tﾃｴi nh蘯ｭn s蘯｣n xu蘯･t theo yﾃｪu c蘯ｧu v盻嬖 s盻� lﾆｰ盻｣ng t盻訴 thi盻ブ 500mﾂｲ cho ngﾃｳi vﾃ� 200mﾂｲ cho g蘯｡ch. Vui lﾃｲng liﾃｪn h盻� ﾄ黛ｻ� ﾄ柁ｰ盻｣c tﾆｰ v蘯･n chi ti蘯ｿt.'
   }
 ]
 
@@ -75,14 +76,16 @@ export default function Contact() {
     e.preventDefault()
     setIsSubmitting(true)
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setIsSubmitting(false)
-    setSubmitSuccess(true)
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
-    
-    setTimeout(() => setSubmitSuccess(false), 5000)
+    try {
+      await http.post('/contact', formData)
+      setSubmitSuccess(true)
+      setFormData({ name: '', email: '', phone: '', subject: '', message: '' })
+      setTimeout(() => setSubmitSuccess(false), 5000)
+    } catch (error) {
+      console.error('Submit contact error:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -104,10 +107,10 @@ export default function Contact() {
         </div>
         <div className='relative z-10 text-center text-white px-4'>
           <h1 className='font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 animate-fade-in-up'>
-            Liên Hệ
+            Liﾃｪn H盻�
           </h1>
           <p className='text-base md:text-xl max-w-2xl mx-auto opacity-90 animate-fade-in-up animation-delay-200'>
-            Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn
+            Chﾃｺng tﾃｴi luﾃｴn s蘯ｵn sﾃ�ng l蘯ｯng nghe vﾃ� h盻� tr盻｣ b蘯｡n
           </p>
         </div>
       </section>
@@ -140,14 +143,14 @@ export default function Contact() {
           <div className='grid lg:grid-cols-2 gap-8 md:gap-12'>
             {/* Contact Form */}
             <div>
-              <span className='text-brick font-medium uppercase tracking-wider text-sm'>Gửi Tin Nhắn</span>
+              <span className='text-brick font-medium uppercase tracking-wider text-sm'>G盻ｭi Tin Nh蘯ｯn</span>
               <h2 className='font-serif text-2xl md:text-4xl font-bold text-earth-dark mt-2 mb-6 md:mb-8'>
-                Liên Hệ Với Chúng Tôi
+                Liﾃｪn H盻� V盻嬖 Chﾃｺng Tﾃｴi
               </h2>
 
               {submitSuccess && (
                 <div className='mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700'>
-                  Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.
+                  C蘯｣m ﾆ｡n b蘯｡n ﾄ妥｣ liﾃｪn h盻�! Chﾃｺng tﾃｴi s蘯ｽ ph蘯｣n h盻妬 trong th盻拱 gian s盻嬶 nh蘯･t.
                 </div>
               )}
 
@@ -155,7 +158,7 @@ export default function Contact() {
                 <div className='grid sm:grid-cols-2 gap-5'>
                   <div>
                     <label className='block text-earth-dark font-medium mb-2 text-sm' htmlFor='name'>
-                      Họ và tên *
+                      H盻� vﾃ� tﾃｪn *
                     </label>
                     <input
                       type='text'
@@ -165,12 +168,12 @@ export default function Contact() {
                       onChange={handleChange}
                       required
                       className='w-full px-4 py-3 rounded-lg border border-cream-dark focus:border-brick focus:ring-2 focus:ring-brick/20 outline-none transition-all text-sm'
-                      placeholder='Nguyễn Văn A'
+                      placeholder='Nguy盻�n Vﾄハ A'
                     />
                   </div>
                   <div>
                     <label className='block text-earth-dark font-medium mb-2 text-sm' htmlFor='phone'>
-                      Số điện thoại *
+                      S盻� ﾄ訴盻㌻ tho蘯｡i *
                     </label>
                     <input
                       type='tel'
@@ -203,7 +206,7 @@ export default function Contact() {
 
                 <div>
                   <label className='block text-earth-dark font-medium mb-2 text-sm' htmlFor='subject'>
-                    Chủ đề
+                    Ch盻ｧ ﾄ黛ｻ�
                   </label>
                   <select
                     id='subject'
@@ -212,17 +215,17 @@ export default function Contact() {
                     onChange={handleChange}
                     className='w-full px-4 py-3 rounded-lg border border-cream-dark focus:border-brick focus:ring-2 focus:ring-brick/20 outline-none transition-all text-sm bg-white'
                   >
-                    <option value=''>Chọn chủ đề</option>
-                    <option value='bao-gia'>Yêu cầu báo giá</option>
-                    <option value='tu-van'>Tư vấn sản phẩm</option>
-                    <option value='hop-tac'>Hợp tác kinh doanh</option>
-                    <option value='khac'>Khác</option>
+                    <option value=''>Ch盻肱 ch盻ｧ ﾄ黛ｻ�</option>
+                    <option value='bao-gia'>Yﾃｪu c蘯ｧu bﾃ｡o giﾃ｡</option>
+                    <option value='tu-van'>Tﾆｰ v蘯･n s蘯｣n ph蘯ｩm</option>
+                    <option value='hop-tac'>H盻｣p tﾃ｡c kinh doanh</option>
+                    <option value='khac'>Khﾃ｡c</option>
                   </select>
                 </div>
 
                 <div>
                   <label className='block text-earth-dark font-medium mb-2 text-sm' htmlFor='message'>
-                    Nội dung tin nhắn *
+                    N盻冓 dung tin nh蘯ｯn *
                   </label>
                   <textarea
                     id='message'
@@ -232,7 +235,7 @@ export default function Contact() {
                     required
                     rows={5}
                     className='w-full px-4 py-3 rounded-lg border border-cream-dark focus:border-brick focus:ring-2 focus:ring-brick/20 outline-none transition-all resize-none text-sm'
-                    placeholder='Mô tả chi tiết yêu cầu của bạn...'
+                    placeholder='Mﾃｴ t蘯｣ chi ti蘯ｿt yﾃｪu c蘯ｧu c盻ｧa b蘯｡n...'
                   ></textarea>
                 </div>
 
@@ -247,11 +250,11 @@ export default function Contact() {
                         <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
                         <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
                       </svg>
-                      Đang gửi...
+                      ﾄ紳ng g盻ｭi...
                     </>
                   ) : (
                     <>
-                      Gửi Tin Nhắn
+                      G盻ｭi Tin Nh蘯ｯn
                       <svg className='w-5 h-5' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
                         <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 19l9 2-9-18-9 18 9-2zm0 0v-8' />
                       </svg>
@@ -263,9 +266,9 @@ export default function Contact() {
 
             {/* Map */}
             <div>
-              <span className='text-brick font-medium uppercase tracking-wider text-sm'>Vị Trí</span>
+              <span className='text-brick font-medium uppercase tracking-wider text-sm'>V盻� Trﾃｭ</span>
               <h2 className='font-serif text-2xl md:text-4xl font-bold text-earth-dark mt-2 mb-6 md:mb-8'>
-                Tìm Đến Chúng Tôi
+                Tﾃｬm ﾄ雪ｺｿn Chﾃｺng Tﾃｴi
               </h2>
               <div className='rounded-xl overflow-hidden shadow-lg h-[300px] md:h-[450px]'>
                 <iframe
@@ -275,15 +278,15 @@ export default function Contact() {
                   style={{ border: 0 }}
                   allowFullScreen
                   loading='lazy'
-                  title='Bản đồ vị trí'
+                  title='B蘯｣n ﾄ黛ｻ� v盻� trﾃｭ'
                 ></iframe>
               </div>
               <div className='mt-6 p-4 md:p-6 bg-white rounded-xl shadow-md'>
-                <h3 className='font-serif text-lg font-bold text-earth-dark mb-3'>Hướng dẫn đường đi</h3>
+                <h3 className='font-serif text-lg font-bold text-earth-dark mb-3'>Hﾆｰ盻嬾g d蘯ｫn ﾄ柁ｰ盻拵g ﾄ訴</h3>
                 <p className='text-earth text-sm leading-relaxed'>
-                  Từ trung tâm Hà Nội, đi theo hướng cầu Chương Dương, rẽ phải vào quốc lộ 5. 
-                  Đi thẳng khoảng 15km, rẽ trái tại ngã ba Bát Tràng. Xưởng sản xuất nằm bên tay phải, 
-                  cách cổng làng khoảng 500m.
+                  T盻ｫ trung tﾃ｢m Hﾃ� N盻冓, ﾄ訴 theo hﾆｰ盻嬾g c蘯ｧu Chﾆｰﾆ｡ng Dﾆｰﾆ｡ng, r蘯ｽ ph蘯｣i vﾃ�o qu盻祖 l盻� 5. 
+                  ﾄ進 th蘯ｳng kho蘯｣ng 15km, r蘯ｽ trﾃ｡i t蘯｡i ngﾃ｣ ba Bﾃ｡t Trﾃ�ng. Xﾆｰ盻殤g s蘯｣n xu蘯･t n蘯ｱm bﾃｪn tay ph蘯｣i, 
+                  cﾃ｡ch c盻貧g lﾃ�ng kho蘯｣ng 500m.
                 </p>
               </div>
             </div>
@@ -297,7 +300,7 @@ export default function Contact() {
           <div className='text-center mb-10 md:mb-16'>
             <span className='text-brick font-medium uppercase tracking-wider text-sm'>FAQ</span>
             <h2 className='font-serif text-2xl md:text-4xl font-bold text-earth-dark mt-2'>
-              Câu Hỏi Thường Gặp
+              Cﾃ｢u H盻淑 Thﾆｰ盻拵g G蘯ｷp
             </h2>
           </div>
 
@@ -338,10 +341,10 @@ export default function Contact() {
           <div className='flex flex-col md:flex-row items-center justify-between gap-6'>
             <div className='text-center md:text-left'>
               <h3 className='font-serif text-xl md:text-2xl font-bold text-white mb-2'>
-                Cần tư vấn nhanh?
+                C蘯ｧn tﾆｰ v蘯･n nhanh?
               </h3>
               <p className='text-white/80 text-sm md:text-base'>
-                Gọi ngay hotline để được hỗ trợ tức thì
+                G盻絞 ngay hotline ﾄ黛ｻ� ﾄ柁ｰ盻｣c h盻� tr盻｣ t盻ｩc thﾃｬ
               </p>
             </div>
             <a 

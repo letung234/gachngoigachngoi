@@ -264,12 +264,36 @@ const getCategoryColor = (categoryName: string): string => {
   return 'from-gray-400 to-gray-400/70' // Default color
 }
 
+// Order counts grouped by status
+export const getOrderStatusCounts = async (req: Request, res: Response) => {
+  const statusList = Object.values(ORDER_STATUS)
+
+  const countPromiseList = statusList.map(async (status) => {
+    const count = await OrderModel.countDocuments({ status })
+    return { status, count }
+  })
+
+  const statusCountList = await Promise.all(countPromiseList)
+
+  const totalOrders = statusCountList.reduce((sum, item) => sum + item.count, 0)
+
+  const response = {
+    message: 'Lấy thống kê trạng thái đơn hàng thành công',
+    data: {
+      statusCountList,
+      totalOrders,
+    },
+  }
+  return responseSuccess(res, response)
+}
+
 const statsController = {
   getOverviewStats,
   getRevenueStats,
   getTopProducts,
   getLatestOrders,
   getCategoryStats,
+  getOrderStatusCounts,
 }
 
 export default statsController

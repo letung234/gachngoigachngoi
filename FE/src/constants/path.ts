@@ -31,7 +31,9 @@ const path = {
   adminPostNew: '/admin/posts/new',
   adminPostEdit: '/admin/posts/:id/edit',
   adminAnalytics: '/admin/analytics',
+  adminContacts: '/admin/contacts',
   adminSettings: '/admin/settings',
+  companyProfile: '/ho-so-nang-luc',
   // Error pages
   unauthorized: '/403',
   notFound: '/404'

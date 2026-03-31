@@ -62,4 +62,12 @@ adminStatsRouter.get(
   wrapAsync(statsController.getCategoryStats)
 )
 
+// Get order status counts
+adminStatsRouter.get(
+  '/order-status-counts',
+  authMiddleware.verifyAccessToken,
+  requirePermission(Permission.STATS_VIEW),
+  wrapAsync(statsController.getOrderStatusCounts)
+)
+
 export default adminStatsRouter

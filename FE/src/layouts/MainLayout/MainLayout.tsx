@@ -2,8 +2,9 @@ import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 import Footer from 'src/components/Footer'
 import Header from 'src/components/Header'
+import NotificationBanner from 'src/components/NotificationBanner/NotificationBanner'
 
-interface Props {
+type Props = {
   children?: React.ReactNode
 }
 
@@ -13,6 +14,7 @@ const Header_ = memo(Header)
 function MainLayoutInner({ children }: Props) {
   return (
     <div className='min-h-screen bg-cream-light'>
+      <NotificationBanner />
       <Header_ />
       <main className='flex flex-col min-h-[calc(100vh-64px)]'>
         {children}

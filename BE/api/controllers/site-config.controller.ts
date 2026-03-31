@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { responseSuccess, ErrorHandler } from '../utils/response'
 import { SiteConfigModel } from '../database/models/site-config.model'
+import { clearMaintenanceCache } from '../middleware/maintenance.middleware'
 import { STATUS } from '../constants/status'
 import { uploadFileCloudinary } from '../utils/cloudinary'
 
@@ -15,7 +16,7 @@ const getSiteConfig = async (req: Request, res: Response) => {
   }
 
   const response = {
-    message: 'Lấy cấu hình thành công',
+    message: 'L蘯･y c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
     data: config
   }
   return responseSuccess(res, response)
@@ -53,10 +54,12 @@ const updateSiteConfig = async (req: Request, res: Response) => {
     await SiteConfigModel.findByIdAndUpdate(config._id, merged)
   }
 
+  clearMaintenanceCache()
+
   const updatedConfig = await SiteConfigModel.findOne().lean()
 
   const response = {
-    message: 'Cập nhật cấu hình thành công',
+    message: 'C蘯ｭp nh蘯ｭt c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
     data: updatedConfig
   }
   return responseSuccess(res, response)
@@ -66,7 +69,7 @@ const updateSiteConfig = async (req: Request, res: Response) => {
 const uploadConfigImage = async (req: Request, res: Response) => {
   const url = await uploadFileCloudinary(req, 'config')
   const response = {
-    message: 'Upload ảnh thành công',
+    message: 'Upload 蘯｣nh thﾃ�nh cﾃｴng',
     data: url
   }
   return responseSuccess(res, response)
@@ -78,7 +81,7 @@ const resetSiteConfig = async (req: Request, res: Response) => {
   const newConfig = await new SiteConfigModel({}).save()
 
   const response = {
-    message: 'Reset cấu hình thành công',
+    message: 'Reset c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
     data: newConfig.toObject()
   }
   return responseSuccess(res, response)

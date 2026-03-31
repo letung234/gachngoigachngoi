@@ -1,5 +1,4 @@
 import { Product, ProductList, ProductListConfig } from 'src/types/product.type'
-import { Purchase } from 'src/types/purchase.type'
 import { User, UserList, UserListConfig } from 'src/types/user.type'
 import { Category, CategoryList, CategoryListConfig } from 'src/types/category.type'
 import { Post, PostList, PostListConfig } from 'src/types/post.type'
@@ -30,10 +29,11 @@ export interface RevenueStats {
 }
 
 export interface TopProduct {
-  _id: string
-  name: string
-  sales: number
-  revenue: number
+  productId: string
+  productName: string
+  image: string
+  totalSold: number
+  totalRevenue: number
 }
 
 export interface LatestOrder {
@@ -52,11 +52,14 @@ export interface CategoryStat {
   color: string
 }
 
-// Purchase list params
-export interface AdminPurchaseParams {
-  page?: number
-  limit?: number
-  status?: number
+export interface OrderStatusCount {
+  status: string
+  count: number
+}
+
+export interface OrderStatusCountsData {
+  statusCountList: OrderStatusCount[]
+  totalOrders: number
 }
 
 // Product specs interface
@@ -126,6 +129,10 @@ const adminApi = {
     return http.get<SuccessResponse<CategoryStat[]>>(`${ADMIN_URL}/stats/category-stats`)
   },
 
+  getOrderStatusCounts() {
+    return http.get<SuccessResponse<OrderStatusCountsData>>(`${ADMIN_URL}/stats/order-status-counts`)
+  },
+
   // ========== PRODUCT APIs ==========
   getProducts(params: ProductListConfig) {
     return http.get<SuccessResponse<ProductList>>(`${ADMIN_URL}/products`, {
@@ -172,31 +179,6 @@ const adminApi = {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    })
-  },
-
-  // ========== PURCHASE/ORDER APIs ==========
-  getPurchases(params: AdminPurchaseParams) {
-    return http.get<SuccessResponse<{
-      purchases: Purchase[]
-      pagination: {
-        page: number
-        limit: number
-        page_size: number
-        total: number
-      }
-    }>>(`${ADMIN_URL}/purchases`, {
-      params
-    })
-  },
-
-  getPurchaseDetail(id: string) {
-    return http.get<SuccessResponse<Purchase>>(`${ADMIN_URL}/purchases/${id}`)
-  },
-
-  updatePurchaseStatus(id: string, status: number) {
-    return http.put<SuccessResponse<Purchase>>(`${ADMIN_URL}/purchases/${id}`, {
-      status
     })
   },
 
@@ -321,6 +303,27 @@ const adminApi = {
         'Content-Type': 'multipart/form-data'
       }
     })
+  },
+
+  // ========== CONTACT APIs ==========
+  getContacts(params?: { page?: number; limit?: number; status?: string; search?: string }) {
+    return http.get<SuccessResponse<{ contacts: any[]; pagination: any }>>(`${ADMIN_URL}/contacts`, { params })
+  },
+
+  updateContactStatus(id: string, body: { status: string; note?: string }) {
+    return http.put<SuccessResponse<any>>(`${ADMIN_URL}/contacts/${id}/status`, body)
+  },
+
+  deleteContact(id: string) {
+    return http.delete<SuccessResponse<{ deleted_count: number }>>(`${ADMIN_URL}/contacts/${id}`)
+  },
+
+  getContactStats() {
+    return http.get<SuccessResponse<any>>(`${ADMIN_URL}/contacts/stats`)
+  },
+
+  exportContacts(status?: string) {
+    return http.get<SuccessResponse<any[]>>(`${ADMIN_URL}/contacts/export`, { params: { status } })
   }
 }
 

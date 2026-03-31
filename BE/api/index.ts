@@ -7,6 +7,7 @@ import adminRoutes from './routes/admin/index.route'
 import commonRoutes from './routes/common/index.route'
 import userRoutes from './routes/user/index.route'
 import { responseError } from './utils/response'
+import maintenanceMiddleware from './middleware/maintenance.middleware'
 import { FOLDERS, FOLDER_UPLOAD, ROUTE_IMAGE } from './constants/config'
 import path from 'path'
 import { isProduction } from './utils/helper'
@@ -33,6 +34,8 @@ const handlerImage: any = Object.values(FOLDERS).reduce(
 )
 
 app.use(`/${ROUTE_IMAGE}`, ...handlerImage)
+
+app.use(maintenanceMiddleware)
 
 routes.forEach((item) =>
   item.routes.forEach((route) => app.use(item.prefix + route.path, route.route))
