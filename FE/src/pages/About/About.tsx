@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import { useSiteConfig } from 'src/contexts/siteConfig.context'
+import { Helmet } from 'react-helmet-async'
 
 const teamMembers = [
   {
@@ -72,22 +74,48 @@ const values = [
 ]
 
 export default function About() {
+  const { config } = useSiteConfig()
+
+  // Get data from config with fallbacks
+  const title = config?.aboutPage?.title || 'Về Chúng Tôi'
+  const subtitle = config?.aboutPage?.subtitle || 'Gần 40 năm gìn giữ và phát triển nghề gạch ngói truyền thống'
+  const heroImage = config?.aboutPage?.heroImage || '/images/craftsman.jpg'
+  const content = config?.aboutPage?.content ||
+    'Khởi nguồn từ một xưởng sản xuất nhỏ tại làng nghề truyền thống, chúng tôi đã không ngừng phát triển và hoàn thiện qua gần 4 thập kỷ.'
+
+  const missionTitle = config?.aboutPage?.missionTitle || 'Sứ Mệnh'
+  const missionContent = config?.aboutPage?.missionContent ||
+    'Gìn giữ và phát huy giá trị văn hóa truyền thống, mang đến những sản phẩm gạch ngói chất lượng cao cho mọi công trình.'
+
+  const visionTitle = config?.aboutPage?.visionTitle || 'Tầm Nhìn'
+  const visionContent = config?.aboutPage?.visionContent ||
+    'Trở thành thương hiệu gạch ngói truyền thống hàng đầu Việt Nam, góp phần bảo tồn và phát triển làng nghề.'
+
+  const teamMembersFromConfig = config?.aboutPage?.teamMembers || []
+  const hasTeamMembers = teamMembersFromConfig.length > 0
+
+  const displayTeamMembers = hasTeamMembers ? teamMembersFromConfig : teamMembers
+
   return (
     <div className='bg-cream-light'>
+      <Helmet>
+        <title>{title} | {config?.siteName || 'Gạch Ngói Việt'}</title>
+        <meta name='description' content={subtitle} />
+      </Helmet>
       {/* Hero Section */}
       <section className='relative h-[50vh] md:h-[60vh] flex items-center justify-center'>
-        <div 
+        <div
           className='absolute inset-0 bg-cover bg-center'
-          style={{ backgroundImage: 'url(/images/craftsman.jpg)' }}
+          style={{ backgroundImage: `url(${heroImage})` }}
         >
           <div className='absolute inset-0 bg-gradient-to-r from-earth-dark/90 to-earth/70'></div>
         </div>
         <div className='relative z-10 text-center text-white px-4'>
           <h1 className='font-serif text-3xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 animate-fade-in-up'>
-            Về Chúng Tôi
+            {title}
           </h1>
           <p className='text-base md:text-xl max-w-2xl mx-auto opacity-90 animate-fade-in-up animation-delay-200'>
-            Gần 40 năm gìn giữ và phát triển nghề gạch ngói truyền thống
+            {subtitle}
           </p>
         </div>
       </section>
@@ -102,28 +130,18 @@ export default function About() {
                 Từ Làng Nghề Đến Thương Hiệu Uy Tín
               </h2>
               <div className='space-y-4 text-earth leading-relaxed text-sm md:text-base'>
-                <p>
-                  Khởi nguồn từ một xưởng sản xuất nhỏ tại làng nghề truyền thống, chúng tôi đã không ngừng phát triển 
-                  và hoàn thiện qua gần 4 thập kỷ. Với niềm đam mê và sự tận tụy, chúng tôi đã giữ gìn được những 
-                  kỹ thuật làm gạch ngói cổ truyền quý báu của cha ông.
-                </p>
-                <p>
-                  Mỗi viên gạch, mỗi tấm ngói ra đời đều mang trong mình hồn cốt của đất Việt - được nhào nặn 
-                  từ đất sét nguyên chất, nung đốt bằng lửa truyền thống, và hoàn thiện bởi đôi bàn tay tài hoa 
-                  của những nghệ nhân lành nghề.
-                </p>
-                <p>
-                  Ngày nay, sản phẩm của chúng tôi không chỉ hiện diện trong những công trình trùng tu di tích 
-                  lịch sử, mà còn tô điểm cho hàng ngàn ngôi nhà, resort và công trình kiến trúc trên khắp cả nước 
-                  và xuất khẩu ra nhiều quốc gia.
-                </p>
+                {content.split('\n').map((paragraph, index) =>
+                  paragraph.trim() ? (
+                    <p key={index}>{paragraph.trim()}</p>
+                  ) : null
+                )}
               </div>
             </div>
             <div className='order-1 lg:order-2'>
               <div className='relative'>
-                <img 
-                  src='/images/hero-bg.jpg' 
-                  alt='Làng nghề gạch ngói truyền thống' 
+                <img
+                  src='/images/hero-bg.jpg'
+                  alt='Làng nghề gạch ngói truyền thống'
                   className='rounded-2xl shadow-2xl w-full'
                 />
                 <div className='absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-brick text-white p-4 md:p-6 rounded-xl shadow-lg'>
@@ -147,7 +165,7 @@ export default function About() {
           </div>
           <div className='grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8'>
             {values.map((value, index) => (
-              <div 
+              <div
                 key={index}
                 className='text-center p-6 md:p-8 rounded-2xl bg-cream-light hover:bg-cream transition-colors duration-300'
               >
@@ -158,6 +176,36 @@ export default function About() {
                 <p className='text-earth text-sm leading-relaxed'>{value.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mission & Vision Section */}
+      <section className='py-12 md:py-20'>
+        <div className='container'>
+          <div className='grid md:grid-cols-2 gap-8 md:gap-12'>
+            {/* Mission */}
+            <div className='rounded-2xl bg-gradient-to-br from-brick to-brick-dark text-white p-8 md:p-10 shadow-xl'>
+              <div className='mb-6'>
+                <svg className='w-12 h-12 md:w-16 md:h-16 opacity-80' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' />
+                </svg>
+              </div>
+              <h3 className='font-serif text-2xl md:text-3xl font-bold mb-4'>{missionTitle}</h3>
+              <p className='text-cream-light/90 leading-relaxed'>{missionContent}</p>
+            </div>
+
+            {/* Vision */}
+            <div className='rounded-2xl bg-gradient-to-br from-gold to-gold-dark text-white p-8 md:p-10 shadow-xl'>
+              <div className='mb-6'>
+                <svg className='w-12 h-12 md:w-16 md:h-16 opacity-80' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={1.5} d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' />
+                </svg>
+              </div>
+              <h3 className='font-serif text-2xl md:text-3xl font-bold mb-4'>{visionTitle}</h3>
+              <p className='text-white/90 leading-relaxed'>{visionContent}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -202,31 +250,51 @@ export default function About() {
       <section className='py-12 md:py-20 bg-white'>
         <div className='container'>
           <div className='text-center mb-10 md:mb-16'>
-            <span className='text-brick font-medium uppercase tracking-wider text-sm'>Đội Ngũ Nghệ Nhân</span>
+            <span className='text-brick font-medium uppercase tracking-wider text-sm'>Đội Ngũ</span>
             <h2 className='font-serif text-2xl md:text-4xl font-bold text-earth-dark mt-2'>
-              Những Bàn Tay Vàng
+              {hasTeamMembers ? 'Những Bàn Tay Vàng' : 'Đội Ngũ Nghệ Nhân'}
             </h2>
           </div>
-          <div className='grid md:grid-cols-3 gap-6 md:gap-8'>
-            {teamMembers.map((member, index) => (
-              <div 
-                key={index}
-                className='group text-center'
-              >
-                <div className='relative overflow-hidden rounded-2xl mb-4 md:mb-6'>
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className='w-full aspect-[4/5] object-cover transition-transform duration-500 group-hover:scale-110'
-                  />
-                  <div className='absolute inset-0 bg-gradient-to-t from-earth-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+          {displayTeamMembers.length > 0 ? (
+            <div className='grid md:grid-cols-3 gap-6 md:gap-8'>
+              {displayTeamMembers.map((member: any, index: number) => (
+                <div
+                  key={index}
+                  className='group text-center'
+                >
+                  <div className='relative overflow-hidden rounded-2xl mb-4 md:mb-6'>
+                    {member.avatar ? (
+                      <img
+                        src={member.avatar}
+                        alt={member.name}
+                        className='w-full aspect-[4/5] object-cover transition-transform duration-500 group-hover:scale-110'
+                        onError={(e) => {
+                          // Fallback if image fails to load
+                          e.currentTarget.src = '/images/process/tao-hinh.jpg'
+                        }}
+                      />
+                    ) : (
+                      <div className='w-full aspect-[4/5] bg-gradient-to-br from-brick to-brick-dark flex items-center justify-center'>
+                        <span className='text-6xl font-bold text-white'>{member.name?.charAt(0) || '?'}</span>
+                      </div>
+                    )}
+                    <div className='absolute inset-0 bg-gradient-to-t from-earth-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
+                  </div>
+                  <h3 className='font-serif text-lg md:text-xl font-bold text-earth-dark'>{member.name}</h3>
+                  <p className='text-brick font-medium text-sm md:text-base'>{member.role}</p>
+                  {member.experience && <p className='text-earth text-sm mt-1'>{member.experience}</p>}
                 </div>
-                <h3 className='font-serif text-lg md:text-xl font-bold text-earth-dark'>{member.name}</h3>
-                <p className='text-brick font-medium text-sm md:text-base'>{member.role}</p>
-                <p className='text-earth text-sm mt-1'>{member.experience}</p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className='rounded-2xl border-2 border-dashed border-cement/30 bg-cream-light/50 p-12 text-center'>
+              <svg className='mx-auto mb-4 h-16 w-16 text-cement/40' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' />
+              </svg>
+              <h3 className='mb-2 text-xl font-semibold text-earth/70'>Chưa có thông tin đội ngũ</h3>
+              <p className='text-earth/50'>Thông tin về đội ngũ sẽ được cập nhật sớm</p>
+            </div>
+          )}
         </div>
       </section>
 

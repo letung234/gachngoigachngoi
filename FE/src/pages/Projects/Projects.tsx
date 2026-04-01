@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import blogApi from 'src/apis/blog.api'
 import categoryApi from 'src/apis/category.api'
+
+const PROJECTS_PER_PAGE = 8
 
 // Helper function to extract plain text from HTML content
 const getExcerpt = (htmlContent: string, maxLength = 200) => {
@@ -31,19 +34,23 @@ const staggerContainer = {
 }
 
 export default function Projects() {
-  const [selectedCategory, setSelectedCategory] = useState('Tất cả')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [selectedCategory, setSelectedCategory] = useState('')
+  const currentPage = Number(searchParams.get('page')) || 1
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  // Fetch project posts from API
+  // Fetch project posts from API with pagination
   const { data: postsData, isPending, error } = useQuery({
-    queryKey: ['project-posts'],
+    queryKey: ['project-posts', currentPage, selectedCategory],
     queryFn: () => blogApi.getPosts({
-      limit: 50,
+      page: currentPage,
+      limit: PROJECTS_PER_PAGE,
       sort_by: 'createdAt',
-      order: 'desc'
+      order: 'desc',
+      ...(selectedCategory && { category: selectedCategory })
     }),
     staleTime: 5 * 60 * 1000
   })
@@ -68,17 +75,28 @@ export default function Projects() {
     slug: post.slug
   }))
 
+  const pagination = postsData?.data.data.pagination || { page: 1, limit: PROJECTS_PER_PAGE, page_size: 1 }
+  const totalPages = pagination.page_size || 1
+
   // Get categories from API
-  let categories = ['Tất cả']
+  let categories = [{ _id: '', name: 'Tất cả' }]
   if (categoriesData?.data.data && Array.isArray(categoriesData.data.data.categories)) {
-    const dynamicCategories = categoriesData.data.data.categories.map((cat: any) => cat.name)
-    categories = ['Tất cả', ...dynamicCategories]
+    const dynamicCategories = categoriesData.data.data.categories.map((cat: any) => ({
+      _id: cat._id,
+      name: cat.name
+    }))
+    categories = [{ _id: '', name: 'Tất cả' }, ...dynamicCategories]
   }
 
-  // Filter projects by selected category
-  const filteredProjects = selectedCategory === 'Tất cả'
-    ? projects
-    : projects.filter(project => project.category === selectedCategory)
+  const handleCategoryChange = (categoryId: string) => {
+    setSelectedCategory(categoryId)
+    setSearchParams({}) // Reset page to 1 when category changes
+  }
+
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: String(page) })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   return (
     <>
@@ -116,13 +134,13 @@ export default function Projects() {
             <div className='flex flex-wrap justify-center gap-3'>
               {categories.map((cat) => (
                 <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
+                  key={cat._id}
+                  onClick={() => handleCategoryChange(cat._id)}
                   className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${
-                    cat === selectedCategory ? 'bg-brick text-cream-light' : 'bg-cream text-earth hover:bg-cream-dark'
+                    cat._id === selectedCategory ? 'bg-brick text-cream-light' : 'bg-cream text-earth hover:bg-cream-dark'
                   }`}
                 >
-                  {cat}
+                  {cat.name}
                 </button>
               ))}
             </div>
@@ -151,14 +169,15 @@ export default function Projects() {
           {/* Projects */}
           {!isPending && !error && (
             <>
-              {filteredProjects.length > 0 ? (
+              {projects.length > 0 ? (
                 <motion.div
                   variants={staggerContainer}
                   initial='hidden'
                   animate='visible'
+                  key={`${selectedCategory}-${currentPage}`}
                   className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'
                 >
-                  {filteredProjects.map((project) => (
+                  {projects.map((project) => (
                 <motion.article
                   key={project.id}
                   variants={fadeInUp}
@@ -224,6 +243,61 @@ export default function Projects() {
                 <span className='text-3xl'>📦</span>
                 <div className='text-gray-600 font-medium mt-2'>Chưa có dự án nào</div>
               </div>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className='mt-12 flex items-center justify-center gap-2'>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className='flex h-10 w-10 items-center justify-center rounded-lg border border-cement-light bg-white text-earth transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
+                </svg>
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show limited page numbers
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? 'bg-brick text-white'
+                          : 'border border-cement-light bg-white text-earth hover:bg-cream'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                }
+                // Show ellipsis
+                if (page === currentPage - 2 || page === currentPage + 2) {
+                  return (
+                    <span key={page} className='px-2 text-earth/50'>
+                      ...
+                    </span>
+                  )
+                }
+                return null
+              })}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className='flex h-10 w-10 items-center justify-center rounded-lg border border-cement-light bg-white text-earth transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                </svg>
+              </button>
             </div>
           )}
         </>

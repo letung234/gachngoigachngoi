@@ -109,8 +109,10 @@ const adminApi = {
     return http.get<SuccessResponse<OverviewStats>>(`${ADMIN_URL}/stats/overview`)
   },
 
-  getRevenueStats() {
-    return http.get<SuccessResponse<RevenueStats>>(`${ADMIN_URL}/stats/revenue`)
+  getRevenueStats(year?: number) {
+    return http.get<SuccessResponse<RevenueStats>>(`${ADMIN_URL}/stats/revenue`, {
+      params: { year }
+    })
   },
 
   getTopProducts(limit?: number) {

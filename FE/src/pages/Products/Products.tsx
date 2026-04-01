@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { useQuery } from '@tanstack/react-query'
@@ -13,6 +13,8 @@ interface Category {
   slug: string
   order?: number
 }
+
+const PRODUCTS_PER_PAGE = 8
 
 // Animation variants
 const fadeInUp = {
@@ -30,7 +32,9 @@ const staggerContainer = {
 
 export default function Products() {
   const { category } = useParams<{ category?: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [activeCategory, setActiveCategory] = useState(category || 'all')
+  const currentPage = Number(searchParams.get('page')) || 1
 
   // Fetch categories
   const { data: categoriesData } = useQuery({
@@ -41,13 +45,15 @@ export default function Products() {
 
   const categories: Category[] = categoriesData?.data.data.categories || []
 
-  // Fetch products
+  // Fetch products with pagination
   const { data: productsData, isLoading: isPending } = useQuery({
-    queryKey: ['products', activeCategory],
+    queryKey: ['products', activeCategory, currentPage],
     queryFn: () => {
-      const params: Record<string, string | number> = { limit: 50 }
+      const params: Record<string, string | number> = {
+        limit: PRODUCTS_PER_PAGE,
+        page: currentPage
+      }
       if (activeCategory !== 'all') {
-        // Find category ID by slug
         const cat = categories.find((c) => c.slug === activeCategory)
         if (cat) {
           params.category = cat._id
@@ -55,19 +61,27 @@ export default function Products() {
       }
       return productApi.getProducts(params as any)
     },
-    enabled: !!categoriesData, // Only fetch products after categories are loaded
+    enabled: !!categoriesData,
     staleTime: 5 * 60 * 1000
   })
 
   const products: Product[] = productsData?.data.data.products || []
+  const pagination = productsData?.data.data.pagination || { page: 1, limit: PRODUCTS_PER_PAGE, page_size: 1 }
+  const totalPages = pagination.page_size || 1
 
   // Add "Tất cả" option at the beginning
   const allCategories = [{ _id: 'all', name: 'Tất cả', slug: 'all' }, ...categories]
 
   useEffect(() => {
     setActiveCategory(category || 'all')
+    setSearchParams({}) // Reset page when category changes
     window.scrollTo(0, 0)
   }, [category])
+
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: String(page) })
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const currentCategory = allCategories.find(
     (cat) => cat.slug === activeCategory || (activeCategory === 'all' && cat._id === 'all')
@@ -211,6 +225,61 @@ export default function Products() {
           {!isPending && products.length === 0 && (
             <div className='py-20 text-center'>
               <p className='text-lg text-earth/60'>Không có sản phẩm nào trong danh mục này.</p>
+            </div>
+          )}
+
+          {/* Pagination */}
+          {!isPending && totalPages > 1 && (
+            <div className='mt-12 flex items-center justify-center gap-2'>
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className='flex h-10 w-10 items-center justify-center rounded-lg border border-cement-light bg-white text-earth transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 19l-7-7 7-7' />
+                </svg>
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                // Show limited page numbers
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                        currentPage === page
+                          ? 'bg-brick text-white'
+                          : 'border border-cement-light bg-white text-earth hover:bg-cream'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                }
+                // Show ellipsis
+                if (page === currentPage - 2 || page === currentPage + 2) {
+                  return (
+                    <span key={page} className='px-2 text-earth/50'>
+                      ...
+                    </span>
+                  )
+                }
+                return null
+              })}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className='flex h-10 w-10 items-center justify-center rounded-lg border border-cement-light bg-white text-earth transition-colors hover:bg-cream disabled:cursor-not-allowed disabled:opacity-50'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9 5l7 7-7 7' />
+                </svg>
+              </button>
             </div>
           )}
         </div>

@@ -11,7 +11,7 @@ const getMaintenanceConfig = async () => {
     return cachedConfig
   }
 
-  const config = await SiteConfigModel.findOne().lean()
+  const config = await SiteConfigModel.findOne().lean() as any
   cachedConfig = config?.maintenance || { enabled: false, message: '', allowedIPs: [] }
   cacheTimestamp = now
   return cachedConfig

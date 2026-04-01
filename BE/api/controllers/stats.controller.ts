@@ -58,26 +58,24 @@ export const getOverviewStats = async (req: Request, res: Response) => {
   return responseSuccess(res, response)
 }
 
-// Revenue by month (last 12 months)
+// Revenue by month (supports year filter)
 export const getRevenueStats = async (req: Request, res: Response) => {
-  const { period = 'month' } = req.query
+  const { year } = req.query
+  const selectedYear = year ? Number(year) : new Date().getFullYear()
 
-  // Get orders from last 12 months
-  const twelveMonthsAgo = new Date()
-  twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12)
+  // Get orders for the selected year
+  const startDate = new Date(selectedYear, 0, 1)
+  const endDate = new Date(selectedYear, 11, 31, 23, 59, 59)
 
   const orders: any = await OrderModel.find({
     status: ORDER_STATUS.COMPLETED,
-    createdAt: { $gte: twelveMonthsAgo },
+    createdAt: { $gte: startDate, $lte: endDate },
   }).lean()
 
-  // Group by month
+  // Initialize all 12 months for the year
   const revenueByMonth: any = {}
-  const currentDate = new Date()
-
-  for (let i = 11; i >= 0; i--) {
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1)
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`
+  for (let i = 0; i < 12; i++) {
+    const monthKey = `${selectedYear}-${String(i + 1).padStart(2, '0')}`
     revenueByMonth[monthKey] = {
       month: monthKey,
       revenue: 0,
@@ -97,6 +95,7 @@ export const getRevenueStats = async (req: Request, res: Response) => {
   const response = {
     message: 'Lấy thống kê doanh thu thành công',
     data: {
+      year: selectedYear,
       monthly: Object.values(revenueByMonth),
     },
   }

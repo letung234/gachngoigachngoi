@@ -21,10 +21,14 @@ const CHART_COLORS = ['#8B4513', '#D4A574', '#FFD700', '#2563EB', '#16A34A', '#D
 
 export default function AdminAnalytics() {
   const [activeView, setActiveView] = useState<'overview' | 'products' | 'orders'>('overview')
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+
+  // Generate year options (last 5 years)
+  const yearOptions = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i)
 
   const { data: revenueData, isLoading: isRevenueLoading } = useQuery({
-    queryKey: ['admin-revenue-full'],
-    queryFn: () => adminApi.getRevenueStats(),
+    queryKey: ['admin-revenue-full', selectedYear],
+    queryFn: () => adminApi.getRevenueStats(selectedYear),
     retry: 2,
   })
 
@@ -138,7 +142,16 @@ export default function AdminAnalytics() {
           <h1 className='text-2xl font-bold text-earth md:text-3xl'>Phân tích & Thống kê</h1>
           <p className='mt-1 text-sm text-cement-dark'>Dữ liệu chi tiết về hoạt động kinh doanh</p>
         </div>
-        <div className='flex gap-3'>
+        <div className='flex flex-wrap gap-3'>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className='rounded-lg border border-cement-light bg-white px-3 py-2 text-xs font-medium text-earth focus:border-brick focus:outline-none'
+          >
+            {yearOptions.map((year) => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
           <div className='flex rounded-lg bg-white shadow-sm'>
             {(['overview', 'products', 'orders'] as const).map((view) => (
               <button

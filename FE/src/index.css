@@ -171,3 +171,75 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
+
+/* Print styles for testimonials */
+@media print {
+  /* Hide unnecessary elements */
+  header,
+  nav,
+  footer,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Show only testimonials section */
+  body {
+    background: white;
+    color: black;
+  }
+
+  /* Optimize testimonials for print */
+  #testimonials {
+    page-break-inside: avoid;
+  }
+
+  #testimonials .container > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Remove shadows and transitions for print */
+  * {
+    box-shadow: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  /* Adjust colors for black and white printing */
+  .text-brick {
+    color: #000 !important;
+  }
+
+  .text-earth-dark,
+  .text-earth {
+    color: #333 !important;
+  }
+
+  .bg-cream,
+  .bg-cream-light {
+    background: white !important;
+  }
+
+  /* Add borders for definition */
+  #testimonials > div > div:last-child > div {
+    border: 1px solid #ddd !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Ensure ratings are visible */
+  .text-gold,
+  .fill-gold {
+    color: #000 !important;
+    fill: #000 !important;
+  }
+
+  /* Page breaks */
+  @page {
+    margin: 2cm;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+  }
+}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { useSiteConfig } from 'src/contexts/siteConfig.context'
+import { generateTestimonialsPDF } from 'src/utils/testimonialsPDF'
 
 // Product categories data
 const categories = [
@@ -479,50 +480,150 @@ export default function Home() {
       </AnimatedSection>
 
       {/* Testimonials Section */}
-      <AnimatedSection className='bg-cream py-20 md:py-28'>
+      <AnimatedSection id='testimonials' className='bg-cream py-20 md:py-28'>
         <div className='container'>
-          <div className='mb-16 text-center'>
-            <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
-              Đánh giá
-            </span>
-            <h2 className='mb-4 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
-              Khách hàng nói gì về chúng tôi
-            </h2>
+          <div className='mb-16 flex flex-col items-center justify-between gap-4 sm:flex-row'>
+            <div className='text-center sm:text-left'>
+              <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
+                Đánh giá
+              </span>
+              <h2 className='mb-2 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
+                Khách hàng nói gì về chúng tôi
+              </h2>
+              <p className='text-earth/70'>
+                Những phản hồi chân thực từ khách hàng đã tin tưởng sử dụng sản phẩm của chúng tôi
+              </p>
+            </div>
+            {/* <div className='flex gap-3'>
+              <button
+                onClick={() => generateTestimonialsPDF(displayTestimonials, config)}
+                className='group inline-flex items-center gap-2 rounded-lg border-2 border-brick bg-white px-6 py-3 font-semibold text-brick transition-all hover:bg-brick hover:text-white'
+                title='Xuất PDF'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' />
+                </svg>
+                <span className='hidden sm:inline'>Xuất PDF</span>
+              </button>
+              <button
+                onClick={() => window.print()}
+                className='group inline-flex items-center gap-2 rounded-lg border-2 border-cement px-6 py-3 font-semibold text-cement transition-all hover:bg-cement hover:text-white'
+                title='In trang'
+              >
+                <svg className='h-5 w-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z' />
+                </svg>
+                <span className='hidden sm:inline'>In</span>
+              </button>
+            </div> */}
           </div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial='hidden'
-            whileInView='visible'
-            viewport={{ once: true }}
-            className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'
-          >
-            {displayTestimonials.map((testimonial) => (
-              <motion.div
-                key={testimonial.id}
-                variants={fadeInUp}
-                className='rounded-2xl bg-cream-light p-8 shadow-md'
-              >
-                <svg className='mb-4 h-10 w-10 text-brick/30' fill='currentColor' viewBox='0 0 24 24'>
-                  <path d='M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z' />
-                </svg>
-                <p className='mb-6 text-lg leading-relaxed text-earth/80'>{testimonial.content}</p>
-                <div className='flex items-center gap-4'>
-                  {testimonial.avatar?.startsWith('http') ? (
-                    <img src={testimonial.avatar} alt={testimonial.name} className='h-12 w-12 rounded-full object-cover' />
-                  ) : (
-                    <div className='flex h-12 w-12 items-center justify-center rounded-full bg-brick text-cream-light font-semibold'>
-                      {testimonial.avatar || testimonial.name?.charAt(0)}
+          {displayTestimonials.length > 0 ? (
+            <motion.div
+              variants={staggerContainer}
+              initial='hidden'
+              whileInView='visible'
+              viewport={{ once: true }}
+              className='grid gap-8 md:grid-cols-2 lg:grid-cols-3'
+            >
+              {displayTestimonials.map((testimonial) => (
+                <motion.div
+                  key={testimonial.id}
+                  variants={fadeInUp}
+                  className='group relative rounded-2xl bg-cream-light p-8 shadow-md transition-all hover:shadow-xl hover:-translate-y-1'
+                >
+                  {/* Rating stars */}
+                  {testimonial.rating && (
+                    <div className='mb-4 flex items-center gap-1'>
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <svg
+                          key={index}
+                          className={`h-5 w-5 ${
+                            index < testimonial.rating ? 'text-gold fill-gold' : 'text-cement/30 fill-cement/30'
+                          }`}
+                          viewBox='0 0 24 24'
+                        >
+                          <path d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' />
+                        </svg>
+                      ))}
+                      <span className='ml-2 text-sm font-medium text-earth'>{testimonial.rating}/5</span>
                     </div>
                   )}
-                  <div>
-                    <h4 className='font-semibold text-earth-dark'>{testimonial.name}</h4>
-                    <p className='text-sm text-earth/60'>{testimonial.role}</p>
+
+                  {/* Quote icon */}
+                  <div className='absolute right-8 top-8 opacity-10 transition-opacity group-hover:opacity-20'>
+                    <svg className='h-16 w-16 text-brick' fill='currentColor' viewBox='0 0 24 24'>
+                      <path d='M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z' />
+                    </svg>
                   </div>
+
+                  {/* Content */}
+                  <p className='relative z-10 mb-6 text-lg leading-relaxed text-earth/80 italic'>
+                    "{testimonial.content}"
+                  </p>
+
+                  {/* Author info */}
+                  <div className='relative z-10 flex items-center gap-4 border-t border-cement/20 pt-6'>
+                    {testimonial.avatar?.startsWith('http') ? (
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className='h-14 w-14 rounded-full object-cover ring-2 ring-brick/20'
+                      />
+                    ) : (
+                      <div className='flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brick to-brick-dark text-cream-light font-bold text-lg ring-2 ring-brick/20'>
+                        {testimonial.avatar || testimonial.name?.charAt(0)?.toUpperCase()}
+                      </div>
+                    )}
+                    <div className='flex-1'>
+                      <h4 className='font-bold text-earth-dark text-lg'>{testimonial.name}</h4>
+                      <p className='text-sm text-earth/60 font-medium'>{testimonial.role}</p>
+                    </div>
+                  </div>
+
+                  {/* Decorative corner */}
+                  <div className='absolute bottom-0 right-0 h-20 w-20 overflow-hidden rounded-br-2xl opacity-5'>
+                    <div className='absolute -bottom-10 -right-10 h-20 w-20 rounded-full bg-brick' />
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <div className='rounded-2xl border-2 border-dashed border-cement/30 bg-cream-light/50 p-12 text-center'>
+              <svg className='mx-auto mb-4 h-16 w-16 text-cement/40' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z' />
+              </svg>
+              <h3 className='mb-2 text-xl font-semibold text-earth/70'>Chưa có đánh giá</h3>
+              <p className='text-earth/50'>Các đánh giá từ khách hàng sẽ được hiển thị tại đây</p>
+            </div>
+          )}
+
+          {/* Statistics */}
+          {displayTestimonials.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className='mt-16 grid gap-6 rounded-2xl bg-gradient-to-br from-brick to-brick-dark p-8 text-center text-white shadow-xl md:grid-cols-3'
+            >
+              <div>
+                <div className='mb-2 text-4xl font-bold'>{displayTestimonials.length}+</div>
+                <div className='text-cream-light/80'>Đánh giá khách hàng</div>
+              </div>
+              <div>
+                <div className='mb-2 text-4xl font-bold'>
+                  {(
+                    displayTestimonials.reduce((sum, t) => sum + (t.rating || 5), 0) / displayTestimonials.length
+                  ).toFixed(1)}
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                <div className='text-cream-light/80'>Điểm đánh giá trung bình</div>
+              </div>
+              <div>
+                <div className='mb-2 text-4xl font-bold'>100%</div>
+                <div className='text-cream-light/80'>Khách hàng hài lòng</div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </AnimatedSection>
 

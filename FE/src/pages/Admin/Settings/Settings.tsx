@@ -400,7 +400,7 @@ export default function Settings() {
                 onClick={() => handleRemoveNavLink(index)}
                 className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'
               >
-                隨ｨ�ｿｽ
+                Xóa
               </button>
             )}
           </div>
@@ -467,7 +467,7 @@ export default function Settings() {
                 onClick={() => handleRemove(index)}
                 className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'
               >
-                Sửa
+                Xóa
               </button>
             )}
           </div>
@@ -501,13 +501,13 @@ export default function Settings() {
     return (
       <div className='space-y-3'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>T</label>
+          <label className='block text-sm font-medium text-earth'>Thành viên</label>
           {canUpdate && (
             <button
               type='button'
               onClick={handleAdd}
               className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'
-            >+ Th�ｾ��ｽｪm</button>
+            >+ Thêm</button>
           )}
         </div>
         {members.map((member, index) => (
@@ -515,7 +515,7 @@ export default function Settings() {
             <input
               type='text'
               className={`${inputClasses} flex-1`}
-              placeholder='T�ｾ��ｽｪn'
+              placeholder='Tên'
               value={member.name || ''}
               onChange={(e) => handleUpdate(index, 'name', e.target.value)}
               disabled={!canUpdate}
@@ -523,7 +523,7 @@ export default function Settings() {
             <input
               type='text'
               className={`${inputClasses} flex-1`}
-              placeholder='Ch逶ｻ�ｽｩc v逶ｻ�ｽ･'
+              placeholder='Chức vụ'
               value={member.role || ''}
               onChange={(e) => handleUpdate(index, 'role', e.target.value)}
               disabled={!canUpdate}
@@ -542,13 +542,13 @@ export default function Settings() {
                 onClick={() => handleRemove(index)}
                 className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'
               >
-                隨ｨ�ｿｽ
+                Xóa
               </button>
             )}
           </div>
         ))}
         {members.length === 0 && (
-          <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ th�ｾ��ｿｽnh vi�ｾ��ｽｪn n�ｾ��ｿｽo.</p>
+          <p className='text-sm text-cement-dark'>Chưa có thành viên nào.</p>
         )}
       </div>
     )
@@ -573,30 +573,30 @@ export default function Settings() {
     return (
       <div className='space-y-4'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>�ｾ�髱呻ｽ｡nh gi�ｾ��ｽ｡ kh�ｾ��ｽ｡ch h�ｾ��ｿｽng</label>
+          <label className='block text-sm font-medium text-earth'>Đánh giá</label>
           {canUpdate && (
             <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>
-              + Th�ｾ��ｽｪm
+              + Thêm
             </button>
           )}
         </div>
         {testimonials.map((t, i) => (
           <div key={i} className='space-y-3 rounded-lg border border-cement-light p-4'>
             <div className='grid gap-3 md:grid-cols-2'>
-              <input type='text' className={inputClasses} placeholder='T�ｾ��ｽｪn kh�ｾ��ｽ｡ch h�ｾ��ｿｽng' value={t.name || ''} onChange={(e) => handleUpdate(i, 'name', e.target.value)} disabled={!canUpdate} />
-              <input type='text' className={inputClasses} placeholder='Ch逶ｻ�ｽｩc v逶ｻ�ｽ･ / C�ｾ��ｽｴng ty' value={t.role || ''} onChange={(e) => handleUpdate(i, 'role', e.target.value)} disabled={!canUpdate} />
+              <input type='text' className={inputClasses} placeholder='Tên khách hàng' value={t.name || ''} onChange={(e) => handleUpdate(i, 'name', e.target.value)} disabled={!canUpdate} />
+              <input type='text' className={inputClasses} placeholder='Chức vụ / Công ty' value={t.role || ''} onChange={(e) => handleUpdate(i, 'role', e.target.value)} disabled={!canUpdate} />
             </div>
-            <textarea className={inputClasses} placeholder='N逶ｻ蜀� dung �ｾ�螯･�ｽ｡nh gi�ｾ��ｽ｡...' rows={2} value={t.content || ''} onChange={(e) => handleUpdate(i, 'content', e.target.value)} disabled={!canUpdate} />
+            <textarea className={inputClasses} placeholder='Nội dung đánh giá...' rows={2} value={t.content || ''} onChange={(e) => handleUpdate(i, 'content', e.target.value)} disabled={!canUpdate} />
             <div className='flex items-center gap-3'>
               <input type='text' className={`${inputClasses} flex-1`} placeholder='URL avatar' value={t.avatar || ''} onChange={(e) => handleUpdate(i, 'avatar', e.target.value)} disabled={!canUpdate} />
               <input type='number' className={`${inputClasses} w-20`} placeholder='Rating' min={1} max={5} value={t.rating || 5} onChange={(e) => handleUpdate(i, 'rating', Number(e.target.value))} disabled={!canUpdate} />
               {canUpdate && (
-                <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>隨ｨ�ｿｽ</button>
+                <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>
               )}
             </div>
           </div>
         ))}
-        {testimonials.length === 0 && <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ �ｾ�螯･�ｽ｡nh gi�ｾ��ｽ｡ n�ｾ��ｿｽo.</p>}
+        {testimonials.length === 0 && <p className='text-sm text-cement-dark'>Chưa có đánh giá nào.</p>}
       </div>
     )
   }
@@ -620,20 +620,20 @@ export default function Settings() {
     return (
       <div className='space-y-4'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>Th逶ｻ蜑ｵg k�ｾ��ｽｪ c�ｾ��ｽｴng ty</label>
+          <label className='block text-sm font-medium text-earth'>Thống kê công ty</label>
           {canUpdate && (
-            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Th�ｾ��ｽｪm</button>
+            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Thêm</button>
           )}
         </div>
         {stats.map((s, i) => (
           <div key={i} className='flex items-center gap-3'>
-            <input type='text' className={`${inputClasses} flex-1`} placeholder='Nh�ｾ��ｽ｣n (vd: N�ｾ�繝� KN)' value={s.label || ''} onChange={(e) => handleUpdate(i, 'label', e.target.value)} disabled={!canUpdate} />
-            <input type='text' className={`${inputClasses} w-24`} placeholder='Gi�ｾ��ｽ｡ tr逶ｻ�ｿｽ' value={s.value || ''} onChange={(e) => handleUpdate(i, 'value', e.target.value)} disabled={!canUpdate} />
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='Nhãn (vd: Số lượng KN)' value={s.label || ''} onChange={(e) => handleUpdate(i, 'label', e.target.value)} disabled={!canUpdate} />
+            <input type='text' className={`${inputClasses} w-24`} placeholder='Giá trị' value={s.value || ''} onChange={(e) => handleUpdate(i, 'value', e.target.value)} disabled={!canUpdate} />
             <input type='text' className={`${inputClasses} w-16`} placeholder='+' value={s.suffix || ''} onChange={(e) => handleUpdate(i, 'suffix', e.target.value)} disabled={!canUpdate} />
-            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>隨ｨ�ｿｽ</button>}
+            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>}
           </div>
         ))}
-        {stats.length === 0 && <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ th逶ｻ蜑ｵg k�ｾ��ｽｪ.</p>}
+        {stats.length === 0 && <p className='text-sm text-cement-dark'>Chưa có thống kê nào.</p>}
       </div>
     )
   }
@@ -657,22 +657,130 @@ export default function Settings() {
     return (
       <div className='space-y-4'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>Th�ｾ��ｿｽnh t逶ｻ�ｽｱu</label>
+          <label className='block text-sm font-medium text-earth'>Thành tựu công ty</label>
           {canUpdate && (
-            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Th�ｾ��ｽｪm</button>
+            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Thêm</button>
           )}
         </div>
         {achievements.map((a, i) => (
           <div key={i} className='flex items-start gap-3 rounded-lg border border-cement-light p-3'>
             <input type='text' className={`${inputClasses} w-16`} placeholder='Icon' value={a.icon || ''} onChange={(e) => handleUpdate(i, 'icon', e.target.value)} disabled={!canUpdate} />
             <div className='flex-1 space-y-2'>
-              <input type='text' className={inputClasses} placeholder='Ti�ｾ��ｽｪu �ｾ�鮟幢ｽｻ�ｿｽ' value={a.title || ''} onChange={(e) => handleUpdate(i, 'title', e.target.value)} disabled={!canUpdate} />
-              <input type='text' className={inputClasses} placeholder='M�ｾ��ｽｴ t陂ｯ�ｽ｣' value={a.description || ''} onChange={(e) => handleUpdate(i, 'description', e.target.value)} disabled={!canUpdate} />
+              <input type='text' className={inputClasses} placeholder='Tiêu đề' value={a.title || ''} onChange={(e) => handleUpdate(i, 'title', e.target.value)} disabled={!canUpdate} />
+              <input type='text' className={inputClasses} placeholder='Mô tả' value={a.description || ''} onChange={(e) => handleUpdate(i, 'description', e.target.value)} disabled={!canUpdate} />
             </div>
-            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>隨ｨ�ｿｽ</button>}
+            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>}
           </div>
         ))}
-        {achievements.length === 0 && <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ th�ｾ��ｿｽnh t逶ｻ�ｽｱu n�ｾ��ｿｽo.</p>}
+        {achievements.length === 0 && <p className='text-sm text-cement-dark'>Chưa có thành tựu nào.</p>}
+      </div>
+    )
+  }
+
+  const renderCoreValuesEditor = () => {
+    const coreValues = (getNestedArray('companyProfile.coreValues') as string[]) || []
+
+    const handleUpdate = (index: number, value: string) => {
+      const updated = coreValues.map((v, i) => (i === index ? value : v))
+      handleNestedChange('companyProfile.coreValues', updated)
+    }
+
+    const handleAdd = () => {
+      handleNestedChange('companyProfile.coreValues', [...coreValues, ''])
+    }
+
+    const handleRemove = (index: number) => {
+      handleNestedChange('companyProfile.coreValues', coreValues.filter((_, i) => i !== index))
+    }
+
+    return (
+      <div className='space-y-4'>
+        <div className='flex items-center justify-between'>
+          <label className='block text-sm font-medium text-earth'>Giá trị cốt lõi</label>
+          {canUpdate && (
+            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Thêm</button>
+          )}
+        </div>
+        {coreValues.map((v, i) => (
+          <div key={i} className='flex items-center gap-3'>
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='Giá trị cốt lõi (vd: Chất lượng)' value={v || ''} onChange={(e) => handleUpdate(i, e.target.value)} disabled={!canUpdate} />
+            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>}
+          </div>
+        ))}
+        {coreValues.length === 0 && <p className='text-sm text-cement-dark'>Chưa có giá trị cốt lõi nào.</p>}
+      </div>
+    )
+  }
+
+  const renderClientsEditor = () => {
+    const clients = (getNestedArray('companyProfile.clients') as { name: string; logo: string }[]) || []
+
+    const handleUpdate = (index: number, field: 'name' | 'logo', value: string) => {
+      const updated = clients.map((c, i) => (i === index ? { ...c, [field]: value } : c))
+      handleNestedChange('companyProfile.clients', updated)
+    }
+
+    const handleAdd = () => {
+      handleNestedChange('companyProfile.clients', [...clients, { name: '', logo: '' }])
+    }
+
+    const handleRemove = (index: number) => {
+      handleNestedChange('companyProfile.clients', clients.filter((_, i) => i !== index))
+    }
+
+    return (
+      <div className='space-y-4'>
+        <div className='flex items-center justify-between'>
+          <label className='block text-sm font-medium text-earth'>Khách hàng tiêu biểu</label>
+          {canUpdate && (
+            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Thêm</button>
+          )}
+        </div>
+        {clients.map((c, i) => (
+          <div key={i} className='flex items-center gap-3'>
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='Tên khách hàng' value={c.name || ''} onChange={(e) => handleUpdate(i, 'name', e.target.value)} disabled={!canUpdate} />
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='URL logo' value={c.logo || ''} onChange={(e) => handleUpdate(i, 'logo', e.target.value)} disabled={!canUpdate} />
+            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>}
+          </div>
+        ))}
+        {clients.length === 0 && <p className='text-sm text-cement-dark'>Chưa có khách hàng nào.</p>}
+      </div>
+    )
+  }
+
+  const renderCertificationsEditor = () => {
+    const certifications = (getNestedArray('companyProfile.certifications') as { name: string; image: string; year: string }[]) || []
+
+    const handleUpdate = (index: number, field: 'name' | 'image' | 'year', value: string) => {
+      const updated = certifications.map((c, i) => (i === index ? { ...c, [field]: value } : c))
+      handleNestedChange('companyProfile.certifications', updated)
+    }
+
+    const handleAdd = () => {
+      handleNestedChange('companyProfile.certifications', [...certifications, { name: '', image: '', year: '' }])
+    }
+
+    const handleRemove = (index: number) => {
+      handleNestedChange('companyProfile.certifications', certifications.filter((_, i) => i !== index))
+    }
+
+    return (
+      <div className='space-y-4'>
+        <div className='flex items-center justify-between'>
+          <label className='block text-sm font-medium text-earth'>Chứng nhận & Giải thưởng</label>
+          {canUpdate && (
+            <button type='button' onClick={handleAdd} className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'>+ Thêm</button>
+          )}
+        </div>
+        {certifications.map((c, i) => (
+          <div key={i} className='flex items-center gap-3'>
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='Tên chứng nhận' value={c.name || ''} onChange={(e) => handleUpdate(i, 'name', e.target.value)} disabled={!canUpdate} />
+            <input type='text' className={`${inputClasses} flex-1`} placeholder='URL hình ảnh' value={c.image || ''} onChange={(e) => handleUpdate(i, 'image', e.target.value)} disabled={!canUpdate} />
+            <input type='text' className={`${inputClasses} w-24`} placeholder='Năm' value={c.year || ''} onChange={(e) => handleUpdate(i, 'year', e.target.value)} disabled={!canUpdate} />
+            {canUpdate && <button type='button' onClick={() => handleRemove(i)} className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'>Xóa</button>}
+          </div>
+        ))}
+        {certifications.length === 0 && <p className='text-sm text-cement-dark'>Chưa có chứng nhận nào.</p>}
       </div>
     )
   }
@@ -682,15 +790,15 @@ export default function Settings() {
       case 'general':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Th�ｾ��ｽｴng tin c�ｾ��ｽ｡ b陂ｯ�ｽ｣n</h3>
+            <h3 className='text-lg font-semibold text-earth'>Tổng quan</h3>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('T�ｾ��ｽｪn website', 'siteName', 'text', 'G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi Store')}
-              {renderInput('Slogan', 'siteSlogan', 'text', 'Ch陂ｯ�ｽ･t l�ｾ��ｽｰ逶ｻ�ｽ｣ng t陂ｯ�ｽ｡o n�ｾ��ｽｪn kh�ｾ��ｽ｡c bi逶ｻ繽�')}
+              {renderInput('Tên website', 'siteName', 'text', 'Giang Ngoc Store')}
+              {renderInput('Slogan', 'siteSlogan', 'text', 'Chuyên cung cấp những sản phẩm độc đáo')}
             </div>
             <div className='grid gap-6 md:grid-cols-3'>
-              {renderImageUpload('Logo', 'logo', 'Logo hi逶ｻ繝� th逶ｻ�ｿｽ tr�ｾ��ｽｪn header')}
-              {renderImageUpload('Logo t逶ｻ險ｴ', 'logoDark', 'Logo cho dark mode')}
-              {renderImageUpload('Favicon', 'favicon', 'Icon hi逶ｻ繝� th逶ｻ�ｿｽ tr�ｾ��ｽｪn tab tr�ｾ��ｽｬnh duy逶ｻ繽�')}
+              {renderImageUpload('Logo', 'logo', 'Logo cho light mode')}
+              {renderImageUpload('Logo tối', 'logoDark', 'Logo cho dark mode')}
+              {renderImageUpload('Favicon', 'favicon', 'Icon hiển thị trên tab trình duyệt')}
             </div>
           </div>
         )
@@ -698,40 +806,40 @@ export default function Settings() {
       case 'header':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt Header</h3>
+            <h3 className='text-lg font-semibold text-earth'>Header</h3>
             <div className='rounded-lg border border-cement-light bg-cream-light/50 p-4'>
               <p className='text-sm text-cement-dark'>
-                Qu陂ｯ�ｽ｣n l�ｾ��ｽｽ c�ｾ��ｽ｡c li�ｾ��ｽｪn k陂ｯ�ｽｿt �ｾ�險ｴ逶ｻ縲� h�ｾ��ｽｰ逶ｻ螫ｾg v�ｾ��ｿｽ n�ｾ��ｽｺt CTA tr�ｾ��ｽｪn thanh header. B陂ｯ�ｽ｡n c�ｾ��ｽｳ th逶ｻ�ｿｽ th�ｾ��ｽｪm, s逶ｻ�ｽｭa, x�ｾ��ｽｳa, ho陂ｯ�ｽｷc 陂ｯ�ｽｩn/hi逶ｻ繻ｻ t逶ｻ�ｽｫng li�ｾ��ｽｪn k陂ｯ�ｽｿt.
+                Quản lý các liên kết trong thanh header. Bạn có thể thêm, sửa, xóa hoặc ẩn/hiện các liên kết.
               </p>
             </div>
             {renderNavLinksEditor()}
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('Text n�ｾ��ｽｺt CTA', 'header.ctaText', 'text', 'Li�ｾ��ｽｪn h逶ｻ�ｿｽ t�ｾ��ｽｰ v陂ｯ�ｽ･n')}
-              {renderInput('Link n�ｾ��ｽｺt CTA', 'header.ctaLink', 'text', '/lien-he')}
+              {renderInput('Text nút CTA', 'header.ctaText', 'text', 'Liên hệ tư vấn')}
+              {renderInput('Link nút CTA', 'header.ctaLink', 'text', '/lien-he')}
             </div>
-            {renderToggle('Hi逶ｻ繝� th逶ｻ�ｿｽ n�ｾ��ｽｺt Admin', 'header.showAdminLink', 'Hi逶ｻ繝� th逶ｻ�ｿｽ li�ｾ��ｽｪn k陂ｯ�ｽｿt v�ｾ��ｿｽo admin panel tr�ｾ��ｽｪn header')}
+            {renderToggle('Hiển thị nút Admin', 'header.showAdminLink', 'Hiển thị liên kết vào admin panel trên header')}
           </div>
         )
 
       case 'footer':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt Footer</h3>
+            <h3 className='text-lg font-semibold text-earth'>Cài đặt Footer</h3>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('T�ｾ��ｽｪn th�ｾ��ｽｰ�ｾ��ｽ｡ng hi逶ｻ緕｡', 'footer.brandName', 'text', 'G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi Vi逶ｻ繽�')}
-              {renderInput('Slogan footer', 'footer.brandSlogan', 'text', 'Tinh hoa l�ｾ��ｿｽng ngh逶ｻ�ｿｽ')}
+              {renderInput('Tên thương hiệu', 'footer.brandName', 'text', 'Gạch Ngói Việt')}
+              {renderInput('Slogan footer', 'footer.brandSlogan', 'text', 'Tinh hoa làng nghề')}
             </div>
-            {renderInput('Gi逶ｻ螫� thi逶ｻ緕｡ ng陂ｯ�ｽｯn', 'footer.about', 'textarea', 'M�ｾ��ｽｴ t陂ｯ�ｽ｣ ng陂ｯ�ｽｯn v逶ｻ�ｿｽ c�ｾ��ｽｴng ty...')}
-            {renderInput('B陂ｯ�ｽ｣n quy逶ｻ�ｼｽ', 'footer.copyright', 'text', '�ｾゑｽｩ 2024 G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi. All rights reserved.')}
-            {renderToggle('Hi逶ｻ繝� th逶ｻ�ｿｽ icon m陂ｯ�ｽ｡ng x�ｾ��ｽ｣ h逶ｻ蜀�', 'footer.showSocialIcons')}
-            {renderToggle('Hi逶ｻ繝� th逶ｻ�ｿｽ �ｾ�諠ｰ繝夙 k�ｾ��ｽｽ newsletter', 'footer.showNewsletter')}
+            {renderInput('Giới thiệu ngắn', 'footer.about', 'textarea', 'Mô tả ngắn về công ty...')}
+            {renderInput('Bản quyền', 'footer.copyright', 'text', '© 2024 Gạch Ngói. All rights reserved.')}
+            {renderToggle('Hiển thị icon mạng xã hội', 'footer.showSocialIcons')}
+            {renderToggle('Hiển thị đăng ký newsletter', 'footer.showNewsletter')}
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <h4 className='font-medium text-earth'>C逶ｻ蜀ｲ li�ｾ��ｽｪn k陂ｯ�ｽｿt s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm</h4>
-              {renderFooterLinksEditor('Links s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm', 'footer.productLinks')}
+              <h4 className='font-medium text-earth'>Cột liên kết sản phẩm</h4>
+              {renderFooterLinksEditor('Links sản phẩm', 'footer.productLinks')}
             </div>
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <h4 className='font-medium text-earth'>C逶ｻ蜀ｲ li�ｾ��ｽｪn k陂ｯ�ｽｿt c�ｾ��ｽｴng ty</h4>
-              {renderFooterLinksEditor('Links c�ｾ��ｽｴng ty', 'footer.companyLinks')}
+              <h4 className='font-medium text-earth'>Cột liên kết công ty</h4>
+              {renderFooterLinksEditor('Links công ty', 'footer.companyLinks')}
             </div>
           </div>
         )
@@ -739,22 +847,22 @@ export default function Settings() {
       case 'contact':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Th�ｾ��ｽｴng tin li�ｾ��ｽｪn h逶ｻ�ｿｽ</h3>
+            <h3 className='text-lg font-semibold text-earth'>Thông tin liên hệ</h3>
             <div className='grid gap-6 md:grid-cols-2'>
               {renderInput('Email', 'contact.email', 'email', 'contact@example.com')}
-              {renderInput('S逶ｻ�ｿｽ �ｾ�險ｴ逶ｻ繻ｻ tho陂ｯ�ｽ｡i', 'contact.phone', 'text', '0123 456 789')}
+              {renderInput('Số điện thoại', 'contact.phone', 'text', '0123 456 789')}
               {renderInput('Hotline', 'contact.hotline', 'text', '1800 xxxx')}
-              {renderInput('Gi逶ｻ�ｿｽ l�ｾ��ｿｽm vi逶ｻ繻�', 'contact.workingHours', 'text', '8:00 - 17:00, Th逶ｻ�ｽｩ 2 - Th逶ｻ�ｽｩ 7')}
+              {renderInput('Giờ làm việc', 'contact.workingHours', 'text', '8:00 - 17:00, Thứ 2 - Thứ 7')}
             </div>
-            {renderInput('�ｾ�髮ｪ�ｽｻ陝ｻ ch逶ｻ�ｿｽ', 'contact.address', 'text', '123 �ｾ�閼��ｽｰ逶ｻ諡ｵg ABC, Qu陂ｯ�ｽｭn XYZ, TP.HCM')}
-            {renderInput('Nh�ｾ��ｽｺng Google Maps', 'contact.mapEmbed', 'textarea', '<iframe src="..."></iframe>')}
+            {renderInput('Địa chỉ', 'contact.address', 'text', '123 Đường ABC, Quận XYZ, TP.HCM')}
+            {renderInput('Nhúng Google Maps', 'contact.mapEmbed', 'textarea', '<iframe src="..."></iframe>')}
           </div>
         )
 
       case 'social':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Li�ｾ��ｽｪn k陂ｯ�ｽｿt m陂ｯ�ｽ｡ng x�ｾ��ｽ｣ h逶ｻ蜀�</h3>
+            <h3 className='text-lg font-semibold text-earth'>Liên kết mạng xã hội</h3>
             <div className='grid gap-6 md:grid-cols-2'>
               {renderInput('Facebook', 'social.facebook', 'text', 'https://facebook.com/...')}
               {renderInput('Zalo', 'social.zalo', 'text', 'https://zalo.me/...')}
@@ -769,11 +877,11 @@ export default function Settings() {
       case 'seo':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt SEO</h3>
-            {renderInput('Meta Title', 'seo.metaTitle', 'text', 'G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi - V陂ｯ�ｽｭt li逶ｻ緕｡ x�ｾ��ｽ｢y d逶ｻ�ｽｱng ch陂ｯ�ｽ･t l�ｾ��ｽｰ逶ｻ�ｽ｣ng')}
-            {renderInput('Meta Description', 'seo.metaDescription', 'textarea', 'M�ｾ��ｽｴ t陂ｯ�ｽ｣ ng陂ｯ�ｽｯn v逶ｻ�ｿｽ website...')}
-            {renderInput('Meta Keywords', 'seo.metaKeywords', 'text', 'g陂ｯ�ｽ｡ch, ng�ｾ��ｽｳi, v陂ｯ�ｽｭt li逶ｻ緕｡ x�ｾ��ｽ｢y d逶ｻ�ｽｱng')}
-            {renderImageUpload('OG Image', 'seo.ogImage', '陂ｯ�ｽ｢nh hi逶ｻ繝� th逶ｻ�ｿｽ khi chia s陂ｯ�ｽｻ tr�ｾ��ｽｪn m陂ｯ�ｽ｡ng x�ｾ��ｽ｣ h逶ｻ蜀�')}
+            <h3 className='text-lg font-semibold text-earth'>Cài đặt SEO</h3>
+            {renderInput('Meta Title', 'seo.metaTitle', 'text', 'Gạch Ngói - Vật liệu xây dựng chất lượng')}
+            {renderInput('Meta Description', 'seo.metaDescription', 'textarea', 'Mô tả ngắn về website...')}
+            {renderInput('Meta Keywords', 'seo.metaKeywords', 'text', 'gạch, ngói, vật liệu xây dựng')}
+            {renderImageUpload('OG Image', 'seo.ogImage', 'Ảnh hiển thị khi chia sẻ trên mạng xã hội')}
             <div className='grid gap-6 md:grid-cols-2'>
               {renderInput('Google Analytics ID', 'seo.googleAnalyticsId', 'text', 'UA-XXXXXXXXX-X')}
               {renderInput('Facebook Pixel ID', 'seo.facebookPixelId', 'text', 'XXXXXXXXXXXXXXXX')}
@@ -784,22 +892,22 @@ export default function Settings() {
       case 'homepage':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt trang ch逶ｻ�ｽｧ</h3>
+            <h3 className='text-lg font-semibold text-earth'>Cài đặt trang chủ</h3>
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
               <h4 className='font-medium text-earth'>Hero Section</h4>
               <div className='grid gap-4 md:grid-cols-2'>
-                {renderInput('Ti�ｾ��ｽｪu �ｾ�鮟幢ｽｻ�ｿｽ Hero', 'homepage.heroTitle', 'text', 'Ch�ｾ��ｿｽo m逶ｻ�ｽｫng �ｾ�鮟幢ｽｺ�ｽｿn v逶ｻ螫�...')}
-                {renderInput('Ph逶ｻ�ｽ･ �ｾ�鮟幢ｽｻ�ｿｽ Hero', 'homepage.heroSubtitle', 'text', 'D�ｾ��ｽｲng ch逶ｻ�ｽｯ ph逶ｻ�ｽ･...')}
+                {renderInput('Tiêu đề Hero', 'homepage.heroTitle', 'text', 'Chào mừng đến với...')}
+                {renderInput('Phụ đề Hero', 'homepage.heroSubtitle', 'text', 'Dòng chữ phụ...')}
               </div>
-              {renderImageUpload('陂ｯ�ｽ｢nh Hero', 'homepage.heroImage', '陂ｯ�ｽ｢nh n逶ｻ�ｼｽ cho hero section')}
+              {renderImageUpload('Ảnh Hero', 'homepage.heroImage', 'Ảnh nền cho hero section')}
               <div className='grid gap-4 md:grid-cols-2'>
-                {renderInput('Text n�ｾ��ｽｺt CTA', 'homepage.heroButtonText', 'text', 'Kh�ｾ��ｽ｡m ph�ｾ��ｽ｡ ngay')}
-                {renderInput('Link n�ｾ��ｽｺt CTA', 'homepage.heroButtonLink', 'text', '/san-pham')}
+                {renderInput('Text nút CTA', 'homepage.heroButtonText', 'text', 'Khám phá ngay')}
+                {renderInput('Link nút CTA', 'homepage.heroButtonLink', 'text', '/san-pham')}
               </div>
             </div>
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
               <h4 className='font-medium text-earth'>Banner</h4>
-              {renderToggle('Hi逶ｻ繝� th逶ｻ�ｿｽ banner', 'homepage.showBanner', 'B陂ｯ�ｽｭt/t陂ｯ�ｽｯt hi逶ｻ繝� th逶ｻ�ｿｽ banner tr�ｾ��ｽｪn trang ch逶ｻ�ｽｧ')}
+              {renderToggle('Hiển thị banner', 'homepage.showBanner', 'Bật/tắt hiển thị banner trên trang chủ')}
             </div>
           </div>
         )
@@ -807,29 +915,43 @@ export default function Settings() {
       case 'about':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Trang Gi逶ｻ螫� thi逶ｻ緕｡</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='text-lg font-semibold text-earth'>Trang Giới thiệu</h3>
+              <a
+                href='/gioi-thieu'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='inline-flex items-center gap-2 rounded-lg bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90'
+              >
+                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' />
+                </svg>
+                Xem trang
+              </a>
+            </div>
             <div className='rounded-lg border border-cement-light bg-cream-light/50 p-4'>
               <p className='text-sm text-cement-dark'>
-                Qu陂ｯ�ｽ｣n l�ｾ��ｽｽ n逶ｻ蜀� dung hi逶ｻ繝� th逶ｻ�ｿｽ tr�ｾ��ｽｪn trang "Gi逶ｻ螫� thi逶ｻ緕｡" c逶ｻ�ｽｧa website.
+                Quản lý nội dung hiển thị trên trang "Giới thiệu" của website.
               </p>
             </div>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('Ti�ｾ��ｽｪu �ｾ�鮟幢ｽｻ�ｿｽ', 'aboutPage.title', 'text', 'V逶ｻ�ｿｽ ch�ｾ��ｽｺng t�ｾ��ｽｴi')}
-              {renderInput('Ph逶ｻ�ｽ･ �ｾ�鮟幢ｽｻ�ｿｽ', 'aboutPage.subtitle', 'text', 'C�ｾ��ｽ｢u chuy逶ｻ繻ｻ c逶ｻ�ｽｧa ch�ｾ��ｽｺng t�ｾ��ｽｴi')}
+              {renderInput('Tiêu đề', 'aboutPage.title', 'text', 'Về chúng tôi')}
+              {renderInput('Phụ đề', 'aboutPage.subtitle', 'text', 'Câu chuyện của chúng tôi')}
             </div>
-            {renderInput('N逶ｻ蜀� dung ch�ｾ��ｽｭnh', 'aboutPage.content', 'textarea', 'Gi逶ｻ螫� thi逶ｻ緕｡ v逶ｻ�ｿｽ c�ｾ��ｽｴng ty...')}
-            {renderImageUpload('陂ｯ�ｽ｢nh hero', 'aboutPage.heroImage', '陂ｯ�ｽ｢nh �ｾ�鮟幢ｽｺ�ｽ｡i di逶ｻ繻ｻ cho trang gi逶ｻ螫� thi逶ｻ緕｡')}
+            {renderInput('Nội dung chính', 'aboutPage.content', 'textarea', 'Giới thiệu về công ty...')}
+            {renderImageUpload('Ảnh hero', 'aboutPage.heroImage', 'Ảnh đại diện cho trang giới thiệu')}
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <h4 className='font-medium text-earth'>S逶ｻ�ｽｩ m逶ｻ繻ｻh & T陂ｯ�ｽｧm nh�ｾ��ｽｬn</h4>
+              <h4 className='font-medium text-earth'>Sứ mệnh & Tầm nhìn</h4>
               <div className='grid gap-4 md:grid-cols-2'>
-                {renderInput('Ti�ｾ��ｽｪu �ｾ�鮟幢ｽｻ�ｿｽ s逶ｻ�ｽｩ m逶ｻ繻ｻh', 'aboutPage.missionTitle', 'text', 'S逶ｻ�ｽｩ m逶ｻ繻ｻh')}
-                {renderInput('Ti�ｾ��ｽｪu �ｾ�鮟幢ｽｻ�ｿｽ t陂ｯ�ｽｧm nh�ｾ��ｽｬn', 'aboutPage.visionTitle', 'text', 'T陂ｯ�ｽｧm nh�ｾ��ｽｬn')}
+                {renderInput('Tiêu đề sứ mệnh', 'aboutPage.missionTitle', 'text', 'Sứ mệnh')}
+                {renderInput('Tiêu đề tầm nhìn', 'aboutPage.visionTitle', 'text', 'Tầm nhìn')}
               </div>
-              {renderInput('N逶ｻ蜀� dung s逶ｻ�ｽｩ m逶ｻ繻ｻh', 'aboutPage.missionContent', 'textarea', 'S逶ｻ�ｽｩ m逶ｻ繻ｻh c逶ｻ�ｽｧa ch�ｾ��ｽｺng t�ｾ��ｽｴi...')}
-              {renderInput('N逶ｻ蜀� dung t陂ｯ�ｽｧm nh�ｾ��ｽｬn', 'aboutPage.visionContent', 'textarea', 'T陂ｯ�ｽｧm nh�ｾ��ｽｬn c逶ｻ�ｽｧa ch�ｾ��ｽｺng t�ｾ��ｽｴi...')}
+              {renderInput('Nội dung sứ mệnh', 'aboutPage.missionContent', 'textarea', 'Sứ mệnh của chúng tôi...')}
+              {renderInput('Nội dung tầm nhìn', 'aboutPage.visionContent', 'textarea', 'Tầm nhìn của chúng tôi...')}
             </div>
             <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <h4 className='font-medium text-earth'>�ｾ�髮ｪ�ｽｻ蜀� ng�ｾ��ｽｩ</h4>
+              <h4 className='font-medium text-earth'>Đội ngũ</h4>
               {renderTeamMembersEditor()}
             </div>
           </div>
@@ -838,43 +960,43 @@ export default function Settings() {
       case 'notification':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Thanh th�ｾ��ｽｴng b�ｾ��ｽ｡o</h3>
+            <h3 className='text-lg font-semibold text-earth'>Thanh thông báo</h3>
             <div className='rounded-lg border border-blue-200 bg-blue-50 p-4'>
               <p className='text-sm text-blue-800'>
-                Thanh th�ｾ��ｽｴng b�ｾ��ｽ｡o s陂ｯ�ｽｽ hi逶ｻ繝� th逶ｻ�ｿｽ 逶ｻ�ｿｽ �ｾ�鮟幢ｽｺ�ｽｧu trang cho t陂ｯ�ｽ･t c陂ｯ�ｽ｣ kh�ｾ��ｽ｡ch truy c陂ｯ�ｽｭp. Th�ｾ��ｽｭch h逶ｻ�ｽ｣p cho khuy陂ｯ�ｽｿn m�ｾ��ｽ｣i,
-                th�ｾ��ｽｴng b�ｾ��ｽ｡o quan tr逶ｻ閧ｱg, ho陂ｯ�ｽｷc s逶ｻ�ｽｱ ki逶ｻ繻ｻ.
+                Thanh thông báo sẽ hiển thị ở đầu trang cho tất cả khách truy cập. Thích hợp cho khuyến mãi,
+                thông báo quan trọng, hoặc sự kiện.
               </p>
             </div>
-            {renderToggle('B陂ｯ�ｽｭt thanh th�ｾ��ｽｴng b�ｾ��ｽ｡o', 'notification.enabled', 'Hi逶ｻ繝� th逶ｻ�ｿｽ th�ｾ��ｽｴng b�ｾ��ｽ｡o tr�ｾ��ｽｪn �ｾ�鮟幢ｽｺ�ｽｧu trang')}
-            {renderInput('N逶ｻ蜀� dung th�ｾ��ｽｴng b�ｾ��ｽ｡o', 'notification.message', 'textarea', 'N逶ｻ蜀� dung th�ｾ��ｽｴng b�ｾ��ｽ｡o...')}
-            {renderSelect('Lo陂ｯ�ｽ｡i th�ｾ��ｽｴng b�ｾ��ｽ｡o', 'notification.type', [
-              { value: 'info', label: 'Th�ｾ��ｽｴng tin' },
-              { value: 'warning', label: 'C陂ｯ�ｽ｣nh b�ｾ��ｽ｡o' },
-              { value: 'success', label: 'Th�ｾ��ｿｽnh c�ｾ��ｽｴng' },
-              { value: 'promotion', label: 'Khuy陂ｯ�ｽｿn m�ｾ��ｽ｣i' },
+            {renderToggle('Bật thanh thông báo', 'notification.enabled', 'Hiển thị thông báo trên đầu trang')}
+            {renderInput('Nội dung thông báo', 'notification.message', 'textarea', 'Nội dung thông báo...')}
+            {renderSelect('Loại thông báo', 'notification.type', [
+              { value: 'info', label: 'Thông tin' },
+              { value: 'warning', label: 'Cảnh báo' },
+              { value: 'success', label: 'Thành công' },
+              { value: 'promotion', label: 'Khuyến mãi' },
             ])}
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('Link li�ｾ��ｽｪn k陂ｯ�ｽｿt', 'notification.link', 'text', '/san-pham')}
-              {renderInput('Text li�ｾ��ｽｪn k陂ｯ�ｽｿt', 'notification.linkText', 'text', 'Xem ngay')}
+              {renderInput('Link liên kết', 'notification.link', 'text', '/san-pham')}
+              {renderInput('Text liên kết', 'notification.linkText', 'text', 'Xem ngay')}
             </div>
-            {renderToggle('Cho ph�ｾ��ｽｩp t陂ｯ�ｽｯt', 'notification.isDismissible', 'Ng�ｾ��ｽｰ逶ｻ諡ｱ d�ｾ��ｽｹng c�ｾ��ｽｳ th逶ｻ�ｿｽ t陂ｯ�ｽｯt th�ｾ��ｽｴng b�ｾ��ｽ｡o')}
+            {renderToggle('Cho phép tắt', 'notification.isDismissible', 'Người dùng có thể tắt thông báo')}
           </div>
         )
 
       case 'ecommerce':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt E-commerce</h3>
+            <h3 className='text-lg font-semibold text-earth'>Cài đặt E-commerce</h3>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('Ti逶ｻ�ｼｽ t逶ｻ�ｿｽ', 'ecommerce.currency', 'text', 'VND')}
-              {renderInput('K�ｾ��ｽｽ hi逶ｻ緕｡ ti逶ｻ�ｼｽ t逶ｻ�ｿｽ', 'ecommerce.currencySymbol', 'text', '遶��ｽｫ')}
-              {renderInput('Thu陂ｯ�ｽｿ (%)', 'ecommerce.taxRate', 'number')}
-              {renderInput('M�ｾ��ｿｽu ph逶ｻ�ｽ･', 'ecommerce.freeShippingThreshold', 'number')}
-              {renderInput('�ｾ�閼��ｽ｡n h�ｾ��ｿｽng t逶ｻ險ｴ thi逶ｻ繝�', 'ecommerce.minOrderAmount', 'number')}
+              {renderInput('Tiền tệ', 'ecommerce.currency', 'text', 'VND')}
+              {renderInput('Ký hiệu tiền tệ', 'ecommerce.currencySymbol', 'text', '₫')}
+              {renderInput('Thuế (%)', 'ecommerce.taxRate', 'number')}
+              {renderInput('Miễn phí ship', 'ecommerce.freeShippingThreshold', 'number')}
+              {renderInput('Đơn hàng tối thiểu', 'ecommerce.minOrderAmount', 'number')}
             </div>
             <div className='space-y-4'>
-              {renderToggle('Hi逶ｻ繝� th逶ｻ�ｿｽ s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm h陂ｯ�ｽｿt h�ｾ��ｿｽng', 'ecommerce.showOutOfStock')}
-              {renderToggle('Cho ph�ｾ��ｽｩp �ｾ�螯･�ｽ｡nh gi�ｾ��ｽ｡ s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm', 'ecommerce.enableReviews')}
+              {renderToggle('Hiển thị sản phẩm hết hàng', 'ecommerce.showOutOfStock')}
+              {renderToggle('Cho phép đánh giá sản phẩm', 'ecommerce.enableReviews')}
             </div>
           </div>
         )
@@ -882,16 +1004,16 @@ export default function Settings() {
       case 'theme':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt giao di逶ｻ繻ｻ</h3>
+            <h3 className='text-lg font-semibold text-earth'>Cài đặt giao diện</h3>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('M�ｾ��ｿｽu ch�ｾ��ｽｭnh', 'theme.primaryColor', 'color')}
-              {renderInput('M�ｾ��ｿｽu ph逶ｻ�ｽ･', 'theme.secondaryColor', 'color')}
-              {renderInput('M�ｾ��ｿｽu nh陂ｯ�ｽ･n', 'theme.accentColor', 'color')}
-              {renderInput('Font ch逶ｻ�ｽｯ', 'theme.fontFamily', 'text', 'Be Vietnam Pro, sans-serif')}
+              {renderInput('Màu chính', 'theme.primaryColor', 'color')}
+              {renderInput('Màu phụ', 'theme.secondaryColor', 'color')}
+              {renderInput('Màu nhấn', 'theme.accentColor', 'color')}
+              {renderInput('Font chữ', 'theme.fontFamily', 'text', 'Be Vietnam Pro, sans-serif')}
             </div>
             <div className='rounded-lg border border-cement-light bg-cream-light/50 p-4'>
               <p className='text-sm text-cement-dark'>
-                <span className='font-medium'>Ghi ch�ｾ��ｽｺ:</span> Thay �ｾ�鮟幢ｽｻ蜩� m�ｾ��ｿｽu s陂ｯ�ｽｯc s陂ｯ�ｽｽ �ｾ��ｽ｡p d逶ｻ�ｽ･ng cho to�ｾ��ｿｽn b逶ｻ�ｿｽ website. Vui l�ｾ��ｽｲng ki逶ｻ繝� tra k逶ｻ�ｽｹ tr�ｾ��ｽｰ逶ｻ雖ｩ khi l�ｾ��ｽｰu.
+                <span className='font-medium'>Ghi chú:</span> Thay đổi màu sắc sẽ áp dụng cho toàn bộ website. Vui lòng kiểm tra kỹ trước khi lưu.
               </p>
             </div>
           </div>
@@ -900,9 +1022,9 @@ export default function Settings() {
       case 'testimonials':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Kh�ｾ��ｽ｡ch h�ｾ��ｿｽng n�ｾ��ｽｳi g�ｾ��ｽｬ v逶ｻ�ｿｽ ch�ｾ��ｽｺng t�ｾ��ｽｴi</h3>
+            <h3 className='text-lg font-semibold text-earth'>Khách hàng nói gì về chúng tôi</h3>
             <div className='rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <p className='text-sm text-cement-dark'>Qu陂ｯ�ｽ｣n l�ｾ��ｽｽ c�ｾ��ｽ｡c �ｾ�螯･�ｽ｡nh gi�ｾ��ｽ｡ c逶ｻ�ｽｧa kh�ｾ��ｽ｡ch h�ｾ��ｿｽng hi逶ｻ繝� th逶ｻ�ｿｽ tr�ｾ��ｽｪn trang ch逶ｻ�ｽｧ.</p>
+              <p className='text-sm text-cement-dark'>Quản lý các đánh giá của khách hàng hiển thị trên trang chủ.</p>
             </div>
             {renderTestimonialsEditor()}
           </div>
@@ -910,40 +1032,74 @@ export default function Settings() {
       case 'company':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>H逶ｻ�ｿｽ s�ｾ��ｽ｡ n�ｾ�繝夙 l逶ｻ�ｽｱc c�ｾ��ｽｴng ty</h3>
+            <div className='flex items-center justify-between'>
+              <h3 className='text-lg font-semibold text-earth'>Hồ sơ năng lực công ty</h3>
+              <a
+                href='/ho-so-nang-luc'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='inline-flex items-center gap-2 rounded-lg bg-brick px-4 py-2 text-sm font-medium text-white hover:bg-brick/90'
+              >
+                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M15 12a3 3 0 11-6 0 3 3 0 016 0z' />
+                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z' />
+                </svg>
+                Xem trang
+              </a>
+            </div>
             <div className='rounded-lg border border-cement-light bg-cream-light/50 p-4'>
-              <p className='text-sm text-cement-dark'>C陂ｯ�ｽ･u h�ｾ��ｽｬnh n逶ｻ蜀� dung trang H逶ｻ�ｿｽ s�ｾ��ｽ｡ n�ｾ�繝夙 l逶ｻ�ｽｱc.</p>
+              <p className='text-sm text-cement-dark'>
+                Cấu hình nội dung trang Hồ sơ năng lực. Trang này có thể xuất PDF và hiển thị QR code để khách hàng quét xem.
+              </p>
             </div>
             <div className='grid gap-6 md:grid-cols-2'>
-              {renderInput('T�ｾ��ｽｪn c�ｾ��ｽｴng ty', 'companyProfile.companyName', 'text', 'G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi Vi逶ｻ繽�')}
-              {renderInput('N�ｾ�繝� th�ｾ��ｿｽnh l陂ｯ�ｽｭp', 'companyProfile.foundedYear', 'text', '1995')}
+              {renderInput('Tên công ty', 'companyProfile.companyName', 'text', 'Gạch Ngói Việt')}
+              {renderInput('Năm thành lập', 'companyProfile.foundedYear', 'text', '1995')}
             </div>
-            {renderInput('M�ｾ��ｽｴ t陂ｯ�ｽ｣ c�ｾ��ｽｴng ty', 'companyProfile.description', 'textarea', 'Gi逶ｻ螫� thi逶ｻ緕｡ v逶ｻ�ｿｽ c�ｾ��ｽｴng ty...')}
-            {renderCompanyStatsEditor()}
-            {renderCompanyAchievementsEditor()}
+            {renderInput('Mô tả công ty', 'companyProfile.description', 'textarea', 'Giới thiệu về công ty...')}
+            <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
+              <h4 className='font-medium text-earth'>Giá trị cốt lõi</h4>
+              {renderCoreValuesEditor()}
+            </div>
+            <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
+              <h4 className='font-medium text-earth'>Thống kê công ty</h4>
+              {renderCompanyStatsEditor()}
+            </div>
+            <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
+              <h4 className='font-medium text-earth'>Thành tựu nổi bật</h4>
+              {renderCompanyAchievementsEditor()}
+            </div>
+            <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
+              <h4 className='font-medium text-earth'>Khách hàng tiêu biểu</h4>
+              {renderClientsEditor()}
+            </div>
+            <div className='space-y-4 rounded-lg border border-cement-light bg-cream-light/50 p-4'>
+              <h4 className='font-medium text-earth'>Chứng nhận & Giải thưởng</h4>
+              {renderCertificationsEditor()}
+            </div>
           </div>
         )
       case 'maintenance':
         return (
           <div className='space-y-6'>
-            <h3 className='text-lg font-semibold text-earth'>Ch陂ｯ�ｽｿ �ｾ�鮟幢ｽｻ�ｿｽ b陂ｯ�ｽ｣o tr�ｾ��ｽｬ</h3>
+            <h3 className='text-lg font-semibold text-earth'>Chế độ bảo trì</h3>
             <div className='rounded-lg border border-yellow-200 bg-yellow-50 p-4'>
               <p className='text-sm text-yellow-800'>
-                <span className='font-medium'>C陂ｯ�ｽ｣nh b�ｾ��ｽ｡o:</span> Khi b陂ｯ�ｽｭt ch陂ｯ�ｽｿ �ｾ�鮟幢ｽｻ�ｿｽ b陂ｯ�ｽ｣o tr�ｾ��ｽｬ, website s陂ｯ�ｽｽ kh�ｾ��ｽｴng th逶ｻ�ｿｽ truy c陂ｯ�ｽｭp �ｾ�譟��ｽｰ逶ｻ�ｽ｣c cho kh�ｾ��ｽ｡ch h�ｾ��ｿｽng.
+                <span className='font-medium'>Cảnh báo:</span> Khi bật chế độ bảo trì, website sẽ không thể truy cập được cho khách hàng.
               </p>
             </div>
-            {renderToggle('B陂ｯ�ｽｭt ch陂ｯ�ｽｿ �ｾ�鮟幢ｽｻ�ｿｽ b陂ｯ�ｽ｣o tr�ｾ��ｽｬ', 'maintenance.enabled', 'Website s陂ｯ�ｽｽ t陂ｯ�ｽ｡m ng逶ｻ�ｽｫng ho陂ｯ�ｽ｡t �ｾ�鮟幢ｽｻ蜀｢g')}
+            {renderToggle('Bật chế độ bảo trì', 'maintenance.enabled', 'Website sẽ tạm ngừng hoạt động')}
             {renderInput(
-              'Th�ｾ��ｽｴng b�ｾ��ｽ｡o b陂ｯ�ｽ｣o tr�ｾ��ｽｬ',
+              'Thông báo bảo trì',
               'maintenance.message',
               'textarea',
-              'Website �ｾ�逍始g �ｾ�譟��ｽｰ逶ｻ�ｽ｣c b陂ｯ�ｽ｣o tr�ｾ��ｽｬ, vui l�ｾ��ｽｲng quay l陂ｯ�ｽ｡i sau...'
+              'Website đang được bảo trì, vui lòng quay lại sau...'
             )}
             {renderInput(
-              'IP �ｾ�譟��ｽｰ逶ｻ�ｽ｣c ph�ｾ��ｽｩp truy c陂ｯ�ｽｭp',
+              'IP được phép truy cập',
               'maintenance.allowedIPs',
               'text',
-              'Nh陂ｯ�ｽｭp c�ｾ��ｽ｡c IP c�ｾ��ｽ｡ch nhau b陂ｯ�ｽｱng d陂ｯ�ｽ･u ph陂ｯ�ｽｩy'
+              'Nhập các IP cách nhau bằng dấu phẩy'
             )}
           </div>
         )
@@ -961,8 +1117,8 @@ export default function Settings() {
       {/* Page header */}
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div>
-          <h1 className='text-2xl font-bold text-earth sm:text-3xl'>C�ｾ��ｿｽi �ｾ�鮟幢ｽｺ�ｽｷt</h1>
-          <p className='mt-1 text-sm text-cement-dark sm:mt-2 sm:text-base'>Qu陂ｯ�ｽ｣n l�ｾ��ｽｽ to�ｾ��ｿｽn b逶ｻ�ｿｽ c陂ｯ�ｽ･u h�ｾ��ｽｬnh website</p>
+          <h1 className='text-2xl font-bold text-earth sm:text-3xl'>Cài đặt</h1>
+          <p className='mt-1 text-sm text-cement-dark sm:mt-2 sm:text-base'>Quản lý toàn bộ cấu hình website</p>
         </div>
         {canUpdate && (
           <button
@@ -970,7 +1126,7 @@ export default function Settings() {
             disabled={!isDirty || updateMutation.isPending}
             className='w-full rounded-lg bg-brick px-6 py-2 font-medium text-white transition-colors hover:bg-brick/90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto'
           >
-            {updateMutation.isPending ? '�ｾ�邏ｳng l�ｾ��ｽｰu...' : 'L�ｾ��ｽｰu thay �ｾ�鮟幢ｽｻ蜩�'}
+            {updateMutation.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
           </button>
         )}
       </div>
