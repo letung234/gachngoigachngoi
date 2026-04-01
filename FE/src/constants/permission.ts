@@ -151,43 +151,43 @@ export const adminMenuItems = [
   {
     path: '/admin/dashboard',
     label: 'Dashboard',
-    icon: '�ｨ滓ｨ雁��',
+    icon: '📊',
     permission: Permission.DASHBOARD_VIEW
   },
   {
     path: '/admin/products',
-    label: 'S髯ゑｽｯ�ｿｽ�ｽｽ�ｽ｣n ph髯ゑｽｯ�ｿｽ�ｽｽ�ｽｩm',
+    label: 'Sản phẩm',
     icon: '�ｨ滓ｨ｣ﾂ�ｿｽ',
     permission: Permission.PRODUCT_READ
   },
   {
     path: '/admin/categories',
-    label: 'Danh m騾ｶ�ｽｻ�ｿｽ�ｽｽ�ｽ･c',
-    icon: '�ｨ滓ｨ雁ｷｮ�ｿｽ�ｽｿ�ｽｽ�ｿｽ�ｽｽ�ｽｸ�ｿｽ�ｽｿ�ｽｽ',
+    label: 'Danh mục',
+    icon: '📋',
     permission: Permission.CATEGORY_READ
   },
   {
     path: '/admin/orders',
-    label: '�ｿｽ�ｽｾ�ｿｽ髢ｼ�ｿｽ�ｿｽ�ｽｽ�ｽ｡n h�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽng',
-    icon: '�ｨ滓ｨ頑帆',
+    label: 'Đơn hàng',
+    icon: '🛒',
     permission: Permission.ORDER_READ
   },
   {
     path: '/admin/users',
-    label: 'Ng�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｰ騾ｶ�ｽｻ隲｡�ｽｱ d�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｹng',
-    icon: '�ｨ滓ｧｫ謠ｴ',
+    label: 'Người dùng',
+    icon: '👥',
     permission: Permission.USER_READ
   },
   {
     path: '/admin/posts',
-    label: 'B�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽi vi髯ゑｽｯ�ｿｽ�ｽｽ�ｽｿt',
-    icon: '�ｨ滓ｨ抵ｽｵ�ｽｱ',
+    label: 'Bài viết',
+    icon: '📝',
     permission: Permission.POST_READ
   },
   {
     path: '/admin/analytics',
-    label: 'Ph�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽ｢n t�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｽ�ｽｭch',
-    icon: '�ｨ滓ｧｫ�ｽｶ�ｿｽ',
+    label: 'Phân tích',
+    icon: '📈',
     permission: Permission.STATS_VIEW
   },
   {
@@ -198,8 +198,8 @@ export const adminMenuItems = [
   },
   {
     path: '/admin/settings',
-    label: 'C�ｿｽ�ｽｾ�ｿｽ�ｿｽ�ｽｿ�ｽｽi �ｿｽ�ｽｾ�ｿｽ魄溷ｹ｢�ｽｽ�ｽｺ�ｿｽ�ｽｽ�ｽｷt',
-    icon: '髫ｨ讒ｫ驕懶ｿｽ�ｽｽ�ｽｸ�ｿｽ�ｽｿ�ｽｽ',
+    label: 'Cài đặt',
+    icon: '⚙️',
     permission: Permission.CONFIG_READ
   }
 ]

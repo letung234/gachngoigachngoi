@@ -22,8 +22,8 @@ type SiteConfigProviderProps = {
 
 const DEFAULT_CONFIG: SiteConfig = {
   _id: 'default',
-  siteName: 'G蘯｡ch Ngﾃｳi Store',
-  siteSlogan: 'Ch蘯･t lﾆｰ盻｣ng t蘯｡o nﾃｪn khﾃ｡c bi盻㏄',
+  siteName: 'Gạch Ngói Store',
+  siteSlogan: 'Chất lượng tạo nên khác biệt',
   logo: '',
   logoDark: '',
   favicon: '',
@@ -44,43 +44,43 @@ const DEFAULT_CONFIG: SiteConfig = {
     twitter: '',
   },
   seo: {
-    metaTitle: 'G蘯｡ch Ngﾃｳi Store',
-    metaDescription: 'C盻ｭa hﾃ�ng cung c蘯･p g蘯｡ch ngﾃｳi ch蘯･t lﾆｰ盻｣ng cao',
-    metaKeywords: 'g蘯｡ch, ngﾃｳi, v蘯ｭt li盻㎡ xﾃ｢y d盻ｱng',
+    metaTitle: 'Gạch Ngói Store',
+    metaDescription: 'Cửa hàng cung cấp gạch ngói chất lượng cao',
+    metaKeywords: 'gạch, ngói, vật liệu xây dựng',
     ogImage: '',
     googleAnalyticsId: '',
     facebookPixelId: '',
   },
   header: {
     navLinks: [
-      { name: 'Trang ch盻ｧ', path: '/', isEnabled: true },
-      { name: 'S蘯｣n ph蘯ｩm', path: '/san-pham', isEnabled: true },
-      { name: 'D盻ｱ ﾃ｡n', path: '/du-an', isEnabled: true },
+      { name: 'Trang chủ', path: '/', isEnabled: true },
+      { name: 'Sản phẩm', path: '/san-pham', isEnabled: true },
+      { name: 'Dự án', path: '/du-an', isEnabled: true },
       { name: 'Blog', path: '/blog', isEnabled: true },
-      { name: 'Gi盻嬖 thi盻㎡', path: '/gioi-thieu', isEnabled: true },
-      { name: 'Liﾃｪn h盻�', path: '/lien-he', isEnabled: true },
+      { name: 'Giới thiệu', path: '/gioi-thieu', isEnabled: true },
+      { name: 'Liên hệ', path: '/lien-he', isEnabled: true },
     ],
-    ctaText: 'Liﾃｪn h盻� tﾆｰ v蘯･n',
+    ctaText: 'Liên hệ tư vấn',
     ctaLink: '/lien-he',
     showAdminLink: true,
   },
   footer: {
-    about: 'C盻ｭa hﾃ�ng cung c蘯･p g蘯｡ch ngﾃｳi vﾃ� v蘯ｭt li盻㎡ xﾃ｢y d盻ｱng ch蘯･t lﾆｰ盻｣ng cao v盻嬖 giﾃ｡ c蘯｣ h盻｣p lﾃｽ.',
-    copyright: '\u00A9 2024 G蘯｡ch Ngﾃｳi Store. T蘯･t c蘯｣ quy盻］ ﾄ柁ｰ盻｣c b蘯｣o lﾆｰu.',
+    about: 'Cửa hàng cung cấp gạch ngói và vật liệu xây dựng chất lượng cao với giá cả hợp lý.',
+    copyright: '\u00A9 2024 Gạch Ngói Store. Tất cả quyền được bảo lưu.',
     showSocialIcons: true,
     showNewsletter: false,
-    brandName: 'G蘯｡ch Ngﾃｳi Vi盻㏄',
-    brandSlogan: 'Tinh hoa lﾃ�ng ngh盻�',
+    brandName: 'Gạch Ngói Việt',
+    brandSlogan: 'Tinh hoa làng nghề',
     productLinks: [],
     companyLinks: [],
   },
   aboutPage: {
-    title: 'V盻� chﾃｺng tﾃｴi',
+    title: 'Về chúng tôi',
     subtitle: '',
     content: '',
-    missionTitle: 'S盻ｩ m盻㌻h',
+    missionTitle: 'Sứ mệnh',
     missionContent: '',
-    visionTitle: 'T蘯ｧm nhﾃｬn',
+    visionTitle: 'Tầm nhìn',
     visionContent: '',
     heroImage: '',
     teamMembers: [],
@@ -94,10 +94,10 @@ const DEFAULT_CONFIG: SiteConfig = {
     isDismissible: true,
   },
   homepage: {
-    heroTitle: 'Chﾃ�o m盻ｫng ﾄ黛ｺｿn v盻嬖 G蘯｡ch Ngﾃｳi Store',
-    heroSubtitle: 'Cung c蘯･p v蘯ｭt li盻㎡ xﾃ｢y d盻ｱng ch蘯･t lﾆｰ盻｣ng cao',
+    heroTitle: 'Chào mừng đến với Gạch Ngói Store',
+    heroSubtitle: 'Cung cấp vật liệu xây dựng chất lượng cao',
     heroImage: '',
-    heroButtonText: 'Khﾃ｡m phﾃ｡ ngay',
+    heroButtonText: 'Khám phá ngay',
     heroButtonLink: '/san-pham',
     featuredCategoryIds: [],
     showBanner: true,
@@ -120,7 +120,7 @@ const DEFAULT_CONFIG: SiteConfig = {
   },
   maintenance: {
     enabled: false,
-    message: 'Website ﾄ疎ng ﾄ柁ｰ盻｣c b蘯｣o trﾃｬ, vui lﾃｲng quay l蘯｡i sau.',
+    message: 'Website đang được bảo trì, vui lòng quay lại sau.',
     allowedIPs: [],
   },
   testimonials: [],
@@ -151,7 +151,7 @@ export const SiteConfigProvider = ({ children }: SiteConfigProviderProps) => {
       setConfig(response.data.data)
     } catch (err) {
       console.error('Failed to load site config:', err)
-      setError('Khﾃｴng th盻� t蘯｣i c蘯･u hﾃｬnh website')
+      setError('Không thể tải cấu hình website')
       setConfig(DEFAULT_CONFIG)
     } finally {
       setIsLoading(false)

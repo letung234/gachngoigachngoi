@@ -1,4 +1,4 @@
-﻿import { Request, Response } from 'express'
+import { Request, Response } from 'express'
 import { responseSuccess, ErrorHandler } from '../utils/response'
 import { ProductModel } from '../database/models/product.model'
 import { STATUS } from '../constants/status'

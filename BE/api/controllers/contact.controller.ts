@@ -7,7 +7,7 @@ const submitContact = async (req: Request, res: Response) => {
   const { name, email, phone, subject, message } = req.body
 
   if (!name || !email || !message) {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Vui long dien day du thong tin bat buoc')
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Vui lòng điền đầy đủ thông tin bắt buộc')
   }
 
   const contact = await new ContactModel({
@@ -20,7 +20,7 @@ const submitContact = async (req: Request, res: Response) => {
   }).save()
 
   const response = {
-    message: 'Gui lien he thanh cong',
+    message: 'Gửi liên hệ thành công. Chúng tôi sẽ phản hồi trong thời gian sớm nhất.',
     data: contact.toObject()
   }
   return responseSuccess(res, response)
@@ -56,7 +56,7 @@ const getContactList = async (req: Request, res: Response) => {
   ])
 
   const response = {
-    message: 'Lay danh sach lien he thanh cong',
+    message: 'Lấy danh sách liên hệ thành công',
     data: {
       contacts: contactList,
       pagination: {
@@ -76,7 +76,7 @@ const updateContactStatus = async (req: Request, res: Response) => {
 
   const validStatusList = Object.values(CONTACT_STATUS)
   if (!validStatusList.includes(status)) {
-    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Trang thai khong hop le')
+    throw new ErrorHandler(STATUS.BAD_REQUEST, 'Trạng thái không hợp lệ')
   }
 
   const updateData: any = { status }
@@ -87,11 +87,11 @@ const updateContactStatus = async (req: Request, res: Response) => {
   const contact = await ContactModel.findByIdAndUpdate(id, updateData, { new: true }).lean()
 
   if (!contact) {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Khong tim thay lien he')
+    throw new ErrorHandler(STATUS.NOT_FOUND, 'Liên hệ không tồn tại')
   }
 
   const response = {
-    message: 'Cap nhat trang thai thanh cong',
+    message: 'Cập nhật trạng thái thành công',
     data: contact
   }
   return responseSuccess(res, response)
@@ -102,11 +102,11 @@ const deleteContact = async (req: Request, res: Response) => {
   const contact = await ContactModel.findByIdAndDelete(id)
 
   if (!contact) {
-    throw new ErrorHandler(STATUS.NOT_FOUND, 'Khong tim thay lien he')
+    throw new ErrorHandler(STATUS.NOT_FOUND, 'Liên hệ không tồn tại')
   }
 
   const response = {
-    message: 'Xoa lien he thanh cong',
+    message: 'Xóa liên hệ thành công',
     data: { deleted_count: 1 }
   }
   return responseSuccess(res, response)
@@ -140,7 +140,7 @@ const getContactStats = async (req: Request, res: Response) => {
   ])
 
   const response = {
-    message: 'Lay thong ke lien he thanh cong',
+    message: 'Lấy thống kê liên hệ thành công',
     data: {
       total: totalContacts,
       new: newContacts,

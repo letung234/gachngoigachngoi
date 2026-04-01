@@ -1,4 +1,4 @@
-﻿import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { schema, Schema } from 'src/utils/rules'

@@ -8,36 +8,36 @@ import { useSiteConfig } from 'src/contexts/siteConfig.context'
 const categories = [
   {
     id: 1,
-    name: 'Ng�ｾ��ｽｳi �ｾ��ｽ｢m d�ｾ��ｽｰ�ｾ��ｽ｡ng',
-    description: 'Lo陂ｯ�ｽ｡i ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg v逶ｻ螫� thi陂ｯ�ｽｿt k陂ｯ�ｽｿ �ｾ�鮟幢ｽｻ蜀� �ｾ�螯･�ｽ｡o, t陂ｯ�ｽ｡o n�ｾ��ｽｪn m�ｾ��ｽ｡i nh�ｾ��ｿｽ b逶ｻ�ｼｽ v逶ｻ�ｽｯng',
+    name: 'Ngói âm dương',
+    description: 'Loại ngói truyền thống với thiết kế độc đáo, tạo nên mái nhà bền vững',
     image: '/images/products/ngoi-am-duong.jpg',
     path: '/san-pham/ngoi-am-duong'
   },
   {
     id: 2,
-    name: 'Ng�ｾ��ｽｳi m�ｾ��ｽｩi h�ｾ��ｿｽi',
-    description: 'Ng�ｾ��ｽｳi cong m逶ｻ�ｼｻ m陂ｯ�ｽ｡i, th�ｾ��ｽｰ逶ｻ諡ｵg d�ｾ��ｽｹng cho �ｾ�螯･�ｽｬnh ch�ｾ��ｽｹa, nh�ｾ��ｿｽ c逶ｻ�ｿｽ',
+    name: 'Ngói mũi hài',
+    description: 'Ngói cong mềm mại, thường dùng cho đình chùa, nhà cổ',
     image: '/images/products/ngoi-mui-hai.jpg',
     path: '/san-pham/ngoi-mui-hai'
   },
   {
     id: 3,
-    name: 'G陂ｯ�ｽ｡ch l�ｾ��ｽ｡t s�ｾ��ｽ｢n',
-    description: 'G陂ｯ�ｽ｡ch terracotta l�ｾ��ｽ｡t s�ｾ��ｽ｢n v�ｾ��ｽｰ逶ｻ諡ｵ, b逶ｻ�ｼｽ �ｾ�鮟幢ｽｺ�ｽｹp qua th逶ｻ諡ｱ gian',
+    name: 'Gạch lát sân',
+    description: 'Gạch terracotta lát sân vườn, bền đẹp qua thời gian',
     image: '/images/products/gach-lat-san.jpg',
     path: '/san-pham/gach-lat-san'
   },
   {
     id: 4,
-    name: 'G陂ｯ�ｽ｡ch x�ｾ��ｽ｢y c逶ｻ�ｿｽ',
-    description: 'G陂ｯ�ｽ｡ch x�ｾ��ｽ｢y d逶ｻ�ｽｱng theo phong c�ｾ��ｽ｡ch truy逶ｻ�ｼｽ th逶ｻ蜑ｵg, ch陂ｯ�ｽｯc kh逶ｻ驫�',
+    name: 'Gạch xây cổ',
+    description: 'Gạch xây dựng theo phong cách truyền thống, chắc khỏe',
     image: '/images/products/gach-xay-co.jpg',
     path: '/san-pham/gach-xay-co'
   },
   {
     id: 5,
-    name: 'G陂ｯ�ｽ｡ch trang tr�ｾ��ｽｭ',
-    description: 'G陂ｯ�ｽ｡ch hoa v�ｾ�繝� trang tr�ｾ��ｽｭ, �ｾ�險ｴ逶ｻ繝� nh陂ｯ�ｽ･n cho c�ｾ��ｽｴng tr�ｾ��ｽｬnh',
+    name: 'Gạch trang trí',
+    description: 'Gạch hoa văn trang trí, điểm nhấn cho công trình',
     image: '/images/products/gach-trang-tri.jpg',
     path: '/san-pham/gach-trang-tri'
   }
@@ -47,32 +47,32 @@ const categories = [
 const processSteps = [
   {
     step: 1,
-    title: 'Ch逶ｻ閧ｱ �ｾ�鮟幢ｽｺ�ｽ･t',
-    description: 'L逶ｻ�ｽｱa ch逶ｻ閧ｱ �ｾ�鮟幢ｽｺ�ｽ･t s�ｾ��ｽｩt ch陂ｯ�ｽ･t l�ｾ��ｽｰ逶ｻ�ｽ｣ng cao t逶ｻ�ｽｫ v�ｾ��ｽｹng nguy�ｾ��ｽｪn li逶ｻ緕｡ truy逶ｻ�ｼｽ th逶ｻ蜑ｵg',
+    title: 'Chọn đất',
+    description: 'Lựa chọn đất sét chất lượng cao từ vùng nguyên liệu truyền thống',
     image: '/images/process/chon-dat.jpg'
   },
   {
     step: 2,
-    title: 'Nh�ｾ��ｿｽo �ｾ�鮟幢ｽｺ�ｽ･t',
-    description: 'Nh�ｾ��ｿｽo tr逶ｻ蜀｢ �ｾ�鮟幢ｽｺ�ｽ･t s�ｾ��ｽｩt v逶ｻ螫� n�ｾ��ｽｰ逶ｻ雖ｩ theo t逶ｻ�ｽｷ l逶ｻ�ｿｽ chu陂ｯ�ｽｩn c逶ｻ�ｽｧa l�ｾ��ｿｽng ngh逶ｻ�ｿｽ',
+    title: 'Nhào đất',
+    description: 'Nhào trộn đất sét với nước theo tỷ lệ chuẩn của làng nghề',
     image: '/images/process/nhao-dat.jpg'
   },
   {
     step: 3,
-    title: 'T陂ｯ�ｽ｡o h�ｾ��ｽｬnh',
-    description: 'Ngh逶ｻ�ｿｽ nh�ｾ��ｽ｢n t陂ｯ�ｽ｡o h�ｾ��ｽｬnh th逶ｻ�ｽｧ c�ｾ��ｽｴng t逶ｻ�ｽｫng vi�ｾ��ｽｪn g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi',
+    title: 'Tạo hình',
+    description: 'Nghệ nhân tạo hình thủ công từng viên gạch ngói',
     image: '/images/process/tao-hinh.jpg'
   },
   {
     step: 4,
-    title: 'Ph�ｾ��ｽ｡i kh�ｾ��ｽｴ',
-    description: 'Ph�ｾ��ｽ｡i s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm d�ｾ��ｽｰ逶ｻ螫� �ｾ��ｽ｡nh n陂ｯ�ｽｯng t逶ｻ�ｽｱ nhi�ｾ��ｽｪn trong nhi逶ｻ縲� ng�ｾ��ｿｽy',
+    title: 'Phơi khô',
+    description: 'Phơi sản phẩm dưới ánh nắng tự nhiên trong nhiều ngày',
     image: '/images/process/phoi-kho.jpg'
   },
   {
     step: 5,
-    title: 'Nung l�ｾ��ｽｲ',
-    description: 'Nung trong l�ｾ��ｽｲ truy逶ｻ�ｼｽ th逶ｻ蜑ｵg 逶ｻ�ｿｽ nhi逶ｻ繽� �ｾ�鮟幢ｽｻ�ｿｽ cao �ｾ�鮟幢ｽｻ�ｿｽ t陂ｯ�ｽ｡o �ｾ�鮟幢ｽｻ�ｿｽ b逶ｻ�ｼｽ',
+    title: 'Nung lò',
+    description: 'Nung trong lò truyền thống ở nhiệt độ cao để tạo độ bền',
     image: '/images/process/nung-lo.jpg'
   }
 ]
@@ -81,26 +81,26 @@ const processSteps = [
 const projects = [
   {
     id: 1,
-    title: 'Nh�ｾ��ｿｽ c逶ｻ�ｿｽ �ｾ�閼��ｽｰ逶ｻ諡ｵg L�ｾ��ｽ｢m',
-    category: 'Nh�ｾ��ｿｽ c逶ｻ�ｿｽ',
+    title: 'Nhà cổ Đường Lâm',
+    category: 'Nhà cổ',
     image: '/images/projects/nha-co.jpg'
   },
   {
     id: 2,
-    title: 'Resort An L�ｾ��ｽ｢m',
+    title: 'Resort An Lâm',
     category: 'Resort',
     image: '/images/projects/resort.jpg'
   },
   {
     id: 3,
-    title: 'Ch�ｾ��ｽｹa B�ｾ��ｽ｡i �ｾ�髱呻ｽｭnh',
-    category: 'Ch�ｾ��ｽｹa',
+    title: 'Chùa Bái Đính',
+    category: 'Chùa',
     image: '/images/projects/chua.jpg'
   },
   {
     id: 4,
-    title: 'Bi逶ｻ繽� th逶ｻ�ｽｱ Vinhomes',
-    category: 'Bi逶ｻ繽� th逶ｻ�ｽｱ',
+    title: 'Biệt thự Vinhomes',
+    category: 'Biệt thự',
     image: '/images/projects/biet-thu.jpg'
   }
 ]
@@ -109,23 +109,23 @@ const projects = [
 const testimonials = [
   {
     id: 1,
-    name: 'Nguy逶ｻ�ｿｽn V�ｾ�繝� Minh',
-    role: 'Ki陂ｯ�ｽｿn tr�ｾ��ｽｺc s�ｾ��ｽｰ',
-    content: 'Ch陂ｯ�ｽ･t l�ｾ��ｽｰ逶ｻ�ｽ｣ng g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi r陂ｯ�ｽ･t t逶ｻ螂�, m�ｾ��ｿｽu s陂ｯ�ｽｯc �ｾ�鮟幢ｽｺ�ｽｹp v�ｾ��ｿｽ �ｾ�鮟幢ｽｻ貂｡g �ｾ�鮟幢ｽｻ縲�. T�ｾ��ｽｴi �ｾ�螯･�ｽ｣ s逶ｻ�ｽｭ d逶ｻ�ｽ･ng cho nhi逶ｻ縲� d逶ｻ�ｽｱ �ｾ��ｽ｡n nh�ｾ��ｿｽ c逶ｻ�ｿｽ ph逶ｻ�ｽ･c d逶ｻ�ｽｱng.',
+    name: 'Nguyễn Văn Minh',
+    role: 'Kiến trúc sư',
+    content: 'Chất lượng gạch ngói rất tốt, màu sắc đẹp và đồng đều. Tôi đã sử dụng cho nhiều dự án nhà cổ phục dựng.',
     avatar: 'NM'
   },
   {
     id: 2,
-    name: 'Tr陂ｯ�ｽｧn Th逶ｻ�ｿｽ Hoa',
-    role: 'Ch逶ｻ�ｽｧ resort',
-    content: 'S陂ｯ�ｽ｣n ph陂ｯ�ｽｩm mang �ｾ�鮟幢ｽｺ�ｽｭm b陂ｯ�ｽ｣n s陂ｯ�ｽｯc Vi逶ｻ繽�, kh�ｾ��ｽ｡ch h�ｾ��ｿｽng qu逶ｻ逾� t陂ｯ�ｽｿ r陂ｯ�ｽ･t th�ｾ��ｽｭch. �ｾ�髮ｪ�ｽｻ蜀� ng�ｾ��ｽｩ t�ｾ��ｽｰ v陂ｯ�ｽ･n nhi逶ｻ繽� t�ｾ��ｽｬnh v�ｾ��ｿｽ chuy�ｾ��ｽｪn nghi逶ｻ緕�.',
+    name: 'Trần Thị Hoa',
+    role: 'Chủ resort',
+    content: 'Sản phẩm mang đậm bản sắc Việt, khách hàng quốc tế rất thích. Đội ngũ tư vấn nhiệt tình và chuyên nghiệp.',
     avatar: 'TH'
   },
   {
     id: 3,
-    name: 'L�ｾ��ｽｪ �ｾ�髮ｪ�ｽｻ�ｽｩc Anh',
-    role: 'Nh�ｾ��ｿｽ th陂ｯ�ｽｧu x�ｾ��ｽ｢y d逶ｻ�ｽｱng',
-    content: 'G陂ｯ�ｽ｡ch ng�ｾ��ｽｳi b逶ｻ�ｼｽ, ch陂ｯ�ｽｯc, ch逶ｻ荳� �ｾ�譟��ｽｰ逶ｻ�ｽ｣c th逶ｻ諡ｱ ti陂ｯ�ｽｿt kh陂ｯ�ｽｯc nghi逶ｻ繽�. Gi�ｾ��ｽ｡ c陂ｯ�ｽ｣ h逶ｻ�ｽ｣p l�ｾ��ｽｽ, giao h�ｾ��ｿｽng �ｾ�螯･�ｽｺng h陂ｯ�ｽｹn.',
+    name: 'Lê Đức Anh',
+    role: 'Nhà thầu xây dựng',
+    content: 'Gạch ngói bền, chắc, chịu được thời tiết khắc nghiệt. Giá cả hợp lý, giao hàng đúng hẹn.',
     avatar: 'LA'
   }
 ]
@@ -177,10 +177,10 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>G陂ｯ�ｽ｡ch Ng�ｾ��ｽｳi Truy逶ｻ�ｼｽ Th逶ｻ蜑ｵg Vi逶ｻ繽� Nam | Tinh Hoa L�ｾ��ｿｽng Ngh逶ｻ�ｿｽ</title>
+        <title>Gạch Ngói Truyền Thống Việt Nam | Tinh Hoa Làng Nghề</title>
         <meta
           name='description'
-          content='Chuy�ｾ��ｽｪn s陂ｯ�ｽ｣n xu陂ｯ�ｽ･t v�ｾ��ｿｽ cung c陂ｯ�ｽ･p g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg Vi逶ｻ繽� Nam. Ng�ｾ��ｽｳi �ｾ��ｽ｢m d�ｾ��ｽｰ�ｾ��ｽ｡ng, ng�ｾ��ｽｳi m�ｾ��ｽｩi h�ｾ��ｿｽi, g陂ｯ�ｽ｡ch l�ｾ��ｽ｡t s�ｾ��ｽ｢n - S陂ｯ�ｽ｣n xu陂ｯ�ｽ･t th逶ｻ�ｽｧ c�ｾ��ｽｴng, b逶ｻ�ｼｽ v逶ｻ�ｽｯng theo th逶ｻ諡ｱ gian.'
+          content='Chuyên sản xuất và cung cấp gạch ngói truyền thống Việt Nam. Ngói âm dương, ngói mũi hài, gạch lát sân - Sản xuất thủ công, bền vững theo thời gian.'
         />
       </Helmet>
 
@@ -189,7 +189,7 @@ export default function Home() {
         <div className='absolute inset-0'>
           <img
             src='/images/hero-bg.jpg'
-            alt='M�ｾ��ｽ｡i ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg Vi逶ｻ繽� Nam'
+            alt='Mái ngói truyền thống Việt Nam'
             className='h-full w-full object-cover'
           />
           <div className='absolute inset-0 bg-gradient-to-b from-earth-dark/70 via-earth-dark/50 to-earth-dark/80' />
@@ -203,20 +203,20 @@ export default function Home() {
             className='max-w-4xl'
           >
             <span className='mb-4 inline-block rounded-full bg-gold/20 px-4 py-2 text-sm font-medium text-gold'>
-              Di s陂ｯ�ｽ｣n l�ｾ��ｿｽng ngh逶ｻ�ｿｽ Vi逶ｻ繽� Nam
+              Di sản làng nghề Việt Nam
             </span>
             <h1 className='mb-6 font-serif text-4xl font-bold leading-tight text-cream-light text-balance sm:text-5xl md:text-6xl lg:text-7xl'>
-              Tinh hoa g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg Vi逶ｻ繽�
+              Tinh hoa gạch ngói truyền thống Việt
             </h1>
             <p className='mx-auto mb-10 max-w-2xl text-lg text-cream-light/80 md:text-xl'>
-              S陂ｯ�ｽ｣n xu陂ｯ�ｽ･t th逶ｻ�ｽｧ c�ｾ��ｽｴng - B逶ｻ�ｼｽ v逶ｻ�ｽｯng theo th逶ｻ諡ｱ gian
+              Sản xuất thủ công - Bền vững theo thời gian
             </p>
             <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
               <Link
                 to='/san-pham'
                 className='group inline-flex items-center gap-2 rounded-lg bg-brick px-8 py-4 font-semibold text-cream-light transition-all hover:bg-brick-dark hover:scale-105'
               >
-                Xem s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm
+                Xem sản phẩm
                 <svg
                   className='h-5 w-5 transition-transform group-hover:translate-x-1'
                   fill='none'
@@ -230,7 +230,7 @@ export default function Home() {
                 to='/lien-he'
                 className='inline-flex items-center gap-2 rounded-lg border-2 border-cream-light/30 px-8 py-4 font-semibold text-cream-light transition-all hover:bg-cream-light/10'
               >
-                Li�ｾ��ｽｪn h逶ｻ�ｿｽ t�ｾ��ｽｰ v陂ｯ�ｽ･n
+                Liên hệ tư vấn
               </Link>
             </div>
           </motion.div>
@@ -243,7 +243,7 @@ export default function Home() {
             className='absolute bottom-10'
           >
             <div className='flex flex-col items-center gap-2 text-cream-light/60'>
-              <span className='text-sm'>Cu逶ｻ蜀｢ xu逶ｻ蜑ｵg</span>
+              <span className='text-sm'>Cuộn xuống</span>
               <motion.div
                 animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
@@ -264,31 +264,31 @@ export default function Home() {
             <div className='img-zoom overflow-hidden rounded-2xl shadow-xl'>
               <img
                 src='/images/craftsman.jpg'
-                alt='Ngh逶ｻ�ｿｽ nh�ｾ��ｽ｢n l�ｾ��ｿｽm g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi'
+                alt='Nghệ nhân làm gạch ngói'
                 className='h-full w-full object-cover'
               />
             </div>
             <div>
               <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
-                V逶ｻ�ｿｽ ch�ｾ��ｽｺng t�ｾ��ｽｴi
+                Về chúng tôi
               </span>
               <h2 className='mb-6 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
-                Gi逶ｻ�ｽｯ h逶ｻ貂｡ ki陂ｯ�ｽｿn tr�ｾ��ｽｺc Vi逶ｻ繽�
+                Giữ hồn kiến trúc Việt
               </h2>
               <p className='mb-6 text-lg leading-relaxed text-earth/80'>
-                V逶ｻ螫� h�ｾ��ｽ｡n 30 n�ｾ�繝� kinh nghi逶ｻ纃�, ch�ｾ��ｽｺng t�ｾ��ｽｴi t逶ｻ�ｽｱ h�ｾ��ｿｽo l�ｾ��ｿｽ �ｾ�譟��ｽ｡n v逶ｻ�ｿｽ h�ｾ��ｿｽng �ｾ�鮟幢ｽｺ�ｽｧu trong vi逶ｻ繻� s陂ｯ�ｽ｣n xu陂ｯ�ｽ･t 
-                g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg. M逶ｻ謫� s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm �ｾ�鮟幢ｽｻ縲� �ｾ�譟��ｽｰ逶ｻ�ｽ｣c l�ｾ��ｿｽm th逶ｻ�ｽｧ c�ｾ��ｽｴng b逶ｻ谿� nh逶ｻ�ｽｯng ngh逶ｻ�ｿｽ nh�ｾ��ｽ｢n 
-                t�ｾ��ｽ｢m huy陂ｯ�ｽｿt, k陂ｯ�ｽｿ th逶ｻ�ｽｫa tinh hoa t逶ｻ�ｽｫ c�ｾ��ｽ｡c th陂ｯ�ｽｿ h逶ｻ�ｿｽ �ｾ�險ｴ tr�ｾ��ｽｰ逶ｻ雖ｩ.
+                Với hơn 30 năm kinh nghiệm, chúng tôi tự hào là đơn vị hàng đầu trong việc sản xuất 
+                gạch ngói truyền thống. Mỗi sản phẩm đều được làm thủ công bởi những nghệ nhân 
+                tâm huyết, kế thừa tinh hoa từ các thế hệ đi trước.
               </p>
               <p className='mb-8 text-lg leading-relaxed text-earth/80'>
-                Ch�ｾ��ｽｺng t�ｾ��ｽｴi kh�ｾ��ｽｴng ch逶ｻ�ｿｽ s陂ｯ�ｽ｣n xu陂ｯ�ｽ･t v陂ｯ�ｽｭt li逶ｻ緕｡ x�ｾ��ｽ｢y d逶ｻ�ｽｱng, m�ｾ��ｿｽ c�ｾ��ｽｲn g�ｾ��ｽｳp ph陂ｯ�ｽｧn b陂ｯ�ｽ｣o t逶ｻ貂｡ v�ｾ��ｿｽ ph�ｾ��ｽ｡t huy 
-                gi�ｾ��ｽ｡ tr逶ｻ�ｿｽ v�ｾ�繝� h�ｾ��ｽｳa ki陂ｯ�ｽｿn tr�ｾ��ｽｺc truy逶ｻ�ｼｽ th逶ｻ蜑ｵg Vi逶ｻ繽� Nam.
+                Chúng tôi không chỉ sản xuất vật liệu xây dựng, mà còn góp phần bảo tồn và phát huy 
+                giá trị văn hóa kiến trúc truyền thống Việt Nam.
               </p>
               <Link
                 to='/gioi-thieu'
                 className='group inline-flex items-center gap-2 font-semibold text-brick transition-colors hover:text-brick-dark'
               >
-                T�ｾ��ｽｬm hi逶ｻ繝� th�ｾ��ｽｪm
+                Tìm hiểu thêm
                 <svg
                   className='h-5 w-5 transition-transform group-hover:translate-x-1'
                   fill='none'
@@ -308,13 +308,13 @@ export default function Home() {
         <div className='container'>
           <div className='mb-16 text-center'>
             <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
-              Danh m逶ｻ�ｽ･c s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm
+              Danh mục sản phẩm
             </span>
             <h2 className='mb-4 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
-              S陂ｯ�ｽ｣n ph陂ｯ�ｽｩm c逶ｻ�ｽｧa ch�ｾ��ｽｺng t�ｾ��ｽｴi
+              Sản phẩm của chúng tôi
             </h2>
             <p className='mx-auto max-w-2xl text-lg text-earth/70'>
-              �ｾ�邏ｳ d陂ｯ�ｽ｡ng c�ｾ��ｽ｡c lo陂ｯ�ｽ｡i g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi truy逶ｻ�ｼｽ th逶ｻ蜑ｵg, ph逶ｻ�ｽ･c v逶ｻ�ｽ･ m逶ｻ邨� nhu c陂ｯ�ｽｧu ki陂ｯ�ｽｿn tr�ｾ��ｽｺc
+              Đa dạng các loại gạch ngói truyền thống, phục vụ mọi nhu cầu kiến trúc
             </p>
           </div>
 
@@ -354,7 +354,7 @@ export default function Home() {
               to='/san-pham'
               className='inline-flex items-center gap-2 rounded-lg bg-brick px-8 py-4 font-semibold text-cream-light transition-all hover:bg-brick-dark hover:scale-105'
             >
-              Xem t陂ｯ�ｽ･t c陂ｯ�ｽ｣ s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm
+              Xem tất cả sản phẩm
             </Link>
           </div>
         </div>
@@ -365,13 +365,13 @@ export default function Home() {
         <div className='container'>
           <div className='mb-16 text-center'>
             <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-gold'>
-              Quy tr�ｾ��ｽｬnh s陂ｯ�ｽ｣n xu陂ｯ�ｽ･t
+              Quy trình sản xuất
             </span>
             <h2 className='mb-4 font-serif text-3xl font-bold text-cream-light md:text-4xl lg:text-5xl'>
-              Ngh逶ｻ�ｿｽ thu陂ｯ�ｽｭt th逶ｻ�ｽｧ c�ｾ��ｽｴng truy逶ｻ�ｼｽ th逶ｻ蜑ｵg
+              Nghệ thuật thủ công truyền thống
             </h2>
             <p className='mx-auto max-w-2xl text-lg text-cream-light/70'>
-              5 b�ｾ��ｽｰ逶ｻ雖ｩ t陂ｯ�ｽ｡o n�ｾ��ｽｪn nh逶ｻ�ｽｯng vi�ｾ��ｽｪn g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi ho�ｾ��ｿｽn h陂ｯ�ｽ｣o
+              5 bước tạo nên những viên gạch ngói hoàn hảo
             </p>
           </div>
 
@@ -427,13 +427,13 @@ export default function Home() {
         <div className='container'>
           <div className='mb-16 text-center'>
             <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
-              D逶ｻ�ｽｱ �ｾ��ｽ｡n ti�ｾ��ｽｪu bi逶ｻ繝�
+              Dự án tiêu biểu
             </span>
             <h2 className='mb-4 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
-              C�ｾ��ｽｴng tr�ｾ��ｽｬnh �ｾ�螯･�ｽ｣ th逶ｻ�ｽｱc hi逶ｻ繻ｻ
+              Công trình được thực hiện
             </h2>
             <p className='mx-auto max-w-2xl text-lg text-earth/70'>
-              Nh逶ｻ�ｽｯng d逶ｻ�ｽｱ �ｾ��ｽ｡n ti�ｾ��ｽｪu bi逶ｻ繝� s逶ｻ�ｽｭ d逶ｻ�ｽ･ng s陂ｯ�ｽ｣n ph陂ｯ�ｽｩm g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi c逶ｻ�ｽｧa ch�ｾ��ｽｺng t�ｾ��ｽｴi
+              Những dự án tiêu biểu sử dụng sản phẩm gạch ngói của chúng tôi
             </p>
           </div>
 
@@ -472,7 +472,7 @@ export default function Home() {
               to='/du-an'
               className='inline-flex items-center gap-2 rounded-lg border-2 border-brick px-8 py-4 font-semibold text-brick transition-all hover:bg-brick hover:text-cream-light'
             >
-              Xem t陂ｯ�ｽ･t c陂ｯ�ｽ｣ d逶ｻ�ｽｱ �ｾ��ｽ｡n
+              Xem tất cả dự án
             </Link>
           </div>
         </div>
@@ -483,10 +483,10 @@ export default function Home() {
         <div className='container'>
           <div className='mb-16 text-center'>
             <span className='mb-4 inline-block text-sm font-semibold uppercase tracking-wider text-brick'>
-              �ｾ�髱呻ｽ｡nh gi�ｾ��ｽ｡
+              Đánh giá
             </span>
             <h2 className='mb-4 font-serif text-3xl font-bold text-earth-dark md:text-4xl lg:text-5xl'>
-              Kh�ｾ��ｽ｡ch h�ｾ��ｿｽng n�ｾ��ｽｳi g�ｾ��ｽｬ v逶ｻ�ｿｽ ch�ｾ��ｽｺng t�ｾ��ｽｴi
+              Khách hàng nói gì về chúng tôi
             </h2>
           </div>
 
@@ -531,7 +531,7 @@ export default function Home() {
         <div className='absolute inset-0'>
           <img
             src='/images/cta-bg.jpg'
-            alt='X�ｾ��ｽｰ逶ｻ谿､g s陂ｯ�ｽ｣n xu陂ｯ�ｽ･t g陂ｯ�ｽ｡ch ng�ｾ��ｽｳi'
+            alt='Xưởng sản xuất gạch ngói'
             className='h-full w-full object-cover'
           />
           <div className='absolute inset-0 bg-earth-dark/85' />
@@ -545,17 +545,17 @@ export default function Home() {
             className='mx-auto max-w-3xl text-center'
           >
             <h2 className='mb-6 font-serif text-3xl font-bold text-cream-light md:text-4xl lg:text-5xl text-balance'>
-              B陂ｯ�ｽ｡n �ｾ�逍始g t�ｾ��ｽｬm v陂ｯ�ｽｭt li逶ｻ緕｡ mang gi�ｾ��ｽ｡ tr逶ｻ�ｿｽ truy逶ｻ�ｼｽ th逶ｻ蜑ｵg?
+              Bạn đang tìm vật liệu mang giá trị truyền thống?
             </h2>
             <p className='mb-10 text-lg text-cream-light/80'>
-              H�ｾ��ｽ｣y li�ｾ��ｽｪn h逶ｻ�ｿｽ v逶ｻ螫� ch�ｾ��ｽｺng t�ｾ��ｽｴi �ｾ�鮟幢ｽｻ�ｿｽ �ｾ�譟��ｽｰ逶ｻ�ｽ｣c t�ｾ��ｽｰ v陂ｯ�ｽ･n v�ｾ��ｿｽ b�ｾ��ｽ｡o gi�ｾ��ｽ｡ chi ti陂ｯ�ｽｿt nh陂ｯ�ｽ･t
+              Hãy liên hệ với chúng tôi để được tư vấn và báo giá chi tiết nhất
             </p>
             <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
               <Link
                 to='/lien-he'
                 className='inline-flex items-center gap-2 rounded-lg bg-gold px-8 py-4 font-semibold text-earth-dark transition-all hover:bg-gold-light hover:scale-105'
               >
-                Li�ｾ��ｽｪn h逶ｻ�ｿｽ ngay
+                Liên hệ ngay
               </Link>
               <a
                 href='tel:0987654321'

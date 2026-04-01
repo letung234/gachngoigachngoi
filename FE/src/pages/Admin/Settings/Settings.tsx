@@ -29,20 +29,20 @@ type Tab = {
 }
 
 const TABS: Tab[] = [
-  { id: 'general', name: 'Th�ｾ��ｽｴng tin chung', icon: '﨟槫ｮｵ' },
-  { id: 'header', name: 'Header', icon: '﨟樣ｧ�' },
-  { id: 'footer', name: 'Footer', icon: '﨟槫愛' },
-  { id: 'contact', name: 'Li�ｾ��ｽｪn h逶ｻ�ｿｽ', icon: '﨟槫芦' },
-  { id: 'social', name: 'M陂ｯ�ｽ｡ng x�ｾ��ｽ｣ h逶ｻ蜀�', icon: '﨟槫ｹ' },
-  { id: 'seo', name: 'SEO', icon: '﨟槫翁' },
-  { id: 'homepage', name: 'Trang ch逶ｻ�ｽｧ', icon: '﨟槫権' },
-  { id: 'about', name: 'Gi逶ｻ螫� thi逶ｻ緕｡', icon: '﨟槫ｽ�' },
-  { id: 'notification', name: 'Th�ｾ��ｽｴng b�ｾ��ｽ｡o', icon: '﨟樒ｲ�' },
-  { id: 'ecommerce', name: 'E-commerce', icon: '﨟槫ｰ�' },
-  { id: 'theme', name: 'Giao di逶ｻ繻ｻ', icon: '﨟櫁ｳ' },
-  { id: 'testimonials', name: 'Testimonials', icon: '邂晢ｿｽ' },
-  { id: 'company', name: 'H逶ｻ�ｿｽ s�ｾ��ｽ｡ c�ｾ��ｽｴng ty', icon: '﨟槫小' },
-  { id: 'maintenance', name: 'B陂ｯ�ｽ｣o tr�ｾ��ｽｬ', icon: '﨟櫁ｌ' },
+  { id: 'general', name: 'Thông tin chung', icon: '⚙️' },
+  { id: 'header', name: 'Header', icon: '📋' },
+  { id: 'footer', name: 'Footer', icon: '📄' },
+  { id: 'contact', name: 'Liên hệ', icon: '📞' },
+  { id: 'social', name: 'Mạng xã hội', icon: '🌐' },
+  { id: 'seo', name: 'SEO', icon: '🔍' },
+  { id: 'homepage', name: 'Trang chủ', icon: '🏠' },
+  { id: 'about', name: 'Giới thiệu', icon: 'ℹ️' },
+  { id: 'notification', name: 'Thông báo', icon: '🔔' },
+  { id: 'ecommerce', name: 'E-commerce', icon: '🛒' },
+  { id: 'theme', name: 'Giao diện', icon: '🎨' },
+  { id: 'testimonials', name: 'Testimonials', icon: '💬' },
+  { id: 'company', name: 'Hồ sơ công ty', icon: '🏢' },
+  { id: 'maintenance', name: 'Bảo trì', icon: '🔧' },
 ]
 
 export default function Settings() {
@@ -66,12 +66,12 @@ export default function Settings() {
   const updateMutation = useMutation({
     mutationFn: (data: Partial<SiteConfig>) => adminApi.updateConfig(data),
     onSuccess: () => {
-      toast.success('C陂ｯ�ｽｭp nh陂ｯ�ｽｭt c陂ｯ�ｽ･u h�ｾ��ｽｬnh th�ｾ��ｿｽnh c�ｾ��ｽｴng')
+      toast.success('Cập nhật cấu hình thành công')
       queryClient.invalidateQueries({ queryKey: ['admin-config'] })
       setIsDirty(false)
     },
     onError: () => {
-      toast.error('C陂ｯ�ｽｭp nh陂ｯ�ｽｭt c陂ｯ�ｽ･u h�ｾ��ｽｬnh th陂ｯ�ｽ･t b陂ｯ�ｽ｡i')
+      toast.error('Cập nhật cấu hình thất bại')
     },
   })
 
@@ -85,10 +85,10 @@ export default function Settings() {
         setUploadingField(null)
       }
 
-      toast.success('Upload 陂ｯ�ｽ｣nh th�ｾ��ｿｽnh c�ｾ��ｽｴng')
+      toast.success('Upload ảnh thành công')
     },
     onError: () => {
-      toast.error('Upload 陂ｯ�ｽ｣nh th陂ｯ�ｽ･t b陂ｯ�ｽ｡i')
+      toast.error('Upload ảnh thất bại')
       setUploadingField(null)
     },
   })
@@ -277,7 +277,7 @@ export default function Settings() {
             disabled={!canUpdate || isUploading}
             className='rounded-lg border border-cement-light bg-white px-4 py-2 text-sm text-earth transition-colors hover:bg-cream-light disabled:cursor-not-allowed disabled:opacity-50'
           >
-            {isUploading ? '�ｾ�邏ｳng t陂ｯ�ｽ｣i...' : value ? 'Thay �ｾ�鮟幢ｽｻ蜩�' : 'T陂ｯ�ｽ｣i l�ｾ��ｽｪn'}
+            {isUploading ? 'Đang tải...' : value ? 'Thay đổi' : 'Tải lên'}
           </button>
         </div>
       </div>
@@ -357,13 +357,13 @@ export default function Settings() {
     return (
       <div className='space-y-4'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>Li�ｾ��ｽｪn k陂ｯ�ｽｿt �ｾ�險ｴ逶ｻ縲� h�ｾ��ｽｰ逶ｻ螫ｾg</label>
+          <label className='block text-sm font-medium text-earth'>Liên kết menu header</label>
           {canUpdate && (
             <button
               type='button'
               onClick={handleAddNavLink}
               className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'
-            >+ Th�ｾ��ｽｪm</button>
+            >+ Thêm</button>
           )}
         </div>
         {navLinks.map((link, index) => (
@@ -371,7 +371,7 @@ export default function Settings() {
             <input
               type='text'
               className={`${inputClasses} flex-1`}
-              placeholder='T�ｾ��ｽｪn hi逶ｻ繝� th逶ｻ�ｿｽ'
+              placeholder='Tên hiển thị'
               value={link.name || ''}
               onChange={(e) => handleUpdateNavLink(index, 'name', e.target.value)}
               disabled={!canUpdate}
@@ -392,7 +392,7 @@ export default function Settings() {
                 link.isEnabled ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
               }`}
             >
-              {link.isEnabled ? 'B陂ｯ�ｽｭt' : 'T陂ｯ�ｽｯt'}
+              {link.isEnabled ? 'Bật' : 'Tắt'}
             </button>
             {canUpdate && (
               <button
@@ -406,7 +406,7 @@ export default function Settings() {
           </div>
         ))}
         {navLinks.length === 0 && (
-          <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ li�ｾ��ｽｪn k陂ｯ�ｽｿt n�ｾ��ｿｽo.</p>
+          <p className='text-sm text-cement-dark'>Chưa có liên kết menu nào.</p>
         )}
       </div>
     )
@@ -440,7 +440,7 @@ export default function Settings() {
               type='button'
               onClick={handleAdd}
               className='rounded-lg bg-brick px-3 py-1 text-xs font-medium text-white hover:bg-brick/90'
-            >+ Th�ｾ��ｽｪm</button>
+            >+ Thêm</button>
           )}
         </div>
         {links.map((link, index) => (
@@ -448,7 +448,7 @@ export default function Settings() {
             <input
               type='text'
               className={`${inputClasses} flex-1`}
-              placeholder='T�ｾ��ｽｪn hi逶ｻ繝� th逶ｻ�ｿｽ'
+              placeholder='Tên hiển thị cho liên kết'
               value={link.name || ''}
               onChange={(e) => handleUpdate(index, 'name', e.target.value)}
               disabled={!canUpdate}
@@ -467,13 +467,13 @@ export default function Settings() {
                 onClick={() => handleRemove(index)}
                 className='rounded-lg bg-red-50 px-2 py-2 text-red-600 hover:bg-red-100'
               >
-                隨ｨ�ｿｽ
+                Sửa
               </button>
             )}
           </div>
         ))}
         {links.length === 0 && (
-          <p className='text-sm text-cement-dark'>Ch�ｾ��ｽｰa c�ｾ��ｽｳ li�ｾ��ｽｪn k陂ｯ�ｽｿt n�ｾ��ｿｽo.</p>
+          <p className='text-sm text-cement-dark'>Chưa có liên kết menu nào.</p>
         )}
       </div>
     )
@@ -501,7 +501,7 @@ export default function Settings() {
     return (
       <div className='space-y-3'>
         <div className='flex items-center justify-between'>
-          <label className='block text-sm font-medium text-earth'>Th�ｾ��ｿｽnh vi�ｾ��ｽｪn �ｾ�鮟幢ｽｻ蜀� ng�ｾ��ｽｩ</label>
+          <label className='block text-sm font-medium text-earth'>T</label>
           {canUpdate && (
             <button
               type='button'

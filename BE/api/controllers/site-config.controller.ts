@@ -16,7 +16,7 @@ const getSiteConfig = async (req: Request, res: Response) => {
   }
 
   const response = {
-    message: 'L蘯･y c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
+    message: 'Lấy cấu hình thành công',
     data: config
   }
   return responseSuccess(res, response)
@@ -59,7 +59,7 @@ const updateSiteConfig = async (req: Request, res: Response) => {
   const updatedConfig = await SiteConfigModel.findOne().lean()
 
   const response = {
-    message: 'C蘯ｭp nh蘯ｭt c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
+    message: 'Cập nhật cấu hình thành công',
     data: updatedConfig
   }
   return responseSuccess(res, response)
@@ -69,7 +69,7 @@ const updateSiteConfig = async (req: Request, res: Response) => {
 const uploadConfigImage = async (req: Request, res: Response) => {
   const url = await uploadFileCloudinary(req, 'config')
   const response = {
-    message: 'Upload 蘯｣nh thﾃ�nh cﾃｴng',
+    message: 'Upload ảnh thành công',
     data: url
   }
   return responseSuccess(res, response)
@@ -81,7 +81,7 @@ const resetSiteConfig = async (req: Request, res: Response) => {
   const newConfig = await new SiteConfigModel({}).save()
 
   const response = {
-    message: 'Reset c蘯･u hﾃｬnh thﾃ�nh cﾃｴng',
+    message: 'Reset cấu hình thành công',
     data: newConfig.toObject()
   }
   return responseSuccess(res, response)
